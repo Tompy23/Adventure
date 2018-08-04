@@ -25,6 +25,9 @@ public class AdventureImpl implements Adventure {
     private boolean proceed = false;
 
     public AdventureImpl() {
+        // Items
+
+        // Areas
         Area room3 = areaFactory.createBuilder()
                 .searchDescription("you find a portal to where yo are now")
                 .name("Room3")
@@ -42,6 +45,7 @@ public class AdventureImpl implements Adventure {
                 .description("Look around, this room is exactly like that")
                 .build();
 
+        // Exits
         Exit exit12 = exitFactory.createBuilder().direction(Direction.DIRECTION_NORTH).area(room2).build();
         Exit exit23 = exitFactory.createBuilder().direction(Direction.DIRECTION_EAST).area(room3).build();
         Exit exit21 = exitFactory.createBuilder().direction(Direction.DIRECTION_SOUTH).area(room1).build();
@@ -52,6 +56,7 @@ public class AdventureImpl implements Adventure {
         room2.installExit(exit21);
         room3.installExit(exit32);
 
+        // Features
         Feature room2Chest = featureFactory.createBuilder()
                 .type(FeatureType.FEATURE_CHEST)
                 .name("Chest")
@@ -66,6 +71,7 @@ public class AdventureImpl implements Adventure {
         room2.installFeature(room2Chest, Direction.DIRECTION_NORTH);
         room1.installFeature(room1Desk, null);
 
+        // Summary
         areas.put(room1.getName(), room1);
         areas.put(room2.getName(), room2);
         areas.put(room3.getName(), room3);
