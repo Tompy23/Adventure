@@ -2,7 +2,13 @@ package com.tompy.entity.api;
 
 import java.util.List;
 
-public interface Entity extends EntityKey {
+public interface Entity {
+
+    /**
+     * Retrieve the Entity Key
+     * @return - the value of the Key
+     */
+    Long getKey();
 
     /**
      * Get the full descriptive name of the Item
@@ -32,6 +38,10 @@ public interface Entity extends EntityKey {
      */
     List<String> getDescriptionWords();
 
+    /**
+     * Helper function for creating messages about the Entity
+     * @return - Representation of the source entity
+     */
     String getSource();
 
 }

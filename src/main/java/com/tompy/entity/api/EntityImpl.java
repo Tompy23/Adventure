@@ -1,18 +1,29 @@
 package com.tompy.entity.api;
 
+import com.tompy.response.api.Responsive;
+
 import java.util.List;
 import java.util.Objects;
 
-public abstract class EntityImpl extends EntityKeyImpl implements Entity {
+/**
+ * Provides basic implementation for Entity subclasses
+ */
+public abstract class EntityImpl extends Responsive implements Entity {
     protected final String name;
     protected final List<String> descriptors;
     protected final String description;
+    private final Long key;
 
     public EntityImpl(Long key, String name, List<String> descriptors, String description) {
-        super(key);
+        this.key = Objects.requireNonNull(key, "Entity Key cannot be null.");
         this.name = Objects.requireNonNull(name, "Name cannot be null.");
-        this.descriptors = descriptors;
+        this.descriptors = Objects.requireNonNull(descriptors, "Descriptors can be empty, but not null.");
         this.description = Objects.requireNonNull(description, "Description cannot be null.");
+    }
+
+    @Override
+    public Long getKey() {
+        return key;
     }
 
     @Override
