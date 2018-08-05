@@ -4,8 +4,6 @@ import com.tompy.adventure.api.Adventure;
 import com.tompy.attribute.api.AttributeManager;
 import com.tompy.attribute.api.AttributeManagerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 public class AttributeManagerFactoryImpl implements AttributeManagerFactory {
@@ -18,10 +16,5 @@ public class AttributeManagerFactoryImpl implements AttributeManagerFactory {
     @Override
     public AttributeManager create() {
         return new AttributeManagerImpl(adventure);
-    }
-
-    @Override
-    public Map<Long, AttributeManager> createMap() {
-        return new HashMap<>();
     }
 }

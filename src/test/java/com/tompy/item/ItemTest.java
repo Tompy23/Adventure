@@ -1,9 +1,7 @@
 package com.tompy.item;
 
 import com.tompy.adventure.api.Adventure;
-import com.tompy.item.api.Item;
-import com.tompy.item.api.ItemFactory;
-import com.tompy.item.interna.ItemFactoryImpl;
+import com.tompy.entity.item.api.Item;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

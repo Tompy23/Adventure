@@ -1,21 +1,18 @@
-package com.tompy.item.interna;
-
-import com.tompy.item.api.Item;
+package com.tompy.entity.api;
 
 import java.util.List;
 import java.util.Objects;
 
-public class ItemImpl implements Item {
-    private final String name;
-    private final List<String> descriptors;
-    private final String description;
-    private final Long key;
+public abstract class EntityImpl extends EntityKeyImpl implements Entity {
+    protected final String name;
+    protected final List<String> descriptors;
+    protected final String description;
 
-    public ItemImpl(Long key, String name, List<String> descriptors, String description) {
+    public EntityImpl(Long key, String name, List<String> descriptors, String description) {
+        super(key);
         this.name = Objects.requireNonNull(name, "Name cannot be null.");
         this.descriptors = descriptors;
         this.description = Objects.requireNonNull(description, "Description cannot be null.");
-        this.key = Objects.requireNonNull(key, "Key cannot be null.");
     }
 
     @Override
@@ -41,7 +38,8 @@ public class ItemImpl implements Item {
     }
 
     @Override
-    public Long getEntityKey() {
-        return key;
+    public String getSource() {
+        return name + "[" + getKey() + "]";
     }
+
 }

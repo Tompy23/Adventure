@@ -1,13 +1,8 @@
-package com.tompy.item.api;
-
-import com.tompy.entity.api.EntityKey;
+package com.tompy.entity.api;
 
 import java.util.List;
 
-/**
- * Hold state for an item
- */
-public interface Item extends EntityKey {
+public interface Entity extends EntityKey {
 
     /**
      * Get the full descriptive name of the Item
@@ -36,4 +31,7 @@ public interface Item extends EntityKey {
      * @return - List of descriptive words for Item
      */
     List<String> getDescriptionWords();
+
+    String getSource();
+
 }

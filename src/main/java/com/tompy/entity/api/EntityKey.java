@@ -9,5 +9,5 @@ public interface EntityKey {
      * Retrieve the Entity Key
      * @return - the value of the Key
      */
-    Long getEntityKey();
+    Long getKey();
 }

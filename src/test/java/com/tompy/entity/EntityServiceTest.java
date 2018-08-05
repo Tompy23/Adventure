@@ -5,8 +5,7 @@ import com.tompy.attribute.api.AttributeManager;
 import com.tompy.attribute.api.AttributeManagerFactory;
 import com.tompy.entity.api.EntityService;
 import com.tompy.entity.internal.EntityServiceImpl;
-import com.tompy.item.api.Item;
-import com.tompy.item.api.ItemFactory;
+import com.tompy.entity.item.api.Item;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -60,7 +59,7 @@ public class EntityServiceTest {
     public void testAddAttribute() {
         when(mockAttributeManagers.containsKey(any())).thenReturn(true);
         when(mockAttributeManagers.get(any())).thenReturn(mockAttributeManager);
-        entityService.add(0L, Attribute.TEST_NORMALA);
+        entityService.add(mockItem, Attribute.TEST_NORMALA);
         verify(mockAttributeManager, times(1)).add(any());
     }
 
@@ -68,7 +67,7 @@ public class EntityServiceTest {
     @Test
     public void testAddAttributeNone() {
         when(mockAttributeManagers.containsKey(any())).thenReturn(false);
-        entityService.add(0L, Attribute.TEST_NORMALA);
+        entityService.add(mockItem, Attribute.TEST_NORMALA);
         verify(mockAttributeManager, times(0)).add(any());
     }
 
@@ -76,7 +75,7 @@ public class EntityServiceTest {
     public void testAddAttributeValue() {
         when(mockAttributeManagers.containsKey(any())).thenReturn(true);
         when(mockAttributeManagers.get(any())).thenReturn(mockAttributeManager);
-        entityService.add(0L, Attribute.TEST_NORMALA, 1);
+        entityService.add(mockItem, Attribute.TEST_NORMALA, 1);
         verify(mockAttributeManager, times(1)).add(any(), any());
     }
 
@@ -84,7 +83,7 @@ public class EntityServiceTest {
     @Test
     public void testAddAttributeValueNone() {
         when(mockAttributeManagers.containsKey(any())).thenReturn(false);
-        entityService.add(0L, Attribute.TEST_NORMALA, 1);
+        entityService.add(mockItem, Attribute.TEST_NORMALA, 1);
         verify(mockAttributeManager, times(0)).add(any(), any());
     }
 
@@ -92,7 +91,7 @@ public class EntityServiceTest {
     public void testRemoveAttribute() {
         when(mockAttributeManagers.containsKey(any())).thenReturn(true);
         when(mockAttributeManagers.get(any())).thenReturn(mockAttributeManager);
-        entityService.remove(0L, Attribute.TEST_NORMALA);
+        entityService.remove(mockItem, Attribute.TEST_NORMALA);
         verify(mockAttributeManager, times(1)).remove(any());
     }
 
@@ -100,7 +99,7 @@ public class EntityServiceTest {
     @Test
     public void testRemoveAttributeNone() {
         when(mockAttributeManagers.containsKey(any())).thenReturn(false);
-        entityService.remove(0L, Attribute.TEST_NORMALA);
+        entityService.remove(mockItem, Attribute.TEST_NORMALA);
         verify(mockAttributeManager, times(0)).remove(any());
     }
 
@@ -108,7 +107,7 @@ public class EntityServiceTest {
     public void testResetAttribute() {
         when(mockAttributeManagers.containsKey(any())).thenReturn(true);
         when(mockAttributeManagers.get(any())).thenReturn(mockAttributeManager);
-        entityService.reset(0L, Attribute.TEST_NORMALA);
+        entityService.reset(mockItem, Attribute.TEST_NORMALA);
         verify(mockAttributeManager, times(1)).reset(any());
     }
 
@@ -116,7 +115,7 @@ public class EntityServiceTest {
     @Test
     public void testResetAttributeNone() {
         when(mockAttributeManagers.containsKey(any())).thenReturn(false);
-        entityService.reset(0L, Attribute.TEST_NORMALA);
+        entityService.reset(mockItem, Attribute.TEST_NORMALA);
         verify(mockAttributeManager, times(0)).reset(any());
     }
 
@@ -125,7 +124,7 @@ public class EntityServiceTest {
         when(mockAttributeManagers.containsKey(any())).thenReturn(true);
         when(mockAttributeManagers.get(any())).thenReturn(mockAttributeManager);
         when(mockAttributeManager.is(any())).thenReturn(true);
-        boolean check = entityService.is(0L, Attribute.TEST_NORMALA);
+        boolean check = entityService.is(mockItem, Attribute.TEST_NORMALA);
         assertTrue(check);
     }
 
@@ -134,14 +133,14 @@ public class EntityServiceTest {
         when(mockAttributeManagers.containsKey(any())).thenReturn(true);
         when(mockAttributeManagers.get(any())).thenReturn(mockAttributeManager);
         when(mockAttributeManager.is(any())).thenReturn(false);
-        boolean check = entityService.is(0L, Attribute.TEST_NORMALA);
+        boolean check = entityService.is(mockItem, Attribute.TEST_NORMALA);
         assertFalse(check);
     }
 
     @Test
     public void testIsAttributeNone() {
         when(mockAttributeManagers.containsKey(any())).thenReturn(false);
-        boolean check = entityService.is(0L, Attribute.TEST_NORMALA);
+        boolean check = entityService.is(mockItem, Attribute.TEST_NORMALA);
         assertFalse(check);
     }
 
@@ -150,7 +149,7 @@ public class EntityServiceTest {
         when(mockAttributeManagers.containsKey(any())).thenReturn(true);
         when(mockAttributeManagers.get(any())).thenReturn(mockAttributeManager);
         when(mockAttributeManager.getValue(any())).thenReturn(OptionalInt.of(5));
-        OptionalInt check = entityService.valueFor(0L, Attribute.TEST_NORMALA);
+        OptionalInt check = entityService.valueFor(mockItem, Attribute.TEST_NORMALA);
         assertTrue(check.getAsInt() == 5);
     }
 
@@ -159,14 +158,14 @@ public class EntityServiceTest {
         when(mockAttributeManagers.containsKey(any())).thenReturn(true);
         when(mockAttributeManagers.get(any())).thenReturn(mockAttributeManager);
         when(mockAttributeManager.getValue(any())).thenReturn(OptionalInt.empty());
-        OptionalInt check = entityService.valueFor(0L, Attribute.TEST_NORMALA);
+        OptionalInt check = entityService.valueFor(mockItem, Attribute.TEST_NORMALA);
         assertTrue(check.equals(OptionalInt.empty()));
     }
 
     @Test
     public void testValueAttributeNone() {
         when(mockAttributeManagers.containsKey(any())).thenReturn(false);
-        OptionalInt check = entityService.valueFor(0L, Attribute.TEST_NORMALA);
+        OptionalInt check = entityService.valueFor(mockItem, Attribute.TEST_NORMALA);
         assertTrue(check.equals(OptionalInt.empty()));
     }
 }
