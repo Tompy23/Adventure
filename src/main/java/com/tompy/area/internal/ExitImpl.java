@@ -1,34 +1,41 @@
 package com.tompy.area.internal;
 
-import com.tompy.response.internal.ResponseImpl;
 import com.tompy.area.api.Area;
 import com.tompy.area.api.Exit;
 import com.tompy.area.api.ExitBuilder;
-import com.tompy.area.api.ExitBuilderFactory;
 import com.tompy.directive.Direction;
 import com.tompy.response.api.Response;
-import com.tompy.response.api.ResponseBuilderFactory;
+import com.tompy.response.api.Responsive;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExitImpl implements Exit {
+public class ExitImpl extends Responsive implements Exit {
     private Direction direction;
     private Area area;
     private Exit parallel;
-    private ResponseBuilderFactory responseFactory = ResponseImpl.createBuilderFactory();
+    private boolean state;
 
-    private ExitImpl(Area area, Direction direction) {
+    private ExitImpl(Area area, Direction direction, boolean state) {
         this.area = area;
         this.direction = direction;
+        this.state = state;
+    }
+
+    public static ExitBuilder createBuilder() {
+        return new ExitBuilderImpl();
     }
 
     @Override
     public List<Response> passThru() {
         List<Response> returnValue = new ArrayList<>();
+        if (state) {
 
-        returnValue.add(responseFactory.createBuilder().text(direction.getDescription()).source("Exit").build());
-
+            returnValue.add(responseFactory.createBuilder().text(direction.getDescription()).source("Exit").build());
+        } else {
+            returnValue.add(responseFactory.createBuilder().text(
+                    String.format("Unable to move %s", direction.getDescription())).source("Exit").build());
+        }
         return returnValue;
     }
 
@@ -43,25 +50,38 @@ public class ExitImpl implements Exit {
     }
 
     @Override
+    public Exit getParallel() {
+        return parallel;
+    }
+
+    @Override
     public void setParallel(Exit exit) {
         parallel = exit;
     }
 
     @Override
-    public Exit getParallel() {
-        return parallel;
+    public void open() {
+        state = true;
     }
 
-    public static ExitBuilderFactory createBuilderFactory() { return ExitImpl::createBuilder; }
+    @Override
+    public void close() {
+        state = false;
+    }
 
-    public static ExitBuilder createBuilder() { return new ExitBuilderImpl(); }
+    @Override
+    public boolean isOpen() {
+        return state;
+    }
 
     public static class ExitBuilderImpl implements ExitBuilder {
         private Area area;
         private Direction direction;
 
         @Override
-        public Exit build() { return new ExitImpl(area, direction); }
+        public Exit build() {
+            return new ExitImpl(area, direction, true);
+        }
 
         @Override
         public ExitBuilder area(Area area) {

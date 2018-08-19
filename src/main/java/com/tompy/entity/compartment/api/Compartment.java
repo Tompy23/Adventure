@@ -1,14 +1,17 @@
 package com.tompy.entity.compartment.api;
 
 import com.tompy.entity.api.Entity;
+import com.tompy.entity.item.api.Item;
+
+import java.util.List;
 
 public interface Compartment extends Entity {
-    Entity fromIn();
+    Item getItem();
 
-    Entity fromOn();
+    List<Item> getAllItems();
 
-    Entity fromUnder();
+    void addItem(Item item);
 
-    Entity fromBehind();
+    void removeItem(Item item);
 
 }

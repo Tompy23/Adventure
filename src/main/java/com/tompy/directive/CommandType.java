@@ -1,5 +1,10 @@
 package com.tompy.directive;
 
+import com.tompy.response.api.Response;
+
+/**
+ * Command types for executions
+ */
 public enum CommandType {
     COMMAND_CLOSE("Close", "Closing"), // TODO
     COMMAND_EQUIP("Equip", "Equipping"), // TODO (Must be in inventory)
@@ -14,9 +19,17 @@ public enum CommandType {
     COMMAND_SEARCH_ON("Search on", "Searching on"), // TODO
     COMMAND_SEARCH_IN("Search in", "Searching in"), // TODO
     COMMAND_TAKE("Take", "Taking"), // TODO
+    COMMAND_UNEQUIP("Unequip", "Unequipping"), // TODO
     COMMAND_USE("Use", "Using"); // TODO
 
+    /**
+     * A printable name for the command
+     */
     private String description;
+
+    /**
+     * A participle version of the command to help with creating {@link Response}
+     */
     private String participle;
 
     CommandType(String description, String participle) {

@@ -17,9 +17,17 @@ public class CommandSearchImpl extends CommandBasicImpl implements Command {
     protected String secondaryTarget;
 
     protected CommandSearchImpl(CommandType type, String target, String secondaryTarget) {
-        this.type = type;
+        super(type);
         this.target = target;
         this.secondaryTarget = secondaryTarget;
+    }
+
+    public static CommandBuilderFactory createBuilderFactory() {
+        return CommandSearchImpl::createBuilder;
+    }
+
+    public static CommandBuilder createBuilder() {
+        return new CommandSearchImpl.CommandSearchBuilderImpl();
     }
 
     @Override
@@ -31,14 +39,7 @@ public class CommandSearchImpl extends CommandBasicImpl implements Command {
         return returnValue;
     }
 
-    public static CommandBuilderFactory createBuilderFactory() { return CommandSearchImpl::createBuilder; }
-
-    public static CommandBuilder createBuilder() {
-        return new CommandSearchImpl.CommandSearchBuilderImpl();
-    }
-
-    public static final class CommandSearchBuilderImpl implements CommandBuilder {
-        private CommandType type = null;
+    public static final class CommandSearchBuilderImpl extends CommandBuilderImpl {
         private String target = null;
         private String secondaryTarget = null;
 
@@ -61,25 +62,24 @@ public class CommandSearchImpl extends CommandBasicImpl implements Command {
         @Override
         public CommandBuilder parts(String[] parts) {
             if (parts.length > 1) {
-                if(AdventureUtils.isDirection(parts[1])) {
+                if (AdventureUtils.isDirection(parts[1])) {
                     target = parts[1];
                     type = CommandType.COMMAND_SEARCH_DIRECTION;
-                }
-                else if (parts.length > 3 && parts[2].equals("ON")) {
+                } else if (parts.length > 3 && (parts[2].equals("ON"))) {
                     target = parts[1];
                     secondaryTarget = parts[3];
                     type = CommandType.COMMAND_SEARCH_ON;
-                }
-                else if (parts.length > 2 && parts[1].equals("IN")) {
+                } else if (parts.length > 2 && parts[1].equals("IN")) {
                     target = parts[2];
                     type = CommandType.COMMAND_SEARCH_IN;
-                }
-                else {
+                } else if (parts.length > 2 && parts[1].equals("ON")) {
+                    target = parts[2];
+                    type = CommandType.COMMAND_SEARCH_ON;
+                } else {
                     target = parts[1];
                     type = CommandType.COMMAND_SEARCH_FEATURE;
                 }
-            }
-            else {
+            } else {
                 type = CommandType.COMMAND_SEARCH;
             }
             return this;

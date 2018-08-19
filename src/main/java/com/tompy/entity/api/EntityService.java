@@ -1,15 +1,18 @@
 package com.tompy.entity.api;
 
 import com.tompy.attribute.api.Attribute;
+import com.tompy.entity.compartment.api.Compartment;
 import com.tompy.entity.compartment.api.CompartmentBuilderFactory;
+import com.tompy.entity.item.api.Item;
 import com.tompy.entity.item.api.ItemBuilderFactory;
+import com.tompy.entity.feature.api.FeatureBuilderFactory;
 
 import java.util.OptionalInt;
 
 /**
  * A service combining entities with various functions and states via an Attribute Manager
  */
-public interface EntityService extends ItemBuilderFactory, CompartmentBuilderFactory {
+public interface EntityService extends ItemBuilderFactory, CompartmentBuilderFactory, FeatureBuilderFactory {
 
     /**
      * Add Attribute to an entity
@@ -63,4 +66,18 @@ public interface EntityService extends ItemBuilderFactory, CompartmentBuilderFac
      * @return - An Optional with the value or an empty Optional if no value for the Attribute
      */
     OptionalInt valueFor(Entity key, Attribute attribute);
+
+    Item getItemByDescription(String description);
+    Compartment getCompartmentByDescription(String description);
+
+    String getAttributeDescription(Entity key, Attribute attribute);
+
+
+    // This group of functions represents the ability to build an item's attribute with attribute
+    // specific responses based on whether the attribute exists or not.
+    void addAttributeDoesApply(Entity key, Attribute attribute, String text);
+    void addAttributeDoesNotApply(Entity key, Attribute attribute, String text);
+    String getAttributeApplicationText(Entity key, Attribute attribute);
+
+
 }

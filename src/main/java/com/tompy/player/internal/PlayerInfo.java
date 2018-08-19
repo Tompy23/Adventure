@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PlayerInfo {
+    public static final String VISITS = "VISITS";
+    public static final String SEARCHES = "SEARCHES";
     private Map<String, Integer> countMap = new HashMap<>();
 
     public int getCount(String key) {

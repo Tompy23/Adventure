@@ -7,4 +7,6 @@ public interface CompartmentBuilderFactory {
      * @return - the builder
      */
     CompartmentBuilder createCompartmentBuilder();
+
+    void addCompartment(Compartment compartment);
 }

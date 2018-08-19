@@ -1,12 +1,19 @@
 package com.tompy.player.api;
 
 import com.tompy.area.api.Area;
+import com.tompy.entity.compartment.api.Compartment;
+import com.tompy.entity.item.api.Item;
 
 public interface Player {
-    public Area getArea();
-    public void setArea(Area area);
-    public void visitArea(String areaName);
-    public int areaVisitCount(String roomName);
-    public void searchArea(String roomName);
-    public int areaSearchCount(String roomName);
+    String getName();
+    Area getArea();
+    void setArea(Area area);
+    void visitArea(String areaName);
+    int areaVisitCount(String roomName);
+    void searchArea(String roomName);
+    int areaSearchCount(String roomName);
+    boolean addItem(Item item);
+    boolean dropItem(Item item, Compartment compartment);
+    boolean equip(Item item);
+    boolean unequip(Item item);
 }

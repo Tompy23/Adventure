@@ -72,4 +72,8 @@ public interface AttributeManager {
      * @return - whether or not the attribute is present
      */
     boolean is(Attribute attribute);
+
+    void addApply(Attribute attribute, String text);
+    void addDesNotApply(Attribute attribute, String text);
+    String getApplication(Attribute attribute, boolean apply);
 }

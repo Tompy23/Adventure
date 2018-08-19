@@ -13,7 +13,17 @@ import java.util.List;
 
 public class CommandQuitImpl extends CommandBasicImpl implements Command {
 
-    private CommandQuitImpl() {}
+    private CommandQuitImpl() {
+        super(CommandType.COMMAND_QUIT);
+    }
+
+    public static CommandBuilderFactory createBuilderFactory() {
+        return CommandQuitImpl::createBuilder;
+    }
+
+    public static CommandBuilder createBuilder() {
+        return new CommandQuitImpl.CommandQuitBuilderImpl();
+    }
 
     @Override
     public List<Response> execute(Player player, Adventure adventure) {
@@ -26,15 +36,7 @@ public class CommandQuitImpl extends CommandBasicImpl implements Command {
         return returnValue;
     }
 
-    public static CommandBuilderFactory createBuilderFactory() {
-        return CommandQuitImpl::createBuilder;
-    }
-
-    public static CommandBuilder createBuilder() {
-        return new CommandQuitImpl.CommandQuitBuilderImpl();
-    }
-
-    public static final class CommandQuitBuilderImpl implements CommandBuilder {
+    public static final class CommandQuitBuilderImpl extends CommandBuilderImpl {
         @Override
         public Command build() {
             return new CommandQuitImpl();

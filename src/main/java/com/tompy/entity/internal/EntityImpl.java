@@ -1,5 +1,7 @@
-package com.tompy.entity.api;
+package com.tompy.entity.internal;
 
+import com.tompy.entity.api.Entity;
+import com.tompy.entity.api.EntityService;
 import com.tompy.response.api.Responsive;
 
 import java.util.List;
@@ -12,13 +14,16 @@ public abstract class EntityImpl extends Responsive implements Entity {
     protected final String name;
     protected final List<String> descriptors;
     protected final String description;
+    protected final EntityService entityService;
     private final Long key;
 
-    public EntityImpl(Long key, String name, List<String> descriptors, String description) {
+    public EntityImpl(Long key, String name, List<String> descriptors, String description, EntityService
+            entityService) {
         this.key = Objects.requireNonNull(key, "Entity Key cannot be null.");
         this.name = Objects.requireNonNull(name, "Name cannot be null.");
         this.descriptors = Objects.requireNonNull(descriptors, "Descriptors can be empty, but not null.");
         this.description = Objects.requireNonNull(description, "Description cannot be null.");
+        this.entityService = entityService;
     }
 
     @Override

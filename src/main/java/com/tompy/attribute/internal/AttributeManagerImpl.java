@@ -2,17 +2,20 @@ package com.tompy.attribute.internal;
 
 import com.tompy.adventure.api.Adventure;
 import com.tompy.attribute.api.Attribute;
+import com.tompy.attribute.api.AttributeInfo;
 import com.tompy.attribute.api.AttributeManager;
 
 import java.util.*;
 
 public class AttributeManagerImpl implements AttributeManager {
     private Map<Attribute, Integer> managed;
-    private Adventure adventure;
+    private Map<Attribute, String> doesApply;
+    private Map<Attribute, String> doesNotApply;
 
-    public AttributeManagerImpl(Adventure adventure) {
-        this.adventure = Objects.requireNonNull(adventure, "Adventure cannot be null.");
+    public AttributeManagerImpl() {
         managed = new HashMap<>();
+        doesApply = new HashMap<>();
+        doesNotApply = new HashMap<>();
     }
 
     @Override
@@ -77,5 +80,20 @@ public class AttributeManagerImpl implements AttributeManager {
     @Override
     public boolean is(Attribute attribute) {
         return managed.keySet().contains(attribute);
+    }
+
+    @Override
+    public void addApply(Attribute attribute, String text) {
+        this.doesApply.put(attribute, text);
+    }
+
+    @Override
+    public void addDesNotApply(Attribute attribute, String text) {
+        this.doesNotApply.put(attribute, text);
+    }
+
+    @Override
+    public String getApplication(Attribute attribute, boolean apply) {
+        return apply ? doesApply.get(attribute) : doesNotApply.get(attribute);
     }
 }

@@ -1,35 +1,43 @@
 package com.tompy.area.internal;
 
-import com.tompy.feature.api.Feature;
-import com.tompy.adventure.internal.AdventureUtils;
-import com.tompy.response.internal.ResponseImpl;
 import com.tompy.adventure.api.Adventure;
+import com.tompy.adventure.internal.AdventureUtils;
 import com.tompy.area.api.Area;
 import com.tompy.area.api.AreaBuilder;
-import com.tompy.area.api.AreaBuilderFactory;
 import com.tompy.area.api.Exit;
 import com.tompy.directive.Direction;
+import com.tompy.entity.api.EntityService;
+import com.tompy.entity.compartment.api.Compartment;
+import com.tompy.entity.feature.api.Feature;
 import com.tompy.player.api.Player;
 import com.tompy.response.api.Response;
-import com.tompy.response.api.ResponseBuilderFactory;
+import com.tompy.response.api.Responsive;
 
 import java.util.*;
 
-public class AreaImpl implements Area {
+public class AreaImpl extends Responsive implements Area {
     protected String name;
     protected String description;
     protected String searchDescription;
-    protected String[] searchDirectionDescription = new String[] {"", "", "", ""};
+    protected String[] searchDirectionDescription = new String[]{"", "", "", ""};
     protected List<Exit> exits = new ArrayList<>();
     protected List<Feature> features = new ArrayList<>();
     protected Map<Direction, List<Feature>> directionFeatures = new HashMap<>();
-    protected ResponseBuilderFactory responseFactory = ResponseImpl.createBuilderFactory();
+    protected Compartment compartment;
+    protected EntityService entityService;
 
-    protected AreaImpl(String name, String description, String searchDescription, String[] searchDirectionDesription) {
+    protected AreaImpl(String name, String description, String searchDescription, String[] searchDirectionDesription,
+                       Compartment compartment, EntityService entityService) {
         this.name = name;
         this.description = description;
         this.searchDescription = searchDescription;
         this.searchDirectionDescription = searchDirectionDesription;
+        this.compartment = compartment;
+        this.entityService = Objects.requireNonNull(entityService, "Entity Service cannot be null.");
+    }
+
+    public static AreaBuilder createBuilder(EntityService entityService) {
+        return new AreaImpl.AreaBuilderImpl(entityService);
     }
 
     @Override
@@ -50,7 +58,7 @@ public class AreaImpl implements Area {
     private void removeExistingExit(Direction direction) {
         Exit toBeRemoved = null;
         for (Exit e : exits) {
-            if(e.getDirection() == direction) {
+            if (e.getDirection() == direction) {
                 toBeRemoved = e;
                 break;
             }
@@ -81,8 +89,7 @@ public class AreaImpl implements Area {
                 directionFeatures.put(direction, new ArrayList<>());
             }
             directionFeatures.get(direction).add(feature);
-        }
-        else {
+        } else {
             features.add(feature);
         }
     }
@@ -143,11 +150,14 @@ public class AreaImpl implements Area {
     public List<Response> searchDirection(Direction direction, Player player, Adventure adventure) {
         List<Response> returnValue = new ArrayList<>();
 
-        if(searchDirectionDescription[direction.ordinal()] != null) {
-            returnValue.add(responseFactory.createBuilder().text(searchDirectionDescription[direction.ordinal()]).source(name).build());
-        }
-        else {
-            returnValue.add(responseFactory.createBuilder().text("Nothing special to the " + direction.getDescription()).source(name).build());
+        if (searchDirectionDescription[direction.ordinal()] != null) {
+            returnValue.add(
+                    responseFactory.createBuilder().text(searchDirectionDescription[direction.ordinal()]).source(
+                            name).build());
+        } else {
+            returnValue.add(
+                    responseFactory.createBuilder().text("Nothing special to the " + direction.getDescription()).source(
+                            name).build());
         }
 
         if (directionFeatures.containsKey(direction)) {
@@ -159,19 +169,17 @@ public class AreaImpl implements Area {
         return returnValue;
     }
 
-    public static AreaBuilderFactory createBuilderFactory() {
-        return AreaImpl::createBuilder;
-    }
-
-    public static AreaBuilder createBuilder() {
-        return new AreaImpl.AreaBuilderImpl();
-    }
-
     public static class AreaBuilderImpl implements AreaBuilder {
         protected String name;
         protected String description;
         protected String searchDescription;
         protected String[] searchDirectionDescription = new String[4];
+        protected Compartment compartment;
+        protected EntityService entityService;
+
+        public AreaBuilderImpl(EntityService entityService) {
+            this.entityService = Objects.requireNonNull(entityService, "Entity Service cannot be null.");
+        }
 
         @Override
         public AreaBuilder name(String name) {
@@ -198,16 +206,22 @@ public class AreaImpl implements Area {
         }
 
         @Override
+        public AreaBuilder compartment(Compartment compartment) {
+            this.compartment = compartment;
+            return this;
+        }
+
+        @Override
         public Area build() {
-            return new AreaImpl(name, description, searchDescription, searchDirectionDescription);
+            return new AreaImpl(name, description, searchDescription, searchDirectionDescription, compartment,
+                    entityService);
         }
 
         @Override
         public boolean equals(Object other) {
             if (null == other || !(other instanceof AreaImpl)) {
                 return false;
-            }
-            else {
+            } else {
                 AreaImpl otherArea = (AreaImpl) other;
                 return (this.name.equals(otherArea.name));
             }

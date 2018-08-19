@@ -18,15 +18,12 @@ import static org.junit.Assert.assertTrue;
 @RunWith(MockitoJUnitRunner.class)
 public class AttributeTest {
 
-    @Mock
-    private Adventure mockAdventure;
-
     private AttributeManagerFactoryImpl managerFactory;
     private AttributeManager manager;
 
     @Before
     public void init() {
-        managerFactory = new AttributeManagerFactoryImpl(mockAdventure);
+        managerFactory = new AttributeManagerFactoryImpl();
         manager = managerFactory.create();
     }
 

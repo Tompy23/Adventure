@@ -23,7 +23,7 @@ public class App
 
     public int go(String[] args) {
         UserInput ui = new UserInputTextImpl();
-        Player player = new PlayerImpl(null);
+        Player player = new PlayerImpl(ui.getResponse("Player name?"), null);
         Adventure adventure = new AdventureImpl();
         adventure.start(player);
         while (adventure.proceed()) {

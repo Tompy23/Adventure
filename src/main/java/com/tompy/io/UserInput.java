@@ -2,7 +2,11 @@ package com.tompy.io;
 
 import com.tompy.command.api.Command;
 
+import java.util.Map;
+
 public interface UserInput {
-    public Command getCommand();
-    public void quit();
+    Command getCommand();
+    Long getSelection(Map<Long, String> selection);
+    String getResponse(String question);
+    void quit();
 }

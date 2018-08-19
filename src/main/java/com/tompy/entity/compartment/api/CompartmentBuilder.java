@@ -11,12 +11,4 @@ public interface CompartmentBuilder extends Builder<Compartment> {
     CompartmentBuilder description(String description);
 
     CompartmentBuilder items(Item... items);
-
-    CompartmentBuilder on(Compartment... on);
-
-    CompartmentBuilder in(Compartment... in);
-
-    CompartmentBuilder under(Compartment... under);
-
-    CompartmentBuilder behind(Compartment... behind);
 }

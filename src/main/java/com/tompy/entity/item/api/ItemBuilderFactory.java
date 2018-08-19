@@ -11,4 +11,6 @@ public interface ItemBuilderFactory {
      * @return - the builder
      */
     ItemBuilder createItemBuilder();
+
+    void addItem(Item item);
 }

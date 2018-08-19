@@ -14,13 +14,7 @@ import java.util.List;
 public class CommandNullImpl extends CommandBasicImpl implements Command {
 
     private CommandNullImpl() {
-    }
-
-    @Override
-    public List<Response> execute(Player player, Adventure adventure) {
-        List<Response> returnValue = new ArrayList<>();
-        returnValue.add(responseFactory.createBuilder().text("I do not understand").source("Unknown").build());
-        return returnValue;
+        super(null);
     }
 
     public static CommandBuilderFactory createBuilderFactory() {
@@ -31,7 +25,14 @@ public class CommandNullImpl extends CommandBasicImpl implements Command {
         return new CommandNullImpl.CommandNullBuilderImpl();
     }
 
-    public static final class CommandNullBuilderImpl implements CommandBuilder {
+    @Override
+    public List<Response> execute(Player player, Adventure adventure) {
+        List<Response> returnValue = new ArrayList<>();
+        returnValue.add(responseFactory.createBuilder().text("I do not understand").source("Unknown").build());
+        return returnValue;
+    }
+
+    public static final class CommandNullBuilderImpl extends CommandBuilderImpl {
 
         @Override
         public CommandBuilder parts(String[] parts) {

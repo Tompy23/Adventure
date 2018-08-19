@@ -8,7 +8,7 @@ public class CommandParserBasicImpl implements CommandParser {
     @Override
     public Command parseCommand(String input) {
         Command returnValue = null;
-        String [] parts = input.split(" ");
+        String[] parts = input.split(" ");
 
         returnValue = factory.createCommand(parts);
 
