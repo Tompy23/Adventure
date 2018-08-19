@@ -2,23 +2,27 @@ package com.tompy.entity.feature.internal;
 
 import com.tompy.area.api.Exit;
 import com.tompy.directive.FeatureType;
-import com.tompy.entity.internal.EntityBuilderHelperImpl;
-import com.tompy.entity.internal.EntityImpl;
 import com.tompy.entity.api.EntityService;
 import com.tompy.entity.compartment.api.Compartment;
 import com.tompy.entity.feature.api.Feature;
 import com.tompy.entity.feature.api.FeatureBuilder;
+import com.tompy.entity.internal.EntityBuilderHelperImpl;
+import com.tompy.entity.internal.EntityImpl;
 import com.tompy.response.api.Response;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class FeatureBasicImpl extends EntityImpl implements Feature {
+    private final List<Response> notImplemented;
     protected Compartment compartment;
 
     protected FeatureBasicImpl(Long key, String name, List<String> descriptors, String description, EntityService
             entityService) {
         super(key, name, descriptors, description, entityService);
+        notImplemented = Collections.singletonList(
+                responseFactory.createBuilder().source(name).text("Not Implemented").build());
     }
 
     public static FeatureBuilder createBuilder(Long key, EntityService entityService) {
@@ -39,17 +43,17 @@ public class FeatureBasicImpl extends EntityImpl implements Feature {
 
     @Override
     public List<Response> open() {
-        return null;
+        return notImplemented;
     }
 
     @Override
     public List<Response> close() {
-        return null;
+        return notImplemented;
     }
 
     @Override
     public List<Response> drink() {
-        return null;
+        return notImplemented;
     }
 
     public static final class FeatureBuilderImpl extends EntityBuilderHelperImpl implements FeatureBuilder {

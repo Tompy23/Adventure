@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="12" failures="0" name="com.tompy.attribute.AttributeTest" time="0.001" errors="0" skipped="0">
+<testsuite tests="12" failures="0" name="com.tompy.attribute.AttributeTest" time="0.005" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/java-8-oracle/jre/lib/amd64"/>
@@ -63,14 +63,14 @@
     <property name="sun.cpu.isalist" value=""/>
   </properties>
   <testcase classname="com.tompy.attribute.AttributeTest" name="testStackable" time="0"/>
-  <testcase classname="com.tompy.attribute.AttributeTest" name="testResetNoValue" time="0"/>
-  <testcase classname="com.tompy.attribute.AttributeTest" name="testAdd" time="0.001"/>
-  <testcase classname="com.tompy.attribute.AttributeTest" name="testReset" time="0"/>
+  <testcase classname="com.tompy.attribute.AttributeTest" name="testResetNoValue" time="0.001"/>
+  <testcase classname="com.tompy.attribute.AttributeTest" name="testAdd" time="0"/>
+  <testcase classname="com.tompy.attribute.AttributeTest" name="testReset" time="0.001"/>
   <testcase classname="com.tompy.attribute.AttributeTest" name="testWrongGet" time="0"/>
   <testcase classname="com.tompy.attribute.AttributeTest" name="testIs" time="0"/>
   <testcase classname="com.tompy.attribute.AttributeTest" name="testStackableValue" time="0"/>
-  <testcase classname="com.tompy.attribute.AttributeTest" name="testAddDup" time="0"/>
-  <testcase classname="com.tompy.attribute.AttributeTest" name="testAddWithNewValue" time="0"/>
+  <testcase classname="com.tompy.attribute.AttributeTest" name="testAddDup" time="0.001"/>
+  <testcase classname="com.tompy.attribute.AttributeTest" name="testAddWithNewValue" time="0.002"/>
   <testcase classname="com.tompy.attribute.AttributeTest" name="testRemoveHasValue" time="0"/>
   <testcase classname="com.tompy.attribute.AttributeTest" name="testGetAllAndClear" time="0"/>
   <testcase classname="com.tompy.attribute.AttributeTest" name="testAddWithValue" time="0"/>
