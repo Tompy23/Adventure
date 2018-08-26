@@ -1,14 +1,11 @@
 package com.tompy.player.internal;
 
-import com.tompy.area.api.Area;
+import com.tompy.entity.area.api.Area;
 import com.tompy.entity.compartment.api.Compartment;
 import com.tompy.entity.item.api.Item;
 import com.tompy.player.api.Player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.tompy.player.internal.PlayerInfo.SEARCHES;
 import static com.tompy.player.internal.PlayerInfo.VISITS;
@@ -113,5 +110,10 @@ public class PlayerImpl implements Player {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<Item> getInventory() {
+        return Collections.unmodifiableList(inventory);
     }
 }

@@ -1,6 +1,7 @@
-package com.tompy.area.api;
+package com.tompy.exit.api;
 
 import com.tompy.directive.Direction;
+import com.tompy.entity.area.api.Area;
 import com.tompy.player.api.Player;
 import com.tompy.response.api.Response;
 

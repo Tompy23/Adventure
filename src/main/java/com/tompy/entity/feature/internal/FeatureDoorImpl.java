@@ -1,6 +1,6 @@
 package com.tompy.entity.feature.internal;
 
-import com.tompy.area.api.Exit;
+import com.tompy.exit.api.Exit;
 import com.tompy.entity.api.EntityService;
 import com.tompy.response.api.Response;
 
@@ -14,7 +14,8 @@ import java.util.List;
  */
 public class FeatureDoorImpl extends FeatureBasicImpl {
     private Exit exit;
-    public FeatureDoorImpl(Long key, String name, List<String> descriptors, String description, EntityService
+
+    protected FeatureDoorImpl(Long key, String name, List<String> descriptors, String description, EntityService
             entityService, Exit exit) {
         super(key, name, descriptors, description, entityService);
         this.exit = exit;

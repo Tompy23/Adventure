@@ -2,8 +2,9 @@ package com.tompy.command.internal;
 
 import com.tompy.adventure.api.Adventure;
 import com.tompy.adventure.internal.AdventureUtils;
-import com.tompy.area.api.Area;
-import com.tompy.area.api.Exit;
+import com.tompy.entity.api.EntityService;
+import com.tompy.entity.area.api.Area;
+import com.tompy.exit.api.Exit;
 import com.tompy.command.api.Command;
 import com.tompy.command.api.CommandBuilder;
 import com.tompy.command.api.CommandBuilderFactory;
@@ -18,8 +19,8 @@ import java.util.List;
 public class CommandMoveImpl extends CommandBasicImpl implements Command {
     protected Direction direction = Direction.DIRECTION_NORTH;
 
-    private CommandMoveImpl(CommandType type, String dir) {
-        super(type != null ? type : CommandType.COMMAND_MOVE);
+    private CommandMoveImpl(CommandType type, String dir, EntityService entityService) {
+        super(type != null ? type : CommandType.COMMAND_MOVE, entityService);
         if (AdventureUtils.isDirection(dir)) {
             direction = AdventureUtils.getDirection(dir);
         } else {
@@ -75,9 +76,8 @@ public class CommandMoveImpl extends CommandBasicImpl implements Command {
             return this;
         }
 
-
         public Command build() {
-            return new CommandMoveImpl(type, dir);
+            return new CommandMoveImpl(type, dir, entityService);
         }
     }
 }

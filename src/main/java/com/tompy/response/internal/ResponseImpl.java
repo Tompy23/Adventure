@@ -22,8 +22,8 @@ public class ResponseImpl implements Response, Comparable<Response> {
     }
 
     @Override
-    public void render() {
-        System.out.println("[" + source + "]" + text);
+    public String render() {
+        return "[" + source + "]" + text;
     }
 
     public static ResponseBuilderFactory createBuilderFactory() { return ResponseImpl::createBuilder; }

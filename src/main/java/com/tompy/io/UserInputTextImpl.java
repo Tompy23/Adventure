@@ -3,18 +3,23 @@ package com.tompy.io;
 import com.tompy.command.CommandFactory;
 import com.tompy.command.CommandFactoryImpl;
 import com.tompy.command.api.Command;
+import com.tompy.entity.api.EntityService;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Map;
+import java.util.Objects;
 
 public class UserInputTextImpl implements UserInput {
-    private CommandFactory factory = new CommandFactoryImpl();
+    private CommandFactory factory;
     private BufferedReader br = null;
+    private PrintStream outStream;
+    private InputStream inStream;
 
-    public UserInputTextImpl() {
-        br = new BufferedReader(new InputStreamReader(System.in));
+    public UserInputTextImpl(InputStream inStream, PrintStream outStream, EntityService entityService) {
+        this.inStream = Objects.requireNonNull(inStream, "In Stream cannot be null.");
+        this.outStream = Objects.requireNonNull(outStream, "Out Stream cannot be null.");
+        br = new BufferedReader(new InputStreamReader(inStream));
+        factory = new CommandFactoryImpl(entityService);
     }
 
     @Override
@@ -30,7 +35,7 @@ public class UserInputTextImpl implements UserInput {
     public Command getCommand() {
         Command returnValue = null;
         try {
-            System.out.print(">>> ");
+            outStream.print(">>> ");
             String input = br.readLine();
             returnValue = factory.createCommand(input.split(" "));
         } catch (IOException ioe) {
@@ -45,18 +50,18 @@ public class UserInputTextImpl implements UserInput {
         Long[] selectionList = setUpSelection(options);
         displaySelection(options, selectionList);
         try {
-            System.out.print("=== ");
+            outStream.print("=== ");
             String input = br.readLine();
             int choice = Integer.parseInt(input);
             if (choice < 1 || choice > options.size()) {
                 // TODO this is a bad choice.  Is this ok?
-                System.out.println("Not a valid choice.  Try again.");
+                outStream.println("Not a valid choice.  Try again.");
                 return getSelection(options);
             } else {
                 return selectionList[choice - 1];
             }
         } catch (IOException | NumberFormatException e) {
-            System.out.println("Not a valid choice.  Try again.");
+            outStream.println("Not a valid choice.  Try again.");
             return getSelection(options);
         }
     }
@@ -65,11 +70,11 @@ public class UserInputTextImpl implements UserInput {
     public String getResponse(String question) {
         String returnValue = "";
         try {
-            System.out.print(question);
-            System.out.print("??? ");
+            outStream.println(question);
+            outStream.print("??? ");
             returnValue = br.readLine();
         } catch(IOException ioe) {
-            System.out.println("ERROR");
+            outStream.println("ERROR");
             ioe.printStackTrace();
         }
         return returnValue;
@@ -88,7 +93,7 @@ public class UserInputTextImpl implements UserInput {
     private void displaySelection(Map<Long, String> options, Long[] selections) {
         Integer index = 1;
         for (Long selection : selections) {
-            System.out.println(index++ + ". " + options.get(selection));
+            outStream.println(index++ + ". " + options.get(selection));
         }
     }
 }

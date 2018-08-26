@@ -1,6 +1,7 @@
 package com.tompy.entity.feature.internal;
 
-import com.tompy.area.api.Exit;
+import com.tompy.entity.compartment.internal.CompartmentImpl;
+import com.tompy.exit.api.Exit;
 import com.tompy.directive.FeatureType;
 import com.tompy.entity.api.EntityService;
 import com.tompy.entity.compartment.api.Compartment;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class FeatureBasicImpl extends EntityImpl implements Feature {
+public class FeatureBasicImpl extends CompartmentImpl implements Feature {
     private final List<Response> notImplemented;
     protected Compartment compartment;
 
@@ -58,7 +59,6 @@ public class FeatureBasicImpl extends EntityImpl implements Feature {
 
     public static final class FeatureBuilderImpl extends EntityBuilderHelperImpl implements FeatureBuilder {
         private FeatureType type;
-        private Compartment compartment;
         private Exit exit;
 
         public FeatureBuilderImpl(Long key, EntityService entityService) {
@@ -90,12 +90,6 @@ public class FeatureBasicImpl extends EntityImpl implements Feature {
         }
 
         @Override
-        public FeatureBuilder compartment(Compartment compartment) {
-            this.compartment = compartment;
-            return this;
-        }
-
-        @Override
         public FeatureBuilder exit(Exit exit) {
             this.exit = exit;
             return this;
@@ -112,15 +106,17 @@ public class FeatureBasicImpl extends EntityImpl implements Feature {
                     }
                     return chest;
                 case FEATURE_DOOR:
-                default:
-                    FeatureBasicImpl feature = new FeatureDoorImpl(key, name, this.buildDescriptors(), description,
+                    FeatureDoorImpl door = new FeatureDoorImpl(key, name, this.buildDescriptors(), description,
                             entityService, exit);
+                    return door;
+                default:
+                    FeatureBasicImpl feature = new FeatureBasicImpl(key, name, this.buildDescriptors(), description,
+                            entityService);
                     if (entityService != null) {
                         entityService.addFeature(feature);
                     }
-
+                    return feature;
             }
-            return null;
         }
     }
 }

@@ -5,11 +5,14 @@ import com.tompy.command.api.Command;
 import com.tompy.command.api.CommandBuilder;
 import com.tompy.command.api.CommandBuilderFactory;
 import com.tompy.command.internal.*;
+import com.tompy.entity.api.EntityService;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class CommandFactoryImpl implements CommandFactory {
+    private static final String COMMAND_INVENTORY = "INVENTORY";
     private static final String COMMAND_NULL = "NULL";
     private static final String COMMAND_MOVE = "MOVE";
     private static final String COMMAND_QUIT = "QUIT";
@@ -17,10 +20,12 @@ public class CommandFactoryImpl implements CommandFactory {
     private static final String COMMAND_SEARCH = "SEARCH";
     private static final String COMMAND_TAKE = "TAKE";
     private static final String COMMAND_USE = "USE";
+    private final EntityService entityService;
 
     private Map<String, CommandBuilderFactory> factoryMap = new HashMap<>();
 
-    public CommandFactoryImpl() {
+    public CommandFactoryImpl(EntityService entityService) {
+        factoryMap.put(COMMAND_INVENTORY, CommandInventoryImpl.createBuilderFactory());
         factoryMap.put(COMMAND_NULL, CommandNullImpl.createBuilderFactory());
         factoryMap.put(COMMAND_MOVE, CommandMoveImpl.createBuilderFactory());
         factoryMap.put(COMMAND_QUIT, CommandQuitImpl.createBuilderFactory());
@@ -28,6 +33,7 @@ public class CommandFactoryImpl implements CommandFactory {
         factoryMap.put(COMMAND_SEARCH, CommandSearchImpl.createBuilderFactory());
         factoryMap.put(COMMAND_TAKE, CommandTakeImpl.createBuilderFactory());
         factoryMap.put(COMMAND_USE, CommandUseImpl.createBuilderFactory());
+        this.entityService = Objects.requireNonNull(entityService, "Entity Service cannot be null.");
     }
 
     @Override
@@ -37,12 +43,10 @@ public class CommandFactoryImpl implements CommandFactory {
             commandInputs[i] = inputs[i].toUpperCase();
         }
 
-        CommandBuilder command;
-        CommandBuilderFactory cbf = factoryMap.get(commandInputs[0]);
-        if (null != cbf) {
-            command = cbf.createBuilder();
-            if (command != null) {
-                return command.parts(commandInputs).type(AdventureUtils.getCommandType(commandInputs[0])).build();
+        CommandBuilder cb = factoryMap.get(commandInputs[0]).createBuilder();
+        if (null != cb) {
+            if (cb != null) {
+                return cb.parts(commandInputs).type(AdventureUtils.getCommandType(commandInputs[0])).build();
             }
         }
 

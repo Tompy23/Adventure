@@ -5,6 +5,8 @@ import com.tompy.command.api.Command;
 import com.tompy.command.api.CommandBuilder;
 import com.tompy.command.api.CommandBuilderFactory;
 import com.tompy.directive.CommandType;
+import com.tompy.entity.EntityUtil;
+import com.tompy.entity.api.Entity;
 import com.tompy.entity.api.EntityService;
 import com.tompy.entity.item.api.Item;
 import com.tompy.player.api.Player;
@@ -18,7 +20,7 @@ public class CommandTakeImpl extends CommandBasicImpl implements Command {
     private final String target;
 
     protected CommandTakeImpl(CommandType type, EntityService entityService, String target) {
-        super(type, entityService);
+        super(type != null ? type : CommandType.COMMAND_TAKE, entityService);
         this.target = Objects.requireNonNull(target, "Target cannot be null.");
     }
 
@@ -33,42 +35,33 @@ public class CommandTakeImpl extends CommandBasicImpl implements Command {
     @Override
     public List<Response> execute(Player player, Adventure adventure) {
         List<Response> returnValue = new ArrayList<>();
-        //TODO Convert target to an entity and then place in player's inventory.
-        // This means that "take" does not equip and does not change the currently equipped item.
-        // I like this because it is nice and simple.
-        Item object = null;
-        // Convert target to object
-        if (player.addItem(object)) {
+        List<Item> items = player.getArea().getAllItems();
+        Long objectKey = EntityUtil.findEntityByDescription(items, target, adventure.getUI());
+        Item object = items.stream().filter((i) -> i.getKey().equals(objectKey)).findFirst().get();
+        if (object != null && player.addItem(object)) {
+            player.getArea().removeItem(object);
             returnValue.add(responseFactory.createBuilder().source("CommandTake").text(
-                    String.format("%s is now in %s's inventory", target, player.getName())).build());
+                    String.format("%s is now in %s's inventory", object.getName(), player.getName())).build());
         } else {
             returnValue.add(responseFactory.createBuilder().source("CommandTake").text(
                     String.format("%s is not in %s's inventory", target, player.getName())).build());
         }
-        return null;
+
+        return returnValue;
     }
 
-    public static final class CommandTakeBuilderImpl implements CommandBuilder {
+    public static final class CommandTakeBuilderImpl extends CommandBuilderImpl {
         private String target;
 
         @Override
         public Command build() {
-            return null;
+            return new CommandTakeImpl(type, entityService, target);
         }
 
         @Override
         public CommandBuilder parts(String[] parts) {
-            return null;
-        }
-
-        @Override
-        public CommandBuilder type(CommandType type) {
-            return null;
-        }
-
-        @Override
-        public CommandBuilder entityService(EntityService entityService) {
-            return null;
+            this.target = parts[1];
+            return this;
         }
     }
 }

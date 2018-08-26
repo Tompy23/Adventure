@@ -2,6 +2,9 @@ package com.tompy.entity;
 
 import com.tompy.entity.api.Entity;
 import com.tompy.entity.api.EntityFacade;
+import com.tompy.entity.api.EntityService;
+import com.tompy.entity.area.api.Area;
+import com.tompy.entity.item.api.Item;
 import com.tompy.io.UserInput;
 
 import java.util.*;
@@ -14,29 +17,32 @@ public class EntityUtil {
     /**
      * Find an entity from a list based on the description.  If necessary the user may have to select from
      * the best choices.
-     * @param entities - The list of entities from which to choose
+     * @param items - The list of items from which to choose
      * @param description - The description supplied by the user.
      * @param io - In case the user must supply a response
-     * @return - The Entity Key value of the selected entity.
+     * @return - The Item selected.
      */
-    public static Long findEntityByDescription(List<Entity> entities, String description, UserInput io) {
-        Map<Long, Integer> scores = computeScores(entities, description);
+    public static Long findEntityByDescription(List<? extends Entity> items, String description, UserInput io) {
+        Map<Long, Integer> scores = computeScores(items, description);
         List<Long> finalists = computeFinalists(scores);
+        Long itemKey;
 
         if (finalists.size() == 0) {
             return null;
         } else if (finalists.size() == 1) {
-            return finalists.get(0);
+            itemKey = finalists.get(0);
         } else {
-            return makeChoice(entities, finalists, io);
+            itemKey = makeChoice(items, finalists, io);
         }
+
+        return itemKey;
     }
 
-    private static Map<Long, Integer> computeScores(List<Entity> entities, String description) {
+    private static Map<Long, Integer> computeScores(List<? extends Entity> items, String description) {
         Map<Long, Integer> scores = new HashMap<>();
-        entities.stream().forEach(e -> scores.put(e.getKey(), 0));
-        for (Entity entity : entities) {
-            if (description.contains(entity.getShortName())) {
+        items.stream().forEach(e -> scores.put(e.getKey(), 0));
+        for (Entity entity : items) {
+            if (description.toUpperCase().contains(entity.getShortName().toUpperCase())) {
                 scores.put(entity.getKey(), scores.get(entity.getKey()) + 1);
             }
         }
@@ -55,7 +61,7 @@ public class EntityUtil {
         return finalists;
     }
 
-    private static Long makeChoice(List<Entity> entities, List<Long> finalists, UserInput io) {
+    private static Long makeChoice(List<? extends Entity> entities, List<Long> finalists, UserInput io) {
         Map<Long, String> choices = new HashMap<>();
         for (Long finalist : finalists) {
             for (Entity entity : entities) {
@@ -67,6 +73,10 @@ public class EntityUtil {
 
 
         return io.getSelection(choices);
+    }
+
+    public static Entity findAreaByName(List<Entity> entities, String name) {
+        return entities.stream().filter(name::equals).findFirst().get();
     }
 
     public static void add(EntityFacade facade) {

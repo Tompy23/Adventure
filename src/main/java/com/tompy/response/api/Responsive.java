@@ -4,5 +4,5 @@ import com.tompy.response.api.ResponseBuilderFactory;
 import com.tompy.response.internal.ResponseImpl;
 
 public abstract class Responsive {
-    protected ResponseBuilderFactory responseFactory = ResponseImpl.createBuilderFactory();
+    protected final ResponseBuilderFactory responseFactory = ResponseImpl.createBuilderFactory();
 }

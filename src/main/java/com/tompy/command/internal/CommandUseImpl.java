@@ -5,8 +5,10 @@ import com.tompy.command.api.Command;
 import com.tompy.command.api.CommandBuilder;
 import com.tompy.command.api.CommandBuilderFactory;
 import com.tompy.directive.CommandType;
+import com.tompy.entity.EntityUtil;
 import com.tompy.entity.api.Entity;
 import com.tompy.entity.api.EntityService;
+import com.tompy.entity.feature.api.Feature;
 import com.tompy.entity.item.api.Item;
 import com.tompy.player.api.Player;
 import com.tompy.response.api.Response;
@@ -36,8 +38,14 @@ public class CommandUseImpl extends CommandBasicImpl implements Command {
     @Override
     public List<Response> execute(Player player, Adventure adventure) {
         // Determine the Entities subject/target represent
-        Item source = null;
-        Entity object = null;
+
+        List<Item> items = player.getArea().getAllItems();
+        Long itemKey = EntityUtil.findEntityByDescription(items, target, adventure.getUI());
+        Item source = items.stream().filter((i) -> i.getKey().equals(itemKey)).findFirst().get();
+
+        List<Feature> entities = player.getArea().getAllFeatures();
+        Long featureKey = EntityUtil.findEntityByDescription(items, target, adventure.getUI());
+        Entity object = items.stream().filter((i) -> i.getKey().equals(featureKey)).findFirst().get();
 
         // TODO Determine the source/object from the subject/target
         // Source must be active for player

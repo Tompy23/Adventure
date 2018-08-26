@@ -1,18 +1,20 @@
-package com.tompy.area.api;
+package com.tompy.entity.area.api;
 
 import com.tompy.adventure.api.Adventure;
 import com.tompy.command.api.Command;
 import com.tompy.directive.Direction;
+import com.tompy.entity.compartment.api.Compartment;
 import com.tompy.entity.feature.api.Feature;
+import com.tompy.exit.api.Exit;
 import com.tompy.player.api.Player;
 import com.tompy.response.api.Response;
 
 import java.util.List;
 
 /**
- * Represents a point of movement connected by an {@link Exit).  A {@link Player} is always in a single Area
+ * Represents a point of movement connected by an {@link Exit ).  A {@link Player} is always in a single Area
  */
-public interface Area {
+public interface Area extends Compartment {
 
     /**
      * Add an exit to the Area
@@ -74,4 +76,10 @@ public interface Area {
      * @return - A list of {@link Response} to display
      */
     List<Response> searchDirection(Direction direction, Player player, Adventure adventure);
+
+    /**
+     * Return all features in the room
+     * @return - A list of {@link Feature} in room
+     */
+    List<Feature> getAllFeatures();
 }

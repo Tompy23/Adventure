@@ -1,8 +1,8 @@
-package com.tompy.area.internal;
+package com.tompy.exit.internal;
 
-import com.tompy.area.api.Area;
-import com.tompy.area.api.Exit;
-import com.tompy.area.api.ExitBuilder;
+import com.tompy.entity.area.api.Area;
+import com.tompy.exit.api.Exit;
+import com.tompy.exit.api.ExitBuilder;
 import com.tompy.directive.Direction;
 import com.tompy.response.api.Response;
 import com.tompy.response.api.Responsive;

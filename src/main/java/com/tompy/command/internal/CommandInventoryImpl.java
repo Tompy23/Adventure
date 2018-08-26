@@ -12,36 +12,35 @@ import com.tompy.response.api.Response;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommandQuitImpl extends CommandBasicImpl implements Command {
+public class CommandInventoryImpl extends CommandBasicImpl implements Command {
 
-    private CommandQuitImpl(EntityService entityService) {
-        super(CommandType.COMMAND_QUIT, entityService);
+    private CommandInventoryImpl(CommandType type, EntityService entityService) {
+        super(type, entityService);
     }
 
     public static CommandBuilderFactory createBuilderFactory() {
-        return CommandQuitImpl::createBuilder;
+        return CommandInventoryImpl::createBuilder;
     }
 
     public static CommandBuilder createBuilder() {
-        return new CommandQuitImpl.CommandQuitBuilderImpl();
+        return new CommandInventoryBuilderImpl();
     }
 
     @Override
     public List<Response> execute(Player player, Adventure adventure) {
         List<Response> returnValue = new ArrayList<>();
 
-        returnValue.add(responseFactory.createBuilder().source(type.getDescription()).text("Goodbye").build());
-
-        adventure.stop(player);
+        if (!player.getInventory().isEmpty()) {
+            player.getInventory().stream().forEach((i) -> returnValue.add(
+                    responseFactory.createBuilder().source(player.getName()).text(i.getName()).build()));
+        } else {
+            returnValue.add(responseFactory.createBuilder().source(player.getName()).text("Inventory Empty").build());
+        }
 
         return returnValue;
     }
 
-    public static final class CommandQuitBuilderImpl extends CommandBuilderImpl {
-        @Override
-        public Command build() {
-            return new CommandQuitImpl(entityService);
-        }
+    public static final class CommandInventoryBuilderImpl extends CommandBuilderImpl {
 
         @Override
         public CommandBuilder parts(String[] parts) {
@@ -49,8 +48,8 @@ public class CommandQuitImpl extends CommandBasicImpl implements Command {
         }
 
         @Override
-        public CommandBuilder type(CommandType type) {
-            return this;
+        public Command build() {
+            return new CommandInventoryImpl(type, entityService);
         }
     }
 }

@@ -1,8 +1,7 @@
-package com.tompy.area.api;
+package com.tompy.entity.area.api;
 
 import com.tompy.common.Builder;
 import com.tompy.directive.Direction;
-import com.tompy.entity.compartment.api.Compartment;
 
 public interface AreaBuilder extends Builder<Area> {
     AreaBuilder name(String name);
@@ -13,5 +12,7 @@ public interface AreaBuilder extends Builder<Area> {
 
     AreaBuilder searchDirectionDescription(Direction direction, String searchDirectionDescription);
 
-    AreaBuilder compartment(Compartment compartment);
+    AreaBuilder compartmentName(String compartmentName);
+
+    AreaBuilder compartmentDescription(String compartmentDescription);
 }

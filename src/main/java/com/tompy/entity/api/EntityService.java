@@ -1,8 +1,11 @@
 package com.tompy.entity.api;
 
 import com.tompy.attribute.api.Attribute;
+import com.tompy.entity.area.api.Area;
+import com.tompy.entity.area.api.AreaBuilderFactory;
 import com.tompy.entity.compartment.api.Compartment;
 import com.tompy.entity.compartment.api.CompartmentBuilderFactory;
+import com.tompy.entity.feature.api.Feature;
 import com.tompy.entity.item.api.Item;
 import com.tompy.entity.item.api.ItemBuilderFactory;
 import com.tompy.entity.feature.api.FeatureBuilderFactory;
@@ -12,7 +15,7 @@ import java.util.OptionalInt;
 /**
  * A service combining entities with various functions and states via an Attribute Manager
  */
-public interface EntityService extends ItemBuilderFactory, CompartmentBuilderFactory, FeatureBuilderFactory {
+public interface EntityService extends ItemBuilderFactory, FeatureBuilderFactory, AreaBuilderFactory {
 
     /**
      * Add Attribute to an entity
@@ -68,7 +71,8 @@ public interface EntityService extends ItemBuilderFactory, CompartmentBuilderFac
     OptionalInt valueFor(Entity key, Attribute attribute);
 
     Item getItemByDescription(String description);
-    Compartment getCompartmentByDescription(String description);
+    Feature getFeatureByDescription(String description);
+    Area getAreaByName(String name);
 
     String getAttributeDescription(Entity key, Attribute attribute);
 

@@ -5,15 +5,16 @@ import com.tompy.attribute.api.AttributeManager;
 import com.tompy.attribute.api.AttributeManagerFactory;
 import com.tompy.entity.api.Entity;
 import com.tompy.entity.api.EntityService;
+import com.tompy.entity.area.api.Area;
+import com.tompy.entity.area.api.AreaBuilder;
+import com.tompy.entity.area.internal.AreaImpl;
 import com.tompy.entity.compartment.api.Compartment;
-import com.tompy.entity.compartment.api.CompartmentBuilder;
-import com.tompy.entity.compartment.internal.CompartmentImpl;
-import com.tompy.entity.item.api.Item;
-import com.tompy.entity.item.api.ItemBuilder;
-import com.tompy.entity.item.interna.ItemImpl;
 import com.tompy.entity.feature.api.Feature;
 import com.tompy.entity.feature.api.FeatureBuilder;
 import com.tompy.entity.feature.internal.FeatureBasicImpl;
+import com.tompy.entity.item.api.Item;
+import com.tompy.entity.item.api.ItemBuilder;
+import com.tompy.entity.item.interna.ItemImpl;
 
 import java.util.*;
 
@@ -23,6 +24,7 @@ public class EntityServiceImpl implements EntityService {
     private List<Item> items;
     private List<Compartment> compartments;
     private List<Feature> features;
+    private List<Area> areas;
     private Long entityKey;
 
     public EntityServiceImpl(AttributeManagerFactory attributeManagerFactory) {
@@ -32,6 +34,7 @@ public class EntityServiceImpl implements EntityService {
         items = new ArrayList<>();
         compartments = new ArrayList<>();
         features = new ArrayList<>();
+        areas = new ArrayList<>();
         entityKey = 0L;
     }
 
@@ -46,20 +49,6 @@ public class EntityServiceImpl implements EntityService {
     public void addItem(Item item) {
         if (item != null) {
             items.add(item);
-        }
-    }
-
-    @Override
-    public CompartmentBuilder createCompartmentBuilder() {
-        entityKey++;
-        attributeManagers.put(entityKey, attributeManagerFactory.create());
-        return CompartmentImpl.createBuilder(entityKey, this);
-    }
-
-    @Override
-    public void addCompartment(Compartment compartment) {
-        if (compartment != null) {
-            compartments.add(compartment);
         }
     }
 
@@ -105,8 +94,13 @@ public class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public Compartment getCompartmentByDescription(String description) {
+    public Feature getFeatureByDescription(String description) {
         return null;
+    }
+
+    @Override
+    public Area getAreaByName(String name) {
+        return areas.stream().filter(a->name.equals(a.getName())).findAny().get();
     }
 
     @Override
@@ -144,6 +138,20 @@ public class EntityServiceImpl implements EntityService {
     public void addFeature(Feature feature) {
         if (feature != null) {
             features.add(feature);
+        }
+    }
+
+    @Override
+    public AreaBuilder createAreabuilder() {
+        entityKey++;
+        attributeManagers.put(entityKey, attributeManagerFactory.create());
+        return AreaImpl.createBuilder(entityKey, this);
+    }
+
+    @Override
+    public void addArea(Area area) {
+        if (area != null) {
+            areas.add(area);
         }
     }
 }

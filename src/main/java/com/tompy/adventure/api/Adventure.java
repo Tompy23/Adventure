@@ -1,12 +1,19 @@
 package com.tompy.adventure.api;
 
-import com.tompy.area.api.Area;
+import com.tompy.entity.area.api.Area;
+import com.tompy.io.UserInput;
 import com.tompy.player.api.Player;
 
 /**
  * Defines functions which interact with the state of the adventure.
  */
 public interface Adventure {
+
+    /**
+     * Create the adventure elements
+     */
+    void create();
+
     /**
      * Begin an adventure for a player
      * @param player - The player who is joining the adventure
@@ -20,15 +27,14 @@ public interface Adventure {
     void stop(Player player);
 
     /**
-     * Retrieve an Area of the adventure based on the key name of the area
-     * @param key - The name of the area
-     * @return - A reference to the area
-     */
-    Area getArea(String key);
-
-    /**
      * Determines if the Adventure is in a state which is ready for user input.
      * @return - True for when the adventure is ready for user input.
      */
     boolean proceed();
+
+    /**
+     * Expose the user input
+     * @return - The user input implementation
+     */
+    UserInput getUI();
 }

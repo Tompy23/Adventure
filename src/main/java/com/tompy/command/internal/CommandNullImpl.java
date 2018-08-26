@@ -5,6 +5,7 @@ import com.tompy.command.api.Command;
 import com.tompy.command.api.CommandBuilder;
 import com.tompy.command.api.CommandBuilderFactory;
 import com.tompy.directive.CommandType;
+import com.tompy.entity.api.EntityService;
 import com.tompy.player.api.Player;
 import com.tompy.response.api.Response;
 
@@ -13,8 +14,8 @@ import java.util.List;
 
 public class CommandNullImpl extends CommandBasicImpl implements Command {
 
-    private CommandNullImpl() {
-        super(null);
+    private CommandNullImpl(EntityService entityService) {
+        super(CommandType.COMMAND_NULL, entityService);
     }
 
     public static CommandBuilderFactory createBuilderFactory() {
@@ -46,7 +47,7 @@ public class CommandNullImpl extends CommandBasicImpl implements Command {
 
         @Override
         public Command build() {
-            return new CommandNullImpl();
+            return new CommandNullImpl(entityService);
         }
     }
 }

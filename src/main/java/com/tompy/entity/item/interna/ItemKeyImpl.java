@@ -21,8 +21,7 @@ public class ItemKeyImpl extends ItemImpl {
     @Override
     public List<Response> use() {
         List<Response> returnValue = new ArrayList<>();
-        // TODO placeholder so Item isn't so lonely
-        // From this it appears Item may become abstract and its use(), etc. will be overloaded.
+
         returnValue.add(this.responseFactory.createBuilder().source(getSource()).text(
                 String.format("Using %s on %s", getName(), target.getEntity().getName())).build());
 

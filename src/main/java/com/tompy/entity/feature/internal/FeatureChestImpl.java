@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class FeatureChestImpl extends FeatureBasicImpl {
 
-    public FeatureChestImpl(Long key, String name, List<String> descriptors, String description, EntityService
+    protected FeatureChestImpl(Long key, String name, List<String> descriptors, String description, EntityService
             entityService) {
         super(key, name, descriptors, description, entityService);
     }

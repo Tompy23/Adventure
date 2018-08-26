@@ -45,7 +45,7 @@ public class EntityFacadeImpl implements EntityFacade {
 
         @Override
         public EntityFacade build() {
-            return null;
+            return new EntityFacadeImpl(entity, attribute, entityService);
         }
 
         @Override

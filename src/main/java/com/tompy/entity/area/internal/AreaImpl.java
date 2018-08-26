@@ -1,43 +1,37 @@
-package com.tompy.area.internal;
+package com.tompy.entity.area.internal;
 
 import com.tompy.adventure.api.Adventure;
 import com.tompy.adventure.internal.AdventureUtils;
-import com.tompy.area.api.Area;
-import com.tompy.area.api.AreaBuilder;
-import com.tompy.area.api.Exit;
 import com.tompy.directive.Direction;
 import com.tompy.entity.api.EntityService;
-import com.tompy.entity.compartment.api.Compartment;
+import com.tompy.entity.area.api.Area;
+import com.tompy.entity.area.api.AreaBuilder;
+import com.tompy.entity.compartment.internal.CompartmentBuilderHelperImpl;
+import com.tompy.entity.compartment.internal.CompartmentImpl;
 import com.tompy.entity.feature.api.Feature;
+import com.tompy.exit.api.Exit;
 import com.tompy.player.api.Player;
 import com.tompy.response.api.Response;
-import com.tompy.response.api.Responsive;
 
 import java.util.*;
 
-public class AreaImpl extends Responsive implements Area {
-    protected String name;
-    protected String description;
-    protected String searchDescription;
+public class AreaImpl extends CompartmentImpl implements Area {
+    protected final String searchDescription;
     protected String[] searchDirectionDescription = new String[]{"", "", "", ""};
     protected List<Exit> exits = new ArrayList<>();
     protected List<Feature> features = new ArrayList<>();
     protected Map<Direction, List<Feature>> directionFeatures = new HashMap<>();
-    protected Compartment compartment;
-    protected EntityService entityService;
 
-    protected AreaImpl(String name, String description, String searchDescription, String[] searchDirectionDesription,
-                       Compartment compartment, EntityService entityService) {
-        this.name = name;
-        this.description = description;
+    protected AreaImpl(Long key, String name, List<String> descriptors, String description, String searchDescription,
+                       String[] searchDirectionDescription, EntityService entityService) {
+        super(key, name, descriptors, description, entityService);
         this.searchDescription = searchDescription;
-        this.searchDirectionDescription = searchDirectionDesription;
-        this.compartment = compartment;
-        this.entityService = Objects.requireNonNull(entityService, "Entity Service cannot be null.");
+        this.searchDirectionDescription = searchDirectionDescription;
     }
 
-    public static AreaBuilder createBuilder(EntityService entityService) {
-        return new AreaImpl.AreaBuilderImpl(entityService);
+
+    public static AreaBuilder createBuilder(Long key, EntityService entityService) {
+        return new AreaBuilderImpl(key, entityService);
     }
 
     @Override
@@ -139,6 +133,8 @@ public class AreaImpl extends Responsive implements Area {
         if (!features.isEmpty()) {
             returnValue.add(responseFactory.createBuilder().text("You find ").source(name).build());
             features.stream().forEach((f) -> returnValue.addAll(f.search()));
+            items.stream().forEach((i) -> returnValue.add(
+                    this.responseFactory.createBuilder().source(i.getName()).text(i.getDetailDescription()).build()));
         }
 
         player.searchArea(name);
@@ -165,20 +161,24 @@ public class AreaImpl extends Responsive implements Area {
             directionFeatures.get(direction).stream().forEach((f) -> returnValue.addAll(f.search()));
         }
 
-
         return returnValue;
     }
 
-    public static class AreaBuilderImpl implements AreaBuilder {
+    @Override
+    public List<Feature> getAllFeatures() {
+        return features;
+    }
+
+    public static class AreaBuilderImpl extends CompartmentBuilderHelperImpl implements AreaBuilder {
         protected String name;
         protected String description;
         protected String searchDescription;
         protected String[] searchDirectionDescription = new String[4];
-        protected Compartment compartment;
-        protected EntityService entityService;
+        protected String compartmentName;
+        protected String compartmentDescription;
 
-        public AreaBuilderImpl(EntityService entityService) {
-            this.entityService = Objects.requireNonNull(entityService, "Entity Service cannot be null.");
+        public AreaBuilderImpl(Long key, EntityService entityService) {
+            super(key, entityService);
         }
 
         @Override
@@ -206,15 +206,21 @@ public class AreaImpl extends Responsive implements Area {
         }
 
         @Override
-        public AreaBuilder compartment(Compartment compartment) {
-            this.compartment = compartment;
+        public AreaBuilder compartmentName(String compartmentName) {
+            this.compartmentName = compartmentName;
+            return this;
+        }
+
+        @Override
+        public AreaBuilder compartmentDescription(String compartmentDescription) {
+            this.compartmentDescription = compartmentDescription;
             return this;
         }
 
         @Override
         public Area build() {
-            return new AreaImpl(name, description, searchDescription, searchDirectionDescription, compartment,
-                    entityService);
+            return new AreaImpl(key, name, this.buildDescriptors(), description, searchDescription,
+                    searchDirectionDescription, entityService);
         }
 
         @Override

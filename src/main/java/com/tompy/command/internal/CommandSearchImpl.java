@@ -6,6 +6,7 @@ import com.tompy.command.api.Command;
 import com.tompy.command.api.CommandBuilder;
 import com.tompy.command.api.CommandBuilderFactory;
 import com.tompy.directive.CommandType;
+import com.tompy.entity.api.EntityService;
 import com.tompy.player.api.Player;
 import com.tompy.response.api.Response;
 
@@ -16,8 +17,8 @@ public class CommandSearchImpl extends CommandBasicImpl implements Command {
     protected String target;
     protected String secondaryTarget;
 
-    protected CommandSearchImpl(CommandType type, String target, String secondaryTarget) {
-        super(type);
+    protected CommandSearchImpl(CommandType type, EntityService entityService, String target, String secondaryTarget) {
+        super(type, entityService);
         this.target = target;
         this.secondaryTarget = secondaryTarget;
     }
@@ -47,15 +48,15 @@ public class CommandSearchImpl extends CommandBasicImpl implements Command {
         public Command build() {
             switch (type) {
                 case COMMAND_SEARCH_DIRECTION:
-                    return new CommandSearchDirectionImpl(type, target, secondaryTarget);
+                    return new CommandSearchDirectionImpl(type, entityService, target, secondaryTarget);
                 case COMMAND_SEARCH_IN:
-                    return new CommandSearchInImpl(type, target, secondaryTarget);
+                    return new CommandSearchInImpl(type, entityService, target, secondaryTarget);
                 case COMMAND_SEARCH_ON:
-                    return new CommandSearchOnImpl(type, target, secondaryTarget);
+                    return new CommandSearchOnImpl(type, entityService, target, secondaryTarget);
                 case COMMAND_SEARCH_FEATURE:
-                    return new CommandSearchFeatureImpl(type, target, secondaryTarget);
+                    return new CommandSearchFeatureImpl(type, entityService, target, secondaryTarget);
                 default:
-                    return new CommandSearchImpl(type, target, secondaryTarget);
+                    return new CommandSearchImpl(type, entityService, target, secondaryTarget);
             }
         }
 
