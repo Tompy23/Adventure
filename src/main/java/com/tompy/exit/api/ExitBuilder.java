@@ -5,7 +5,7 @@ import com.tompy.directive.Direction;
 import com.tompy.entity.area.api.Area;
 
 public interface ExitBuilder extends Builder<Exit> {
-    ExitBuilder direction(Direction direction);
-
     ExitBuilder area(Area area);
+
+    ExitBuilder state(boolean state);
 }

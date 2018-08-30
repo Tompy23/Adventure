@@ -2,14 +2,14 @@ package com.tompy.command.internal;
 
 import com.tompy.adventure.api.Adventure;
 import com.tompy.adventure.internal.AdventureUtils;
-import com.tompy.entity.api.EntityService;
-import com.tompy.entity.area.api.Area;
-import com.tompy.exit.api.Exit;
 import com.tompy.command.api.Command;
 import com.tompy.command.api.CommandBuilder;
 import com.tompy.command.api.CommandBuilderFactory;
 import com.tompy.directive.CommandType;
 import com.tompy.directive.Direction;
+import com.tompy.entity.api.EntityService;
+import com.tompy.entity.area.api.Area;
+import com.tompy.exit.api.Exit;
 import com.tompy.player.api.Player;
 import com.tompy.response.api.Response;
 
@@ -42,22 +42,24 @@ public class CommandMoveImpl extends CommandBasicImpl implements Command {
         Area currentArea = player.getArea();
         Exit targetExit = currentArea.getExitForDirection(direction);
 
-        returnValue.add(
-                responseFactory.createBuilder().text(type.getParticiple() + " " + direction.getDescription()).source(
-                        type.getDescription()).build());
+        if (direction == null) {
+            returnValue.add(responseFactory.createBuilder().source("MOVE").text("Unknown direction").build());
+        } else {
+            returnValue.add(responseFactory.createBuilder().text(
+                    type.getParticiple() + " " + direction.getDescription()).source(type.getDescription()).build());
+        }
 
         if (null != targetExit) {
             if (targetExit.isOpen()) {
+                Area targetArea = targetExit.getConnectedArea(currentArea);
                 returnValue.add(responseFactory.createBuilder().text("Success").source(type.getDescription()).build());
-                returnValue.addAll(currentArea.exit(targetExit.getDirection(), player, adventure));
-                returnValue.addAll(targetExit.passThru());
-                returnValue.addAll(
-                        targetExit.getArea().enter(AdventureUtils.getOppositeDirection(targetExit.getDirection()),
-                                player, adventure));
-                player.setArea(targetExit.getArea());
+                returnValue.addAll(currentArea.exit(direction, player, adventure));
+                returnValue.addAll(targetExit.passThru(direction));
+                returnValue.addAll(targetArea.enter(AdventureUtils.getOppositeDirection(direction), player, adventure));
+                player.setArea(targetArea);
             } else {
                 returnValue.add(responseFactory.createBuilder().text("Failure").source(type.getDescription()).build());
-                returnValue.addAll(currentArea.exit(targetExit.getDirection(), player, adventure));
+                returnValue.addAll(currentArea.exit(direction, player, adventure));
             }
         } else {
             returnValue.add(

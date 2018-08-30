@@ -1,24 +1,23 @@
 package com.tompy.exit.internal;
 
+import com.tompy.directive.Direction;
 import com.tompy.entity.area.api.Area;
 import com.tompy.exit.api.Exit;
 import com.tompy.exit.api.ExitBuilder;
-import com.tompy.directive.Direction;
 import com.tompy.response.api.Response;
 import com.tompy.response.api.Responsive;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ExitImpl extends Responsive implements Exit {
-    private Direction direction;
-    private Area area;
-    private Exit parallel;
+    private final Area[] areas;
     private boolean state;
 
-    private ExitImpl(Area area, Direction direction, boolean state) {
-        this.area = area;
-        this.direction = direction;
+    private ExitImpl(Area[] areas, boolean state) {
+        this.areas = areas;
         this.state = state;
     }
 
@@ -27,10 +26,9 @@ public class ExitImpl extends Responsive implements Exit {
     }
 
     @Override
-    public List<Response> passThru() {
+    public List<Response> passThru(Direction direction) {
         List<Response> returnValue = new ArrayList<>();
         if (state) {
-
             returnValue.add(responseFactory.createBuilder().text(direction.getDescription()).source("Exit").build());
         } else {
             returnValue.add(responseFactory.createBuilder().text(
@@ -40,23 +38,13 @@ public class ExitImpl extends Responsive implements Exit {
     }
 
     @Override
-    public Direction getDirection() {
-        return direction;
-    }
-
-    @Override
-    public Area getArea() {
-        return area;
-    }
-
-    @Override
-    public Exit getParallel() {
-        return parallel;
-    }
-
-    @Override
-    public void setParallel(Exit exit) {
-        parallel = exit;
+    public Area getConnectedArea(Area area) {
+        if (area.getKey() == areas[0].getKey()) {
+            return areas[1];
+        } else if (area.getKey() == areas[1].getKey()) {
+            return areas[0];
+        }
+        return null;
     }
 
     @Override
@@ -75,23 +63,27 @@ public class ExitImpl extends Responsive implements Exit {
     }
 
     public static class ExitBuilderImpl implements ExitBuilder {
-        private Area area;
-        private Direction direction;
+        private List<Area> areas = new ArrayList<>();
+        private boolean state;
 
         @Override
         public Exit build() {
-            return new ExitImpl(area, direction, true);
+            if (areas.size() == 2) {
+                return new ExitImpl(areas.toArray(new Area[2]), state);
+            } else {
+                return null;
+            }
         }
 
         @Override
         public ExitBuilder area(Area area) {
-            this.area = area;
+            this.areas.add(area);
             return this;
         }
 
         @Override
-        public ExitBuilder direction(Direction direction) {
-            this.direction = direction;
+        public ExitBuilder state(boolean state) {
+            this.state = state;
             return this;
         }
     }

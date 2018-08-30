@@ -44,19 +44,14 @@ public class CommandUseImpl extends CommandBasicImpl implements Command {
         Item source = items.stream().filter((i) -> i.getKey().equals(itemKey)).findFirst().get();
 
         List<Feature> entities = player.getArea().getAllFeatures();
-        Long featureKey = EntityUtil.findEntityByDescription(items, target, adventure.getUI());
-        Entity object = items.stream().filter((i) -> i.getKey().equals(featureKey)).findFirst().get();
-
-        // TODO Determine the source/object from the subject/target
-        // Source must be active for player
-        // Object must be in area and visible
-        // This is the bulk of the function and clearly requires Entity tricks (like EntityUtil
-        // .findEntityByDescription())
+        Long featureKey = EntityUtil.findEntityByDescription(entities, target, adventure.getUI());
+        Entity object = entities.stream().filter((i) -> i.getKey().equals(featureKey)).findFirst().get();
 
         // Use subject on object
-        if (source.hasTarget(object)) {
+        if (source != null && target != null && source.hasTarget(object)) {
             return source.use();
         }
+
         return Collections.singletonList(responseFactory.createBuilder().source("CommandUse").text(
                 String.format("Cannot use %s on %s", source.getName(), object.getName())).build());
     }

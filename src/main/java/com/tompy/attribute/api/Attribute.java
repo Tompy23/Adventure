@@ -6,11 +6,13 @@ package com.tompy.attribute.api;
 public enum Attribute {
     TEST_NORMALA(false, false, "TEST A", "APPLIES", "DOES NOT APPLY"), TEST_NORMALB(false, false, "TEST B", "APPLIES",
             "DOES NOT APPLY"), TEST_STACKABLE(true, false, "TEST STACKABLE", "APPLIES",
-            "DOES NOT APPLY"), TEST_HAS_VALUE(false, true, "TEST HAS VALUE", "APPLIES", "DOES NOT APPLY"), TAKABLE(
-            false, false, "Can take", "can take", "can not take"), USABLE(false, false, "Usable", "usable",
-            "not usable"), TARGETABLE(false, false, "Can target", "can target", "can not target"), VISIBLE(false,
-            false, "Visible", "see", "do not see"), BONUS(false, true, "Bonus", "bonus", "no bonus"), OPEN(false, false,
-            "Open", "open", "closed"), LOCKED(false, false, "Locked", "locked", "unlocked");
+            "DOES NOT APPLY"), TEST_HAS_VALUE(false, true, "TEST HAS VALUE", "APPLIES", "DOES NOT APPLY"), BONUS(false,
+            true, "Bonus", "bonus", "no bonus"), LOCKED(false, false, "Locked", "locked", "unlocked"), OPEN(false,
+            false, "Open", "open", "closed"), TAKABLE(false, false, "Can take", "can take", "can not take"), TARGETABLE(
+            false, false, "Can target", "can target", "can not target"), USABLE(false, false, "Usable", "usable",
+            "not usable"), VALUE(false, true, "Value", "value of", "no value"), VISIBLE(false, false, "Visible", "see",
+            "do not see");
+
 
     /**
      * A stackable Attribute is one that when added increments the value by 1,

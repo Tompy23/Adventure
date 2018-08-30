@@ -18,9 +18,10 @@ public interface Area extends Compartment {
 
     /**
      * Add an exit to the Area
+     * @param direction - the {@link Direction} where the exit is located
      * @param exit - the {@link Exit} to add
      */
-    void installExit(Exit exit);
+    void installExit(Direction direction, Exit exit);
 
     /**
      * Add a {@link Feature} to the Area.

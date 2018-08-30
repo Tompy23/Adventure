@@ -43,13 +43,16 @@ public class CommandFactoryImpl implements CommandFactory {
             commandInputs[i] = inputs[i].toUpperCase();
         }
 
-        CommandBuilder cb = factoryMap.get(commandInputs[0]).createBuilder();
-        if (null != cb) {
-            if (cb != null) {
-                return cb.parts(commandInputs).type(AdventureUtils.getCommandType(commandInputs[0])).build();
+        if (factoryMap.containsKey(commandInputs[0])) {
+            CommandBuilder cb = factoryMap.get(commandInputs[0]).createBuilder();
+            if (null != cb) {
+                if (cb != null) {
+                    return cb.parts(commandInputs).entityService(entityService).type(
+                            AdventureUtils.getCommandType(commandInputs[0])).build();
+                }
             }
         }
 
-        return factoryMap.get(COMMAND_NULL).createBuilder().build();
+        return factoryMap.get(COMMAND_NULL).createBuilder().entityService(entityService).build();
     }
 }

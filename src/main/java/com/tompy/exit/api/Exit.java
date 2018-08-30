@@ -13,35 +13,31 @@ import java.util.List;
 public interface Exit {
     /**
      * When a {@link Player} passes through the Exit
-     * }
+     * @param direction - The {@link Direction} traveling through the exit
      * @return - List of {@link Response}
      */
-    List<Response> passThru();
+    List<Response> passThru(Direction direction);
 
     /**
-     * Retrieve the {@link Direction} of the exit relative to its {@link Area}
-     * @return - The {@link Direction}
+     * Return the other area for this exit based on the first area
+     * @param area - The {@link Area} from which to start
+     * @return - the {@link Area} to which this exit ends
      */
-    Direction getDirection();
+    Area getConnectedArea(Area area);
 
-    /**
-     * Retrieve the {@link Area} to which this Exit is attached
-     * @return - The {@link Area}
-     */
-    Area getArea();
-
-    /**
-     * Retrieve the matching Exit if any.  A matching Exit is attached to the {@link Area} to which
-     * this Exit is pointed and points to this Exit's {@link Area}
-     * @return - The matching Exit.
-     */
-    Exit getParallel();
-
-    /**
-     * Sets a parallel exit that normally represents the opposite direction of travel between two {@link Area}
-     * @param exit - The matching Exit
-     */
-    void setParallel(Exit exit);
+//    /**
+//     * Retrieve the {@link Area} to which this Exit is attached
+//     * @param - direction - the {@link Direction} of the {@link Area} requested
+//     * @return - The {@link Area}
+//     */
+//    Area getArea(Direction direction);
+//
+//    /**
+//     * Retrieve the {@link Direction} for an area
+//     * @param area - the {@link Area} requested
+//     * @return - The {@link Direction}
+//     */
+//    Direction getDirection(Area area);
 
     /**
      * Sets the Exit to allow use

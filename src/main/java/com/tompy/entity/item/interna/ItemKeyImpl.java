@@ -36,7 +36,7 @@ public class ItemKeyImpl extends ItemImpl {
 
     @Override
     public boolean hasTarget(Entity entity) {
-        return entity.getKey() == target.getEntity().getKey();
+        return entity.getKey().equals(target.getEntity().getKey());
     }
 
 }

@@ -18,7 +18,7 @@ import java.util.*;
 public class AreaImpl extends CompartmentImpl implements Area {
     protected final String searchDescription;
     protected String[] searchDirectionDescription = new String[]{"", "", "", ""};
-    protected List<Exit> exits = new ArrayList<>();
+    protected Map<Direction, Exit> exits = new HashMap<>();
     protected List<Feature> features = new ArrayList<>();
     protected Map<Direction, List<Feature>> directionFeatures = new HashMap<>();
 
@@ -35,45 +35,12 @@ public class AreaImpl extends CompartmentImpl implements Area {
     }
 
     @Override
-    public void installExit(Exit exit) {
+    public void installExit(Direction direction, Exit exit) {
         Objects.requireNonNull(exit, "When initializing an exit to a room, the exit must not be null");
 
-        // There can only be a single exit in a direction, so first we remove any existing exit
-        removeExistingExit(exit.getDirection());
-
         // Next we add the exit
-        exits.add(exit);
+        exits.put(direction, exit);
 
-        // Finally we see if the connecting area has an exit in the opposite direction
-        detectParallelExit(exit);
-
-    }
-
-    private void removeExistingExit(Direction direction) {
-        Exit toBeRemoved = null;
-        for (Exit e : exits) {
-            if (e.getDirection() == direction) {
-                toBeRemoved = e;
-                break;
-            }
-        }
-        if (null != toBeRemoved) {
-            exits.remove(toBeRemoved);
-        }
-    }
-
-    private void detectParallelExit(Exit exit) {
-        Area otherArea = exit.getArea();
-        if (null != otherArea) {
-            Direction otherDirection = AdventureUtils.getOppositeDirection(exit.getDirection());
-            if (null != otherDirection) {
-                Exit otherExit = otherArea.getExitForDirection(otherDirection);
-                if (null != otherExit) {
-                    exit.setParallel(otherExit);
-                    otherExit.setParallel(exit);
-                }
-            }
-        }
     }
 
     @Override
@@ -95,14 +62,7 @@ public class AreaImpl extends CompartmentImpl implements Area {
 
     @Override
     public Exit getExitForDirection(Direction direction) {
-        Exit returnValue = null;
-        for (Exit e : exits) {
-            if (e.getDirection() == direction) {
-                returnValue = e;
-                break;
-            }
-        }
-        return returnValue;
+        return exits.get(direction);
     }
 
     @Override
