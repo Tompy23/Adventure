@@ -17,8 +17,8 @@ public abstract class EntityImpl extends Responsive implements Entity {
     protected final EntityService entityService;
     private final Long key;
 
-    public EntityImpl(Long key, String name, List<String> descriptors, String description, EntityService
-            entityService) {
+    public EntityImpl(Long key, String name, List<String> descriptors, String description,
+                      EntityService entityService) {
         this.key = Objects.requireNonNull(key, "Entity Key cannot be null.");
         this.name = Objects.requireNonNull(name, "Name cannot be null.");
         this.descriptors = Objects.requireNonNull(descriptors, "Descriptors can be empty, but not null.");

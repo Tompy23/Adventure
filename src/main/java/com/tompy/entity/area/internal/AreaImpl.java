@@ -1,7 +1,6 @@
 package com.tompy.entity.area.internal;
 
 import com.tompy.adventure.api.Adventure;
-import com.tompy.adventure.internal.AdventureUtils;
 import com.tompy.directive.Direction;
 import com.tompy.entity.api.EntityService;
 import com.tompy.entity.area.api.Area;
@@ -56,11 +55,6 @@ public class AreaImpl extends CompartmentImpl implements Area {
     }
 
     @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
     public Exit getExitForDirection(Direction direction) {
         return exits.get(direction);
     }
@@ -93,8 +87,8 @@ public class AreaImpl extends CompartmentImpl implements Area {
         if (!features.isEmpty()) {
             returnValue.add(responseFactory.createBuilder().text("You find ").source(name).build());
             features.stream().forEach((f) -> returnValue.addAll(f.search()));
-            items.stream().forEach((i) -> returnValue.add(
-                    this.responseFactory.createBuilder().source(i.getName()).text(i.getDetailDescription()).build()));
+            items.stream().forEach((i) -> returnValue
+                .add(this.responseFactory.createBuilder().source(i.getName()).text(i.getDetailDescription()).build()));
         }
 
         player.searchArea(name);
@@ -108,12 +102,11 @@ public class AreaImpl extends CompartmentImpl implements Area {
 
         if (searchDirectionDescription[direction.ordinal()] != null) {
             returnValue.add(
-                    responseFactory.createBuilder().text(searchDirectionDescription[direction.ordinal()]).source(
-                            name).build());
+                responseFactory.createBuilder().text(searchDirectionDescription[direction.ordinal()]).source(name)
+                    .build());
         } else {
-            returnValue.add(
-                    responseFactory.createBuilder().text("Nothing special to the " + direction.getDescription()).source(
-                            name).build());
+            returnValue.add(responseFactory.createBuilder().text("Nothing special to the " + direction.getDescription())
+                                .source(name).build());
         }
 
         if (directionFeatures.containsKey(direction)) {
@@ -126,7 +119,16 @@ public class AreaImpl extends CompartmentImpl implements Area {
 
     @Override
     public List<Feature> getAllFeatures() {
-        return features;
+        List<Feature> returnValue = new ArrayList<>();
+        returnValue.addAll(features);
+        directionFeatures.values().stream().forEach((f) -> returnValue.addAll(f));
+
+        return returnValue;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     public static class AreaBuilderImpl extends CompartmentBuilderHelperImpl implements AreaBuilder {
@@ -180,7 +182,7 @@ public class AreaImpl extends CompartmentImpl implements Area {
         @Override
         public Area build() {
             return new AreaImpl(key, name, this.buildDescriptors(), description, searchDescription,
-                    searchDirectionDescription, entityService);
+                                searchDirectionDescription, entityService);
         }
 
         @Override

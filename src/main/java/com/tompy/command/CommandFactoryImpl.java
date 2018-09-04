@@ -12,9 +12,11 @@ import java.util.Map;
 import java.util.Objects;
 
 public class CommandFactoryImpl implements CommandFactory {
+    private static final String COMMAND_CLOSE = "CLOSE";
     private static final String COMMAND_INVENTORY = "INVENTORY";
-    private static final String COMMAND_NULL = "NULL";
     private static final String COMMAND_MOVE = "MOVE";
+    private static final String COMMAND_NULL = "NULL";
+    private static final String COMMAND_OPEN = "OPEN";
     private static final String COMMAND_QUIT = "QUIT";
     private static final String COMMAND_RUN = "RUN";
     private static final String COMMAND_SEARCH = "SEARCH";
@@ -25,9 +27,11 @@ public class CommandFactoryImpl implements CommandFactory {
     private Map<String, CommandBuilderFactory> factoryMap = new HashMap<>();
 
     public CommandFactoryImpl(EntityService entityService) {
+        factoryMap.put(COMMAND_CLOSE, CommandCloseImpl.createBuilderFactory());
         factoryMap.put(COMMAND_INVENTORY, CommandInventoryImpl.createBuilderFactory());
-        factoryMap.put(COMMAND_NULL, CommandNullImpl.createBuilderFactory());
         factoryMap.put(COMMAND_MOVE, CommandMoveImpl.createBuilderFactory());
+        factoryMap.put(COMMAND_NULL, CommandNullImpl.createBuilderFactory());
+        factoryMap.put(COMMAND_OPEN, CommandOpenImpl.createBuilderFactory());
         factoryMap.put(COMMAND_QUIT, CommandQuitImpl.createBuilderFactory());
         factoryMap.put(COMMAND_RUN, CommandMoveImpl.createBuilderFactory());
         factoryMap.put(COMMAND_SEARCH, CommandSearchImpl.createBuilderFactory());
@@ -47,8 +51,8 @@ public class CommandFactoryImpl implements CommandFactory {
             CommandBuilder cb = factoryMap.get(commandInputs[0]).createBuilder();
             if (null != cb) {
                 if (cb != null) {
-                    return cb.parts(commandInputs).entityService(entityService).type(
-                            AdventureUtils.getCommandType(commandInputs[0])).build();
+                    return cb.parts(commandInputs).entityService(entityService)
+                        .type(AdventureUtils.getCommandType(commandInputs[0])).build();
                 }
             }
         }

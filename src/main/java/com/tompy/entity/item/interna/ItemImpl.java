@@ -3,9 +3,9 @@ package com.tompy.entity.item.interna;
 import com.tompy.directive.ItemType;
 import com.tompy.entity.api.Entity;
 import com.tompy.entity.api.EntityFacade;
+import com.tompy.entity.api.EntityService;
 import com.tompy.entity.internal.EntityBuilderHelperImpl;
 import com.tompy.entity.internal.EntityImpl;
-import com.tompy.entity.api.EntityService;
 import com.tompy.entity.item.api.Item;
 import com.tompy.entity.item.api.ItemBuilder;
 import com.tompy.response.api.Response;
@@ -16,8 +16,9 @@ import java.util.List;
 public class ItemImpl extends EntityImpl implements Item {
     private int hands;
     private int encumbrance;
-    protected ItemImpl(Long key, String name, List<String> descriptors, String description, EntityService
-            entityService) {
+
+    protected ItemImpl(Long key, String name, List<String> descriptors, String description,
+                       EntityService entityService) {
         super(key, name, descriptors, description, entityService);
         hands = 1;
         encumbrance = 0;

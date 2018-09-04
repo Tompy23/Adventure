@@ -2,9 +2,6 @@ package com.tompy.entity;
 
 import com.tompy.entity.api.Entity;
 import com.tompy.entity.api.EntityFacade;
-import com.tompy.entity.api.EntityService;
-import com.tompy.entity.area.api.Area;
-import com.tompy.entity.item.api.Item;
 import com.tompy.io.UserInput;
 
 import java.util.*;
@@ -17,9 +14,10 @@ public class EntityUtil {
     /**
      * Find an entity from a list based on the description.  If necessary the user may have to select from
      * the best choices.
-     * @param items - The list of items from which to choose
+     *
+     * @param items       - The list of items from which to choose
      * @param description - The description supplied by the user.
-     * @param io - In case the user must supply a response
+     * @param io          - In case the user must supply a response
      * @return - The Item selected.
      */
     public static Long findEntityByDescription(List<? extends Entity> items, String description, UserInput io) {

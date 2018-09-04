@@ -15,7 +15,8 @@ import com.tompy.player.api.Player;
 
 import java.util.Objects;
 
-import static com.tompy.attribute.api.Attribute.*;
+import static com.tompy.attribute.api.Attribute.LOCKED;
+import static com.tompy.attribute.api.Attribute.VALUE;
 import static com.tompy.directive.Direction.*;
 import static com.tompy.directive.FeatureType.FEATURE_CHEST;
 import static com.tompy.directive.FeatureType.FEATURE_DOOR;
@@ -32,102 +33,96 @@ public class AdventureImpl implements Adventure {
     public AdventureImpl(EntityService entityService, EntityFacadeBuilderFactory entityFacadeBuilderFactory,
                          ExitBuilderFactory exitBuilderFactory, UserInput userInput) {
         this.entityService = Objects.requireNonNull(entityService, "Entity Service cannot be null.");
-        this.entityFacadeBuilderFactory = Objects.requireNonNull(entityFacadeBuilderFactory,
-                "Entity Facade Builder Factory cannot be null.");
+        this.entityFacadeBuilderFactory =
+            Objects.requireNonNull(entityFacadeBuilderFactory, "Entity Facade Builder Factory cannot be null.");
         this.exitBuilderFactory = Objects.requireNonNull(exitBuilderFactory, "Exit Builder Factory cannot be null.");
         this.userInput = Objects.requireNonNull(userInput, "User Input cannot be null.");
     }
 
-    /**
-     * README README README
-     * <p>
-     * New way for Doors/Exits
-     * <p>
-     * There will now be a single Exit between 2 areas.  The Exit will have no concept of direction in it.
-     * <p>
-     * Each Area will have a size 4 array (representing direction like Search Direction array) containing an Exit if
-     * appropriate.  It is likely that an exit will
-     * be shared by 2 Areas.
-     * <p>
-     * An Exit can still be open or closed, and thus will be open or closed for both directions.
-     * <p>
-     * An Exit may contain a single FeatureDoorImpl (create a FeatureDoorInterface?).  When either Area is searched
-     * in the direction of the exit this FeatureDoorImpl Description will be contained in Search Response
-     * <p>
-     * README README README
-     */
-
     @Override
     public void create() {
         // Areas
-        Area room3 = entityService.createAreabuilder().searchDescription("you find a portal to where yo are now").name(
-                "Room3").description("A big empty room, how disappointing").compartmentName(
-                "nothing").compartmentDescription("nothing").build();
-        Area room2 = entityService.createAreabuilder().searchDescription("Nothing special").name("Room2").description(
-                "Smoke is making it difficult to breath").searchDirectionDescription(DIRECTION_NORTH,
-                "A crack in the wall, this is where the smoke must be coming from").build();
-        Area room1 = entityService.createAreabuilder().searchDescription("You discover that you are in this room").name(
-                "Room1").description("Look around, this room is exactly like that").build();
+        Area room1 = entityService.createAreabuilder().name("Room1").description(
+            "Well lit empty room with bright white walls and dark blue carpet.  In the center of the room sits a " +
+            "large wooden box.")
+            .searchDescription("There is nothing special about this room.  There is a door to the north.")
+            .searchDirectionDescription(DIRECTION_NORTH, "An old wooden door.").build();
+
+        Area room2 = entityService.createAreabuilder().name("Room2").description(
+            "A hallway that bends to the right.  It is well let with white walls and a dark blue well worn carpet" +
+            ".").searchDescription("Along both sides of the hallway are portraits of previous tenants, some quite old.")
+            .searchDirectionDescription(DIRECTION_SOUTH, "An old wooden door")
+            .searchDirectionDescription(DIRECTION_EAST, "A rusty iron door.").build();
+
+        Area room3 = entityService.createAreabuilder().name("Room3")
+            .description("This room has a single torch, making it smoky and dark.")
+            .searchDescription("There is nothing to see, but the smoke seems to be building up.")
+            .searchDirectionDescription(DIRECTION_WEST, "An iron door.")
+            .searchDirectionDescription(DIRECTION_NORTH, "A dark curatin seems to cover something.").build();
+
+        Area room4 = entityService.createAreabuilder().name("Room4").description("You have made it outside").build();
+
 
         // Exits
         Exit exit1 = exitBuilderFactory.builder().area(room2).area(room1).state(true).build();
         Exit exit2 = exitBuilderFactory.builder().area(room3).area(room2).state(false).build();
+        Exit exit3 = exitBuilderFactory.builder().area(room3).area(room4).state(false).build();
 
         room1.installExit(DIRECTION_NORTH, exit1);
         room2.installExit(DIRECTION_SOUTH, exit1);
         room2.installExit(DIRECTION_EAST, exit2);
         room3.installExit(DIRECTION_WEST, exit2);
+        room3.installExit(DIRECTION_NORTH, exit3);
 
         // Features
-        Feature room2Chest = entityService.createFeatureBuilder().type(FEATURE_CHEST).name("Chest").longName(
-                "dusty chest").description("an old and dusty chest").build();
-        Feature room1Desk = entityService.createFeatureBuilder().type(FEATURE_CHEST).name("Desk").longName(
-                "roll top desk").description("an old roll top desk").build();
-        Feature room2EastDoor = entityService.createFeatureBuilder().type(FEATURE_DOOR).name("Door").longName(
-                "north door").description("oak door").build();
-        Feature room2SouthDoor = entityService.createFeatureBuilder().type(FEATURE_DOOR).name("Door").longName(
-                "south door").description("oak door").build();
+        Feature room1Chest =
+            entityService.createFeatureBuilder().type(FEATURE_CHEST).name("Chest").longName("dusty chest")
+                .description("an old and dusty chest").build();
+        Feature room2EastDoor =
+            entityService.createFeatureBuilder().type(FEATURE_DOOR).name("Oak Door").longName("north door")
+                .description("oak door").exit(exit2).build();
+        Feature room2SouthDoor =
+            entityService.createFeatureBuilder().type(FEATURE_DOOR).name("Iron Door").longName("south door")
+                .description("iron door").exit(exit1).build();
+        Feature room3NorthDoor =
+            entityService.createFeatureBuilder().type(FEATURE_DOOR).name("Curtain").longName("Dark curtain")
+                .description("dark curtain").exit(exit3).build();
 
-        EntityFacade room2ChestLock = entityFacadeBuilderFactory.builder().entity(room2Chest).attribute(LOCKED).build();
-        EntityFacade room2EastDoorLock = entityFacadeBuilderFactory.builder().entity(room2EastDoor).attribute(
-                LOCKED).build();
-        EntityFacade room1NorthDoorOpen = entityFacadeBuilderFactory.builder().entity(room2EastDoor).attribute(
-                OPEN).build();
-        EntityFacade room2SouthDoorOpen = entityFacadeBuilderFactory.builder().entity(room2SouthDoor).attribute(
-                OPEN).build();
+        EntityFacade room1ChestLock = entityFacadeBuilderFactory.builder().entity(room1Chest).attribute(LOCKED).build();
+        EntityFacade room2EastDoorLock =
+            entityFacadeBuilderFactory.builder().entity(room2EastDoor).attribute(LOCKED).build();
 
-        EntityUtil.add(room2ChestLock);
+        EntityUtil.add(room1ChestLock);
         EntityUtil.add(room2EastDoorLock);
-        EntityUtil.add(room1NorthDoorOpen);
-        EntityUtil.add(room2SouthDoorOpen);
 
-        room2.installFeature(room2Chest, DIRECTION_NORTH);
-        room2.installFeature(room2EastDoor, null);
-        room1.installFeature(room1Desk, null);
+        room1.installFeature(room1Chest, null);
+        room1.installFeature(room2SouthDoor, DIRECTION_NORTH);
+        room2.installFeature(room2EastDoor, DIRECTION_EAST);
+        room2.installFeature(room2SouthDoor, DIRECTION_SOUTH);
+        room3.installFeature(room2EastDoor, DIRECTION_WEST);
+        room3.installFeature(room3NorthDoor, DIRECTION_NORTH);
 
 
         // Items.
-        Item key1 = entityService.createItemBuilder().type(ITEM_KEY).name("key").longName("blue key").description(
-                "a shiny blue key").target(room2ChestLock).build();
-        Item gem1 = entityService.createItemBuilder().type(ITEM_GEM).name("Ruby").longName("red ruby").description(
-                "sparkling red ruby").build();
+        Item key1 = entityService.createItemBuilder().type(ITEM_KEY).name("key").longName("blue key")
+            .description("shiny blue key").target(room2EastDoorLock).build();
+        Item key2 = entityService.createItemBuilder().type(ITEM_KEY).name("key").longName("iron key")
+            .description("dull iron key").target(room1ChestLock).build();
+        Item gem1 = entityService.createItemBuilder().type(ITEM_GEM).name("Ruby").longName("red ruby")
+            .description("sparkling red ruby").build();
 
         EntityFacade gem1Value = entityFacadeBuilderFactory.builder().entity(gem1).attribute(VALUE).build();
         EntityUtil.add(gem1Value, 5);
 
-        room1.addItem(key1);
-        room2Chest.addItem(gem1);
-
+        room1Chest.addItem(gem1);
+        room1.addItem(key2);
+        room3.addItem(key1);
 
         // Summary
         entityService.addArea(room1);
         entityService.addArea(room2);
         entityService.addArea(room3);
-    }
-
-    @Override
-    public boolean proceed() {
-        return proceed;
+        entityService.addArea(room4);
     }
 
     @Override
@@ -140,6 +135,11 @@ public class AdventureImpl implements Adventure {
     public void stop(Player player) {
         //TODO Persist
         proceed = false;
+    }
+
+    @Override
+    public boolean proceed() {
+        return proceed;
     }
 
     @Override

@@ -1,9 +1,8 @@
 package com.tompy.entity.feature.api;
 
-import com.tompy.exit.api.Exit;
 import com.tompy.common.Builder;
 import com.tompy.directive.FeatureType;
-import com.tompy.entity.compartment.api.Compartment;
+import com.tompy.exit.api.Exit;
 
 public interface FeatureBuilder extends Builder<Feature> {
 

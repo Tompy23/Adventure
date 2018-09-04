@@ -6,6 +6,7 @@ public interface Entity {
 
     /**
      * Retrieve the Entity Key
+     *
      * @return - the value of the Key
      */
     Long getKey();
@@ -40,6 +41,7 @@ public interface Entity {
 
     /**
      * Helper function for creating messages about the Entity
+     *
      * @return - Representation of the source entity
      */
     String getSource();

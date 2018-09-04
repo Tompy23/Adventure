@@ -8,9 +8,7 @@ import com.tompy.response.api.Response;
 import com.tompy.response.api.Responsive;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ExitImpl extends Responsive implements Exit {
     private final Area[] areas;
@@ -31,8 +29,9 @@ public class ExitImpl extends Responsive implements Exit {
         if (state) {
             returnValue.add(responseFactory.createBuilder().text(direction.getDescription()).source("Exit").build());
         } else {
-            returnValue.add(responseFactory.createBuilder().text(
-                    String.format("Unable to move %s", direction.getDescription())).source("Exit").build());
+            returnValue.add(
+                responseFactory.createBuilder().text(String.format("Unable to move %s", direction.getDescription()))
+                    .source("Exit").build());
         }
         return returnValue;
     }

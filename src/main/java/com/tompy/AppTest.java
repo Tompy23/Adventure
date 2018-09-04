@@ -44,14 +44,14 @@ public class AppTest {
     private List<Item> buildItems(EntityService entityService) {
         List<Item> items = new ArrayList<>();
         ItemBuilder itemBuilder = ItemImpl.createBuilder(1L, entityService);
-        items.add(itemBuilder.name("cookie").longName("chocolate chip cookie").description("chips ahoy!").type(
-                ItemType.ITEM_TEST).build());
+        items.add(itemBuilder.name("cookie").longName("chocolate chip cookie").description("chips ahoy!")
+                      .type(ItemType.ITEM_TEST).build());
         itemBuilder = ItemImpl.createBuilder(2L, entityService);
-        items.add(itemBuilder.name("cookie").longName("peanute butter cookie").description("my favorite!").type(
-                ItemType.ITEM_TEST).build());
+        items.add(itemBuilder.name("cookie").longName("peanute butter cookie").description("my favorite!")
+                      .type(ItemType.ITEM_TEST).build());
         itemBuilder = ItemImpl.createBuilder(3L, entityService);
-        items.add(itemBuilder.name("brownie").longName("chocolate brownie").description("special brownies!").type(
-                ItemType.ITEM_TEST).build());
+        items.add(itemBuilder.name("brownie").longName("chocolate brownie").description("special brownies!")
+                      .type(ItemType.ITEM_TEST).build());
 
         return items;
     }

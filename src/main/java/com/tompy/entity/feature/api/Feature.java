@@ -1,6 +1,5 @@
 package com.tompy.entity.feature.api;
 
-import com.tompy.entity.api.Entity;
 import com.tompy.entity.compartment.api.Compartment;
 import com.tompy.response.api.Response;
 

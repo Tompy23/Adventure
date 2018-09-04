@@ -1,11 +1,12 @@
 package com.tompy.entity.internal;
 
 import com.tompy.attribute.api.Attribute;
-import com.tompy.common.Builder;
-import com.tompy.entity.api.*;
+import com.tompy.entity.api.Entity;
+import com.tompy.entity.api.EntityFacade;
+import com.tompy.entity.api.EntityFacadeBuilder;
+import com.tompy.entity.api.EntityService;
 
 import java.util.Objects;
-import java.util.OptionalInt;
 
 public class EntityFacadeImpl implements EntityFacade {
     private final Entity entity;

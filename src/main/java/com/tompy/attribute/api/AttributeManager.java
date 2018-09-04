@@ -74,6 +74,8 @@ public interface AttributeManager {
     boolean is(Attribute attribute);
 
     void addApply(Attribute attribute, String text);
+
     void addDesNotApply(Attribute attribute, String text);
+
     String getApplication(Attribute attribute, boolean apply);
 }

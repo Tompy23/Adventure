@@ -13,6 +13,7 @@ import java.util.List;
 public interface Exit {
     /**
      * When a {@link Player} passes through the Exit
+     *
      * @param direction - The {@link Direction} traveling through the exit
      * @return - List of {@link Response}
      */
@@ -20,6 +21,7 @@ public interface Exit {
 
     /**
      * Return the other area for this exit based on the first area
+     *
      * @param area - The {@link Area} from which to start
      * @return - the {@link Area} to which this exit ends
      */
@@ -51,6 +53,7 @@ public interface Exit {
 
     /**
      * Checks the state of the exit if it is usable or not
+     *
      * @return - True, usable; False, not usable
      */
     boolean isOpen();

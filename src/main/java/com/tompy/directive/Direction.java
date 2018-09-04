@@ -11,7 +11,11 @@ public enum Direction {
      */
     private String description;
 
-    Direction(String description) {this.description = description; }
+    Direction(String description) {
+        this.description = description;
+    }
 
-    public String getDescription() { return description; }
+    public String getDescription() {
+        return description;
+    }
 }

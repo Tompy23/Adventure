@@ -2,7 +2,6 @@ package com.tompy.entity.item.api;
 
 import com.tompy.common.Builder;
 import com.tompy.directive.ItemType;
-import com.tompy.entity.api.Entity;
 import com.tompy.entity.api.EntityFacade;
 
 /**

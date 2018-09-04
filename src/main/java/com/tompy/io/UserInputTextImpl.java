@@ -23,15 +23,6 @@ public class UserInputTextImpl implements UserInput {
     }
 
     @Override
-    public void quit() {
-        try {
-            br.close();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-    }
-
-    @Override
     public Command getCommand() {
         Command returnValue = null;
         try {
@@ -73,11 +64,20 @@ public class UserInputTextImpl implements UserInput {
             outStream.println(question);
             outStream.print("??? ");
             returnValue = br.readLine();
-        } catch(IOException ioe) {
+        } catch (IOException ioe) {
             outStream.println("ERROR");
             ioe.printStackTrace();
         }
         return returnValue;
+    }
+
+    @Override
+    public void quit() {
+        try {
+            br.close();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
     }
 
     private Long[] setUpSelection(Map<Long, String> options) {

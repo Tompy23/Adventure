@@ -8,15 +8,26 @@ import java.util.List;
 
 public interface Player {
     String getName();
+
     Area getArea();
+
     void setArea(Area area);
+
     void visitArea(String areaName);
+
     int areaVisitCount(String roomName);
+
     void searchArea(String roomName);
+
     int areaSearchCount(String roomName);
+
     boolean addItem(Item item);
+
     boolean dropItem(Item item, Compartment compartment);
+
     boolean equip(Item item);
+
     boolean unequip(Item item);
+
     List<Item> getInventory();
 }

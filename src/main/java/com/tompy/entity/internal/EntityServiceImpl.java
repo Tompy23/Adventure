@@ -28,8 +28,8 @@ public class EntityServiceImpl implements EntityService {
     private Long entityKey;
 
     public EntityServiceImpl(AttributeManagerFactory attributeManagerFactory) {
-        this.attributeManagerFactory = Objects.requireNonNull(attributeManagerFactory,
-                "Attribute Manager Factory cannot be null.");
+        this.attributeManagerFactory =
+            Objects.requireNonNull(attributeManagerFactory, "Attribute Manager Factory cannot be null.");
         attributeManagers = new HashMap<>();
         items = new ArrayList<>();
         compartments = new ArrayList<>();
@@ -100,7 +100,7 @@ public class EntityServiceImpl implements EntityService {
 
     @Override
     public Area getAreaByName(String name) {
-        return areas.stream().filter(a->name.equals(a.getName())).findAny().get();
+        return areas.stream().filter(a -> name.equals(a.getName())).findAny().get();
     }
 
     @Override

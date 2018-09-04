@@ -1,8 +1,6 @@
 package com.tompy.attribute.internal;
 
-import com.tompy.adventure.api.Adventure;
 import com.tompy.attribute.api.Attribute;
-import com.tompy.attribute.api.AttributeInfo;
 import com.tompy.attribute.api.AttributeManager;
 
 import java.util.*;
@@ -70,8 +68,8 @@ public class AttributeManagerImpl implements AttributeManager {
     @Override
     public OptionalInt getValue(Attribute attribute) {
         if (managed.containsKey(attribute)) {
-            return attribute.hasValue() || attribute.stackable() ? OptionalInt.of(
-                    managed.get(attribute)) : OptionalInt.empty();
+            return attribute.hasValue() || attribute.stackable() ? OptionalInt.of(managed.get(attribute)) :
+                   OptionalInt.empty();
         } else {
             return OptionalInt.empty();
         }

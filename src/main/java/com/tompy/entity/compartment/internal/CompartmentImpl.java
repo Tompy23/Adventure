@@ -12,8 +12,8 @@ import java.util.List;
 public abstract class CompartmentImpl extends EntityImpl implements Compartment {
     protected final List<Item> items;
 
-    protected CompartmentImpl(Long key, String name, List<String> descriptors, String description, EntityService
-            entityService) {
+    protected CompartmentImpl(Long key, String name, List<String> descriptors, String description,
+                              EntityService entityService) {
         super(key, name, descriptors, description, entityService);
         items = new ArrayList<>();
     }

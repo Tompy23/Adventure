@@ -32,7 +32,7 @@ public class App {
         EntityService entityService = new EntityServiceImpl(new AttributeManagerFactoryImpl());
         UserInput ui = new UserInputTextImpl(inStream, outStream, entityService);
         Adventure adventure = new AdventureImpl(entityService, new EntityFacadeBuilderFactoryImpl(entityService),
-                new ExitBuilderFactoryImpl(), ui);
+                                                new ExitBuilderFactoryImpl(), ui);
         Player player = new PlayerImpl(ui.getResponse("Player name?"), null);
 
         adventure.create();

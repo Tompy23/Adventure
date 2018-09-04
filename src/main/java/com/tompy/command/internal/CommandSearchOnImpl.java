@@ -19,8 +19,8 @@ public class CommandSearchOnImpl extends CommandSearchImpl {
     public List<Response> execute(Player player, Adventure adventure) {
         List<Response> returnValue = new ArrayList<>();
 
-        returnValue.add(
-                responseFactory.createBuilder().text("not implemented").source(this.type.getDescription()).build());
+        returnValue
+            .add(responseFactory.createBuilder().text("not implemented").source(this.type.getDescription()).build());
 
         return returnValue;
     }

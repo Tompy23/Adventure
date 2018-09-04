@@ -17,7 +17,10 @@ import java.util.List;
  */
 public interface Item extends Entity {
     List<Response> use();
+
     boolean hasTarget(Entity entity);
+
     int hands();
+
     int encumbrance();
 }

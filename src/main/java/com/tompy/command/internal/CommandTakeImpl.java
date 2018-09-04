@@ -6,7 +6,6 @@ import com.tompy.command.api.CommandBuilder;
 import com.tompy.command.api.CommandBuilderFactory;
 import com.tompy.directive.CommandType;
 import com.tompy.entity.EntityUtil;
-import com.tompy.entity.api.Entity;
 import com.tompy.entity.api.EntityService;
 import com.tompy.entity.item.api.Item;
 import com.tompy.player.api.Player;
@@ -15,6 +14,7 @@ import com.tompy.response.api.Response;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class CommandTakeImpl extends CommandBasicImpl implements Command {
     private final String target;
@@ -37,14 +37,14 @@ public class CommandTakeImpl extends CommandBasicImpl implements Command {
         List<Response> returnValue = new ArrayList<>();
         List<Item> items = player.getArea().getAllItems();
         Long objectKey = EntityUtil.findEntityByDescription(items, target, adventure.getUI());
-        Item object = items.stream().filter((i) -> i.getKey().equals(objectKey)).findFirst().get();
-        if (object != null && player.addItem(object)) {
-            player.getArea().removeItem(object);
+        Optional<Item> object = items.stream().filter((i) -> i.getKey().equals(objectKey)).findFirst();
+        if (object.isPresent() && player.addItem(object.get())) {
+            player.getArea().removeItem(object.get());
             returnValue.add(responseFactory.createBuilder().source("CommandTake").text(
-                    String.format("%s is now in %s's inventory", object.getName(), player.getName())).build());
+                String.format("%s is now in %s's inventory", object.get().getName(), player.getName())).build());
         } else {
-            returnValue.add(responseFactory.createBuilder().source("CommandTake").text(
-                    String.format("%s is not in %s's inventory", target, player.getName())).build());
+            returnValue.add(responseFactory.createBuilder().source("CommandTake")
+                                .text(String.format("%s is not in %s's inventory", target, player.getName())).build());
         }
 
         return returnValue;

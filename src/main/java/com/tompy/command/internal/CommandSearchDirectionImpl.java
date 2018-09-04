@@ -12,8 +12,8 @@ import java.util.List;
 
 public class CommandSearchDirectionImpl extends CommandSearchImpl {
 
-    public CommandSearchDirectionImpl(CommandType type, EntityService entityService, String target, String
-            secondaryTarget) {
+    public CommandSearchDirectionImpl(CommandType type, EntityService entityService, String target,
+                                      String secondaryTarget) {
         super(type, entityService, target, secondaryTarget);
     }
 

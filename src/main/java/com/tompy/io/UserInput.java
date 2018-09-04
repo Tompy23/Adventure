@@ -6,7 +6,10 @@ import java.util.Map;
 
 public interface UserInput {
     Command getCommand();
+
     Long getSelection(Map<Long, String> selection);
+
     String getResponse(String question);
+
     void quit();
 }

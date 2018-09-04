@@ -1,7 +1,6 @@
 package com.tompy.exit.api;
 
 import com.tompy.common.Builder;
-import com.tompy.directive.Direction;
 import com.tompy.entity.area.api.Area;
 
 public interface ExitBuilder extends Builder<Exit> {

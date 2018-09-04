@@ -37,23 +37,21 @@ public class CommandUseImpl extends CommandBasicImpl implements Command {
 
     @Override
     public List<Response> execute(Player player, Adventure adventure) {
-        // Determine the Entities subject/target represent
-
         List<Item> items = player.getArea().getAllItems();
-        Long itemKey = EntityUtil.findEntityByDescription(items, target, adventure.getUI());
+        Long itemKey = EntityUtil.findEntityByDescription(items, subject, adventure.getUI());
         Item source = items.stream().filter((i) -> i.getKey().equals(itemKey)).findFirst().get();
 
-        List<Feature> entities = player.getArea().getAllFeatures();
-        Long featureKey = EntityUtil.findEntityByDescription(entities, target, adventure.getUI());
-        Entity object = entities.stream().filter((i) -> i.getKey().equals(featureKey)).findFirst().get();
+        List<Feature> features = player.getArea().getAllFeatures();
+        Long featureKey = EntityUtil.findEntityByDescription(features, target, adventure.getUI());
+        Entity object = features.stream().filter((i) -> i.getKey().equals(featureKey)).findFirst().get();
 
-        // Use subject on object
-        if (source != null && target != null && source.hasTarget(object)) {
+        // Use subject on target
+        if (source != null && object != null && source.hasTarget(object)) {
             return source.use();
         }
 
         return Collections.singletonList(responseFactory.createBuilder().source("CommandUse").text(
-                String.format("Cannot use %s on %s", source.getName(), object.getName())).build());
+            String.format("Cannot use %s on %s", source.getName(), object.getName())).build());
     }
 
     public static final class CommandUseBuilderImpl extends CommandBuilderImpl {

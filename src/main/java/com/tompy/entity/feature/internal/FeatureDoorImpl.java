@@ -1,9 +1,10 @@
 package com.tompy.entity.feature.internal;
 
-import com.tompy.exit.api.Exit;
 import com.tompy.entity.api.EntityService;
+import com.tompy.exit.api.Exit;
 import com.tompy.response.api.Response;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -15,8 +16,8 @@ import java.util.List;
 public class FeatureDoorImpl extends FeatureBasicImpl {
     private Exit exit;
 
-    protected FeatureDoorImpl(Long key, String name, List<String> descriptors, String description, EntityService
-            entityService, Exit exit) {
+    protected FeatureDoorImpl(Long key, String name, List<String> descriptors, String description,
+                              EntityService entityService, Exit exit) {
         super(key, name, descriptors, description, entityService);
         this.exit = exit;
     }
@@ -24,12 +25,12 @@ public class FeatureDoorImpl extends FeatureBasicImpl {
     @Override
     public List<Response> open() {
         exit.open();
-        return null;
+        return Collections.emptyList();
     }
 
     @Override
     public List<Response> close() {
         exit.close();
-        return null;
+        return Collections.emptyList();
     }
 }

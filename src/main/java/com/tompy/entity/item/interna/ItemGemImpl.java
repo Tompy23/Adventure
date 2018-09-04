@@ -6,8 +6,8 @@ import java.util.List;
 
 public class ItemGemImpl extends ItemImpl {
 
-    public ItemGemImpl(Long key, String name, List<String> descriptors, String description, EntityService
-            entityService) {
+    public ItemGemImpl(Long key, String name, List<String> descriptors, String description,
+                       EntityService entityService) {
         super(key, name, descriptors, description, entityService);
     }
 }

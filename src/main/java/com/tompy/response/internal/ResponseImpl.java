@@ -16,6 +16,14 @@ public class ResponseImpl implements Response, Comparable<Response> {
         sequence = counter++;
     }
 
+    public static ResponseBuilderFactory createBuilderFactory() {
+        return ResponseImpl::createBuilder;
+    }
+
+    public static ResponseBuilder createBuilder() {
+        return new ResponseImpl.ResponseBuilderImpl();
+    }
+
     @Override
     public long getSequence() {
         return sequence;
@@ -26,12 +34,10 @@ public class ResponseImpl implements Response, Comparable<Response> {
         return "[" + source + "]" + text;
     }
 
-    public static ResponseBuilderFactory createBuilderFactory() { return ResponseImpl::createBuilder; }
-
-    public static ResponseBuilder createBuilder() { return new ResponseImpl.ResponseBuilderImpl(); }
-
     @Override
-    public int compareTo(Response other) { return (int)(other.getSequence() - this.getSequence()); }
+    public int compareTo(Response other) {
+        return (int) (other.getSequence() - this.getSequence());
+    }
 
     public static class ResponseBuilderImpl implements ResponseBuilder {
         private String source;
@@ -50,7 +56,9 @@ public class ResponseImpl implements Response, Comparable<Response> {
         }
 
         @Override
-        public Response build() { return new ResponseImpl(source, text); }
+        public Response build() {
+            return new ResponseImpl(source, text);
+        }
     }
 
 }
