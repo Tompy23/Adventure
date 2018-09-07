@@ -9,11 +9,14 @@ import com.tompy.entity.internal.EntityImpl;
 import com.tompy.entity.item.api.Item;
 import com.tompy.entity.item.api.ItemBuilder;
 import com.tompy.response.api.Response;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ItemImpl extends EntityImpl implements Item {
+    private static final Logger LOGGER = LogManager.getLogger(ItemImpl.class);
     private int hands;
     private int encumbrance;
 
@@ -31,6 +34,8 @@ public class ItemImpl extends EntityImpl implements Item {
     @Override
     public List<Response> use() {
         List<Response> returnValue = new ArrayList<>();
+
+        LOGGER.info("Using [{}]", getName());
 
         // TODO placeholder so Item isn't so lonely
         // From this it appears Item may become abstract and its use(), etc. will be overloaded.
@@ -73,6 +78,11 @@ public class ItemImpl extends EntityImpl implements Item {
                         entityService.addItem(item);
                     }
                     break;
+                case ITEM_GEM:
+                    item = new ItemGemImpl(key, name, buildDescriptors(), description, entityService);
+                    if (entityService != null) {
+                        entityService.addItem(item);
+                    }
                 default:
                     item = new ItemImpl(key, name, buildDescriptors(), description, entityService);
                     if (entityService != null) {

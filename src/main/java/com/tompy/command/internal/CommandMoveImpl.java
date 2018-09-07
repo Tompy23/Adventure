@@ -1,6 +1,7 @@
 package com.tompy.command.internal;
 
 import com.tompy.adventure.api.Adventure;
+import com.tompy.adventure.internal.AdventureImpl;
 import com.tompy.adventure.internal.AdventureUtils;
 import com.tompy.command.api.Command;
 import com.tompy.command.api.CommandBuilder;
@@ -12,11 +13,14 @@ import com.tompy.entity.area.api.Area;
 import com.tompy.exit.api.Exit;
 import com.tompy.player.api.Player;
 import com.tompy.response.api.Response;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CommandMoveImpl extends CommandBasicImpl implements Command {
+    private static final Logger LOGGER = LogManager.getLogger(CommandMoveImpl.class);
     protected Direction direction = Direction.DIRECTION_NORTH;
 
     private CommandMoveImpl(CommandType type, String dir, EntityService entityService) {
@@ -38,6 +42,7 @@ public class CommandMoveImpl extends CommandBasicImpl implements Command {
 
     @Override
     public List<Response> execute(Player player, Adventure adventure) {
+        LOGGER.info("Executing Command Move");
         List<Response> returnValue = new ArrayList<>();
         Area currentArea = player.getArea();
         Exit targetExit = currentArea.getExitForDirection(direction);

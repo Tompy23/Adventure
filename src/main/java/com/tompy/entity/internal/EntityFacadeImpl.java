@@ -1,14 +1,14 @@
 package com.tompy.entity.internal;
 
 import com.tompy.attribute.api.Attribute;
-import com.tompy.entity.api.Entity;
-import com.tompy.entity.api.EntityFacade;
-import com.tompy.entity.api.EntityFacadeBuilder;
-import com.tompy.entity.api.EntityService;
+import com.tompy.entity.api.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Objects;
 
 public class EntityFacadeImpl implements EntityFacade {
+    private static final Logger LOGGER = LogManager.getLogger(EntityFacadeImpl.class);
     private final Entity entity;
     private final Attribute attribute;
     private final EntityService entityService;
@@ -34,6 +34,9 @@ public class EntityFacadeImpl implements EntityFacade {
         return attribute;
     }
 
+    public static EntityFacadeBuilder createBuilder(EntityService entityService) {
+        return new EntityFacadeBuilderImpl(entityService);
+    }
 
     public static final class EntityFacadeBuilderImpl implements EntityFacadeBuilder {
         private Entity entity;

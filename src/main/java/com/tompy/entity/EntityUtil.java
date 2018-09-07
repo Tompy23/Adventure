@@ -3,6 +3,8 @@ package com.tompy.entity;
 import com.tompy.entity.api.Entity;
 import com.tompy.entity.api.EntityFacade;
 import com.tompy.io.UserInput;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
@@ -10,6 +12,7 @@ import java.util.*;
  * Utility class of functions dealing with Entities.
  */
 public class EntityUtil {
+    private static final Logger LOGGER = LogManager.getLogger(EntityUtil.class);
 
     /**
      * Find an entity from a list based on the description.  If necessary the user may have to select from

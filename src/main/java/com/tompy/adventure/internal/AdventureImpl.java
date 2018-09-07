@@ -12,6 +12,8 @@ import com.tompy.exit.api.Exit;
 import com.tompy.exit.api.ExitBuilderFactory;
 import com.tompy.io.UserInput;
 import com.tompy.player.api.Player;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Objects;
 
@@ -24,6 +26,7 @@ import static com.tompy.directive.ItemType.ITEM_GEM;
 import static com.tompy.directive.ItemType.ITEM_KEY;
 
 public class AdventureImpl implements Adventure {
+    private static final Logger LOGGER = LogManager.getLogger(AdventureImpl.class);
     private final EntityService entityService;
     private final EntityFacadeBuilderFactory entityFacadeBuilderFactory;
     private final ExitBuilderFactory exitBuilderFactory;
@@ -41,6 +44,7 @@ public class AdventureImpl implements Adventure {
 
     @Override
     public void create() {
+        LOGGER.info("Creating adventure...");
         // Areas
         Area room1 = entityService.createAreabuilder().name("Room1").description(
             "Well lit empty room with bright white walls and dark blue carpet.  In the center of the room sits a " +
@@ -123,16 +127,20 @@ public class AdventureImpl implements Adventure {
         entityService.addArea(room2);
         entityService.addArea(room3);
         entityService.addArea(room4);
+
+        LOGGER.info("...complete.");
     }
 
     @Override
     public void start(Player player) {
+        LOGGER.info("Starting the adventure.");
         player.setArea(entityService.getAreaByName("Room1"));
         proceed = true;
     }
 
     @Override
     public void stop(Player player) {
+        LOGGER.info("Stopping the adventure.");
         //TODO Persist
         proceed = false;
     }

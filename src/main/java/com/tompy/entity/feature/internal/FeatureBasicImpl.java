@@ -8,12 +8,15 @@ import com.tompy.entity.feature.api.FeatureBuilder;
 import com.tompy.entity.internal.EntityBuilderHelperImpl;
 import com.tompy.exit.api.Exit;
 import com.tompy.response.api.Response;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class FeatureBasicImpl extends CompartmentImpl implements Feature {
+    private static final Logger LOGGER = LogManager.getLogger(FeatureBasicImpl.class);
     private final List<Response> notImplemented;
 
     protected FeatureBasicImpl(Long key, String name, List<String> descriptors, String description,
@@ -35,6 +38,7 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
     @Override
     public List<Response> search() {
         List<Response> returnValue = new ArrayList<>();
+        LOGGER.info("Searching Feature [{}]", getName());
         assert returnValue.add(responseFactory.createBuilder().source(name).text(description).build());
         return returnValue;
     }

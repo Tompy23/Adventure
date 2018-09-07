@@ -8,11 +8,14 @@ import com.tompy.directive.CommandType;
 import com.tompy.entity.api.EntityService;
 import com.tompy.player.api.Player;
 import com.tompy.response.api.Response;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CommandNullImpl extends CommandBasicImpl implements Command {
+    private static final Logger LOGGER = LogManager.getLogger(CommandNullImpl.class);
 
     private CommandNullImpl(EntityService entityService) {
         super(CommandType.COMMAND_NULL, entityService);
@@ -28,6 +31,7 @@ public class CommandNullImpl extends CommandBasicImpl implements Command {
 
     @Override
     public List<Response> execute(Player player, Adventure adventure) {
+        LOGGER.info("Executing Command Null.");
         List<Response> returnValue = new ArrayList<>();
         returnValue.add(responseFactory.createBuilder().text("I do not understand").source("Unknown").build());
         return returnValue;

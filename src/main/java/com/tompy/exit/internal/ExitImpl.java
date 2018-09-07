@@ -6,11 +6,14 @@ import com.tompy.exit.api.Exit;
 import com.tompy.exit.api.ExitBuilder;
 import com.tompy.response.api.Response;
 import com.tompy.response.api.Responsive;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ExitImpl extends Responsive implements Exit {
+    private static final Logger LOGGER = LogManager.getLogger(ExitImpl.class);
     private final Area[] areas;
     private boolean state;
 
@@ -26,6 +29,8 @@ public class ExitImpl extends Responsive implements Exit {
     @Override
     public List<Response> passThru(Direction direction) {
         List<Response> returnValue = new ArrayList<>();
+        LOGGER.info("Passing thru exit [{}] connecting areas [{}] and [{}]",
+                    new String[]{direction.name(), areas[0].getName(), areas[1].getName()});
         if (state) {
             returnValue.add(responseFactory.createBuilder().text(direction.getDescription()).source("Exit").build());
         } else {
@@ -59,6 +64,18 @@ public class ExitImpl extends Responsive implements Exit {
     @Override
     public boolean isOpen() {
         return state;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.areas[0].getName());
+        sb.append(" - ");
+        sb.append(this.areas[1].getName());
+        sb.append(" - ");
+        sb.append(this.isOpen());
+
+        return sb.toString();
     }
 
     public static class ExitBuilderImpl implements ExitBuilder {

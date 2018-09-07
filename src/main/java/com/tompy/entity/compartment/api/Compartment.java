@@ -6,8 +6,6 @@ import com.tompy.entity.item.api.Item;
 import java.util.List;
 
 public interface Compartment extends Entity {
-    Item getItem();
-
     List<Item> getAllItems();
 
     void addItem(Item item);

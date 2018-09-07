@@ -3,8 +3,11 @@ package com.tompy.response.internal;
 import com.tompy.response.api.Response;
 import com.tompy.response.api.ResponseBuilder;
 import com.tompy.response.api.ResponseBuilderFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ResponseImpl implements Response, Comparable<Response> {
+    private static final Logger LOGGER = LogManager.getLogger(ResponseImpl.class);
     private static long counter = 0;
     private long sequence;
     private String source;
@@ -31,7 +34,8 @@ public class ResponseImpl implements Response, Comparable<Response> {
 
     @Override
     public String render() {
-        return "[" + source + "]" + text;
+        LOGGER.info("Rendering [{}-{}]", new String[]{source, text});
+        return text;
     }
 
     @Override

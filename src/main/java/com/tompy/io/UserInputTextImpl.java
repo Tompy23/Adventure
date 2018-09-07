@@ -4,12 +4,15 @@ import com.tompy.command.CommandFactory;
 import com.tompy.command.CommandFactoryImpl;
 import com.tompy.command.api.Command;
 import com.tompy.entity.api.EntityService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.util.Map;
 import java.util.Objects;
 
 public class UserInputTextImpl implements UserInput {
+    private static final Logger LOGGER = LogManager.getLogger(UserInputTextImpl.class);
     private CommandFactory factory;
     private BufferedReader br = null;
     private PrintStream outStream;
@@ -28,6 +31,7 @@ public class UserInputTextImpl implements UserInput {
         try {
             outStream.print(">>> ");
             String input = br.readLine();
+            LOGGER.info("User Command input [{}]", input);
             returnValue = factory.createCommand(input.split(" "));
         } catch (IOException ioe) {
             ioe.printStackTrace();
@@ -43,6 +47,7 @@ public class UserInputTextImpl implements UserInput {
         try {
             outStream.print("=== ");
             String input = br.readLine();
+            LOGGER.info("User Choice input [{}]", input);
             int choice = Integer.parseInt(input);
             if (choice < 1 || choice > options.size()) {
                 // TODO this is a bad choice.  Is this ok?
@@ -68,6 +73,7 @@ public class UserInputTextImpl implements UserInput {
             outStream.println("ERROR");
             ioe.printStackTrace();
         }
+        LOGGER.info("User Responded with [{}]", returnValue);
         return returnValue;
     }
 

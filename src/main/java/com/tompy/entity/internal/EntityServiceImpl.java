@@ -15,10 +15,13 @@ import com.tompy.entity.feature.internal.FeatureBasicImpl;
 import com.tompy.entity.item.api.Item;
 import com.tompy.entity.item.api.ItemBuilder;
 import com.tompy.entity.item.interna.ItemImpl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
 public class EntityServiceImpl implements EntityService {
+    private static final Logger LOGGER = LogManager.getLogger(EntityServiceImpl.class);
     private final AttributeManagerFactory attributeManagerFactory;
     private Map<Long, AttributeManager> attributeManagers;
     private List<Item> items;

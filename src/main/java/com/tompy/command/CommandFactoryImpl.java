@@ -6,12 +6,15 @@ import com.tompy.command.api.CommandBuilder;
 import com.tompy.command.api.CommandBuilderFactory;
 import com.tompy.command.internal.*;
 import com.tompy.entity.api.EntityService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class CommandFactoryImpl implements CommandFactory {
+    private static final Logger LOGGER = LogManager.getLogger(CommandFactoryImpl.class);
     private static final String COMMAND_CLOSE = "CLOSE";
     private static final String COMMAND_INVENTORY = "INVENTORY";
     private static final String COMMAND_MOVE = "MOVE";
@@ -42,6 +45,7 @@ public class CommandFactoryImpl implements CommandFactory {
 
     @Override
     public Command createCommand(String[] inputs) {
+        LOGGER.info("Creating command");
         String[] commandInputs = new String[inputs.length];
         for (int i = 0; i < inputs.length; i++) {
             commandInputs[i] = inputs[i].toUpperCase();
@@ -51,12 +55,14 @@ public class CommandFactoryImpl implements CommandFactory {
             CommandBuilder cb = factoryMap.get(commandInputs[0]).createBuilder();
             if (null != cb) {
                 if (cb != null) {
+                    LOGGER.info("Creating Command [{}]", commandInputs[0]);
                     return cb.parts(commandInputs).entityService(entityService)
                         .type(AdventureUtils.getCommandType(commandInputs[0])).build();
                 }
             }
         }
 
+        LOGGER.info("Created Null Command");
         return factoryMap.get(COMMAND_NULL).createBuilder().entityService(entityService).build();
     }
 }

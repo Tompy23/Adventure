@@ -3,6 +3,8 @@ package com.tompy.entity.feature.internal;
 import com.tompy.entity.api.EntityService;
 import com.tompy.exit.api.Exit;
 import com.tompy.response.api.Response;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Collections;
 import java.util.List;
@@ -14,6 +16,7 @@ import java.util.List;
  * A Door can be trapped.
  */
 public class FeatureDoorImpl extends FeatureBasicImpl {
+    private static final Logger LOGGER = LogManager.getLogger(FeatureDoorImpl.class);
     private Exit exit;
 
     protected FeatureDoorImpl(Long key, String name, List<String> descriptors, String description,
@@ -24,6 +27,7 @@ public class FeatureDoorImpl extends FeatureBasicImpl {
 
     @Override
     public List<Response> open() {
+        LOGGER.info("Opening exit [{}]", exit.toString());
         exit.open();
         return Collections.emptyList();
     }

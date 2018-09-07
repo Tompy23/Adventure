@@ -13,6 +13,8 @@ import com.tompy.io.UserInput;
 import com.tompy.io.UserInputTextImpl;
 import com.tompy.player.api.Player;
 import com.tompy.player.internal.PlayerImpl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -21,6 +23,8 @@ import java.io.PrintStream;
  * Hello world!
  */
 public class App {
+    private final static Logger LOGGER = LogManager.getLogger(App.class);
+
     public static void main(String[] args) {
         App a = new App();
         System.exit(a.go(args));
@@ -39,6 +43,7 @@ public class App {
         adventure.start(player);
 
         while (adventure.proceed()) {
+            LOGGER.info("Start of round");
             Command command = ui.getCommand();
             if (null != command) {
                 command.execute(player, adventure).stream().forEachOrdered((a) -> outStream.println(a.render()));

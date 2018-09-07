@@ -10,6 +10,8 @@ import com.tompy.entity.api.EntityService;
 import com.tompy.entity.item.api.Item;
 import com.tompy.player.api.Player;
 import com.tompy.response.api.Response;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class CommandTakeImpl extends CommandBasicImpl implements Command {
+    private static final Logger LOGGER = LogManager.getLogger(CommandTakeImpl.class);
     private final String target;
 
     protected CommandTakeImpl(CommandType type, EntityService entityService, String target) {
@@ -34,6 +37,7 @@ public class CommandTakeImpl extends CommandBasicImpl implements Command {
 
     @Override
     public List<Response> execute(Player player, Adventure adventure) {
+        LOGGER.info("Executing Command Take");
         List<Response> returnValue = new ArrayList<>();
         List<Item> items = player.getArea().getAllItems();
         Long objectKey = EntityUtil.findEntityByDescription(items, target, adventure.getUI());

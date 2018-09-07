@@ -11,10 +11,13 @@ import com.tompy.entity.feature.api.Feature;
 import com.tompy.exit.api.Exit;
 import com.tompy.player.api.Player;
 import com.tompy.response.api.Response;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
 public class AreaImpl extends CompartmentImpl implements Area {
+    private static final Logger LOGGER = LogManager.getLogger(AreaImpl.class);
     protected final String searchDescription;
     protected String[] searchDirectionDescription = new String[]{"", "", "", ""};
     protected Map<Direction, Exit> exits = new HashMap<>();
@@ -37,6 +40,9 @@ public class AreaImpl extends CompartmentImpl implements Area {
     public void installExit(Direction direction, Exit exit) {
         Objects.requireNonNull(exit, "When initializing an exit to a room, the exit must not be null");
 
+        LOGGER.info("Installing Exit from [{}] to area [{}]",
+                    new String[]{this.getName(), exit.getConnectedArea(this).getName()});
+
         // Next we add the exit
         exits.put(direction, exit);
 
@@ -44,7 +50,9 @@ public class AreaImpl extends CompartmentImpl implements Area {
 
     @Override
     public void installFeature(Feature feature, Direction direction) {
+        LOGGER.info("Installing feature [{}]", feature.getName());
         if (null != direction) {
+            LOGGER.info("Installing feature in direction [{}]", direction.name());
             if (!directionFeatures.containsKey(direction)) {
                 directionFeatures.put(direction, new ArrayList<>());
             }
@@ -62,6 +70,7 @@ public class AreaImpl extends CompartmentImpl implements Area {
     @Override
     public List<Response> enter(Direction direction, Player player, Adventure adventure) {
         List<Response> returnValue = new ArrayList<>();
+        LOGGER.info("Entering room [{}] in direction [{}]", this.getName(), direction.name());
 
         returnValue.add(responseFactory.createBuilder().text(description).source(name).build());
         player.visitArea(name);
@@ -72,6 +81,7 @@ public class AreaImpl extends CompartmentImpl implements Area {
     @Override
     public List<Response> exit(Direction direction, Player player, Adventure adventure) {
         List<Response> returnValue = new ArrayList<>();
+        LOGGER.info("Exiting room [{}] in direction [{}]", this.getName(), direction.name());
 
         returnValue.add(responseFactory.createBuilder().text("bye bye").source(name).build());
 
@@ -81,6 +91,7 @@ public class AreaImpl extends CompartmentImpl implements Area {
     @Override
     public List<Response> search(Player player, Adventure adventure) {
         List<Response> returnValue = new ArrayList<>();
+        LOGGER.info("Searching room [{}]", this.getName());
 
         returnValue.add(responseFactory.createBuilder().text(searchDescription).source(name).build());
 
@@ -99,6 +110,7 @@ public class AreaImpl extends CompartmentImpl implements Area {
     @Override
     public List<Response> searchDirection(Direction direction, Player player, Adventure adventure) {
         List<Response> returnValue = new ArrayList<>();
+        LOGGER.info("Searching room [{}] in direction [{}]", this.getName(), direction.name());
 
         if (searchDirectionDescription[direction.ordinal()] != null) {
             returnValue.add(
@@ -119,6 +131,7 @@ public class AreaImpl extends CompartmentImpl implements Area {
 
     @Override
     public List<Feature> getAllFeatures() {
+        LOGGER.info("Retrieving all features from room [{}]", this.getName());
         List<Feature> returnValue = new ArrayList<>();
         returnValue.addAll(features);
         directionFeatures.values().stream().forEach((f) -> returnValue.addAll(f));
@@ -183,16 +196,6 @@ public class AreaImpl extends CompartmentImpl implements Area {
         public Area build() {
             return new AreaImpl(key, name, this.buildDescriptors(), description, searchDescription,
                                 searchDirectionDescription, entityService);
-        }
-
-        @Override
-        public boolean equals(Object other) {
-            if (null == other || !(other instanceof AreaImpl)) {
-                return false;
-            } else {
-                AreaImpl otherArea = (AreaImpl) other;
-                return (this.name.equals(otherArea.name));
-            }
         }
     }
 }

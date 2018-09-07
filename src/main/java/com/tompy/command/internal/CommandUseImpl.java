@@ -12,12 +12,15 @@ import com.tompy.entity.feature.api.Feature;
 import com.tompy.entity.item.api.Item;
 import com.tompy.player.api.Player;
 import com.tompy.response.api.Response;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 public class CommandUseImpl extends CommandBasicImpl implements Command {
+    private static final Logger LOGGER = LogManager.getLogger(CommandUseImpl.class);
     private final String subject;
     private final String target;
 
@@ -37,6 +40,7 @@ public class CommandUseImpl extends CommandBasicImpl implements Command {
 
     @Override
     public List<Response> execute(Player player, Adventure adventure) {
+        LOGGER.info("Executing Command Use");
         List<Item> items = player.getArea().getAllItems();
         Long itemKey = EntityUtil.findEntityByDescription(items, subject, adventure.getUI());
         Item source = items.stream().filter((i) -> i.getKey().equals(itemKey)).findFirst().get();
