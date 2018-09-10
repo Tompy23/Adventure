@@ -50,12 +50,11 @@ public interface Area extends Compartment {
     /**
      * The action which happens when an Area is entered by the {@link Player}
      *
-     * @param direction - The {@link Direction} the character is entering
      * @param player    - The {@link Player} info
      * @param adventure - The {@link Adventure} info
      * @return - A list of {@link Response} to display
      */
-    List<Response> enter(Direction direction, Player player, Adventure adventure);
+    List<Response> enter(Player player, Adventure adventure);
 
     /**
      * The action which happens when a {@link Player} leaves an Area

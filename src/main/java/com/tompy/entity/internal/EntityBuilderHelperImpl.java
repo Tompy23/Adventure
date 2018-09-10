@@ -28,7 +28,7 @@ public abstract class EntityBuilderHelperImpl {
      *
      * @return
      */
-    public List<String> buildDescriptors() {
+    protected List<String> buildDescriptors() {
         List<String> descriptors = new ArrayList<>();
         if (longName != null) {
             descriptors.addAll(Arrays.asList(longName.split(" ")));

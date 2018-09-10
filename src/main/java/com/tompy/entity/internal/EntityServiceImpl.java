@@ -14,7 +14,7 @@ import com.tompy.entity.feature.api.FeatureBuilder;
 import com.tompy.entity.feature.internal.FeatureBasicImpl;
 import com.tompy.entity.item.api.Item;
 import com.tompy.entity.item.api.ItemBuilder;
-import com.tompy.entity.item.interna.ItemImpl;
+import com.tompy.entity.item.internal.ItemImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

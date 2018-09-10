@@ -45,7 +45,6 @@ public class CommandFactoryImpl implements CommandFactory {
 
     @Override
     public Command createCommand(String[] inputs) {
-        LOGGER.info("Creating command");
         String[] commandInputs = new String[inputs.length];
         for (int i = 0; i < inputs.length; i++) {
             commandInputs[i] = inputs[i].toUpperCase();

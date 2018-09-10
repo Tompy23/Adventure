@@ -1,11 +1,15 @@
 package com.tompy.entity.feature.internal;
 
+import com.tompy.attribute.api.Attribute;
 import com.tompy.directive.FeatureType;
+import com.tompy.entity.EntityUtil;
+import com.tompy.entity.api.EntityFacade;
 import com.tompy.entity.api.EntityService;
 import com.tompy.entity.compartment.internal.CompartmentImpl;
 import com.tompy.entity.feature.api.Feature;
 import com.tompy.entity.feature.api.FeatureBuilder;
 import com.tompy.entity.internal.EntityBuilderHelperImpl;
+import com.tompy.entity.internal.EntityFacadeImpl;
 import com.tompy.exit.api.Exit;
 import com.tompy.response.api.Response;
 import org.apache.logging.log4j.LogManager;
@@ -17,13 +21,20 @@ import java.util.List;
 
 public class FeatureBasicImpl extends CompartmentImpl implements Feature {
     private static final Logger LOGGER = LogManager.getLogger(FeatureBasicImpl.class);
-    private final List<Response> notImplemented;
+    protected final List<Response> notImplemented;
+    protected final EntityFacade open;
+    protected final EntityFacade locked;
+    protected final EntityFacade visible;
+
 
     protected FeatureBasicImpl(Long key, String name, List<String> descriptors, String description,
-                               EntityService entityService) {
+        EntityService entityService) {
         super(key, name, descriptors, description, entityService);
         notImplemented =
             Collections.singletonList(responseFactory.createBuilder().source(name).text("Not Implemented").build());
+        open = EntityFacadeImpl.createBuilder(entityService).entity(this).attribute(Attribute.OPEN).build();
+        locked = EntityFacadeImpl.createBuilder(entityService).entity(this).attribute(Attribute.LOCKED).build();
+        visible = EntityFacadeImpl.createBuilder(entityService).entity(this).attribute(Attribute.VISIBLE).build();
     }
 
     public static FeatureBuilder createBuilder(Long key, EntityService entityService) {
@@ -45,12 +56,76 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
 
     @Override
     public List<Response> open() {
-        return notImplemented;
+        List<Response> returnValue = new ArrayList<>();
+        LOGGER.info("Opening [{}]", this.getName());
+
+        if (!EntityUtil.is(open) && !EntityUtil.is(locked)) {
+            EntityUtil.add(open);
+            returnValue.add(
+                responseFactory.createBuilder().source(this.getName()).text(String.format("%s opens", this.getName()))
+                    .build());
+        } else {
+            returnValue.add(responseFactory.createBuilder().source(this.getName())
+                .text(String.format("%s does not open", this.getName())).build());
+        }
+
+
+        return returnValue;
     }
 
     @Override
     public List<Response> close() {
-        return notImplemented;
+        List<Response> returnValue = new ArrayList<>();
+        LOGGER.info("Closing [{}]", this.getName());
+
+        if (EntityUtil.is(open)) {
+            EntityUtil.remove(open);
+            returnValue.add(
+                responseFactory.createBuilder().source(this.getName()).text(String.format("%s closes", this.getName()))
+                    .build());
+        } else {
+            returnValue.add(responseFactory.createBuilder().source(this.getName())
+                .text(String.format("%s does not close", this.getName())).build());
+        }
+
+        return returnValue;
+    }
+
+    @Override
+    public List<Response> lock() {
+        List<Response> returnValue = new ArrayList<>();
+        LOGGER.info("Locking [{}]", this.getName());
+
+        if (!EntityUtil.is(open) && !EntityUtil.is(locked)) {
+            EntityUtil.add(locked);
+            returnValue.add(responseFactory.createBuilder().source(this.getName())
+                .text(String.format("%s is locked", this.getName())).build());
+        } else {
+            returnValue.add(responseFactory.createBuilder().source(this.getName())
+                .text(String.format("%s is not locked", this.getName())).build());
+        }
+
+
+        return returnValue;
+    }
+
+    @Override
+    public List<Response> unlock() {
+        List<Response> returnValue = new ArrayList<>();
+        LOGGER.info("Unlocking [{}]", this.getName());
+
+        if (EntityUtil.is(locked)) {
+            EntityUtil.remove(locked);
+            returnValue.add(
+                responseFactory.createBuilder().source(this.getName()).text(String.format("%s is unlocked", this
+                    .getName()))
+                    .build());
+        } else {
+            returnValue.add(responseFactory.createBuilder().source(this.getName())
+                .text(String.format("%s is already locked", this.getName())).build());
+        }
+
+        return returnValue;
     }
 
     @Override

@@ -36,11 +36,16 @@ public class App {
         EntityService entityService = new EntityServiceImpl(new AttributeManagerFactoryImpl());
         UserInput ui = new UserInputTextImpl(inStream, outStream, entityService);
         Adventure adventure = new AdventureImpl(entityService, new EntityFacadeBuilderFactoryImpl(entityService),
-                                                new ExitBuilderFactoryImpl(), ui);
+            new ExitBuilderFactoryImpl(), ui);
         Player player = new PlayerImpl(ui.getResponse("Player name?"), null);
+        LOGGER.info("Player [{}] enters the adventure", player.getName());
 
+        outStream.println(String
+            .format("%s, you are about to enter a world of adventure... you find yourself in an area...",
+                player.getName()));
         adventure.create();
         adventure.start(player);
+        player.getArea().enter(player, adventure).stream().forEachOrdered((a) -> outStream.println(a.render()));
 
         while (adventure.proceed()) {
             LOGGER.info("Start of round");
@@ -49,6 +54,8 @@ public class App {
                 command.execute(player, adventure).stream().forEachOrdered((a) -> outStream.println(a.render()));
             }
         }
+
+        outStream.println(String.format("%s has left the adventure.", player.getName()));
 
         return 0;
     }

@@ -4,6 +4,8 @@ import com.tompy.entity.area.api.Area;
 import com.tompy.entity.compartment.api.Compartment;
 import com.tompy.entity.item.api.Item;
 import com.tompy.player.api.Player;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
@@ -11,6 +13,7 @@ import static com.tompy.player.internal.PlayerInfo.SEARCHES;
 import static com.tompy.player.internal.PlayerInfo.VISITS;
 
 public class PlayerImpl implements Player {
+    private static final Logger LOGGER = LogManager.getLogger(PlayerImpl.class);
     private String name;
     private Area currentArea;
     private Map<String, PlayerInfo> areaInfoMap = new HashMap<>();
@@ -75,6 +78,7 @@ public class PlayerImpl implements Player {
     public boolean addItem(Item item) {
         if (!inventory.contains(item)) {
             inventory.add(item);
+            LOGGER.info("Adding item [{}] to player inventory.", item.getName());
             return true;
         }
         return false;
@@ -85,6 +89,8 @@ public class PlayerImpl implements Player {
         if (inventory.contains(item)) {
             // TODO When Compartment is fleshed out, we'll deal with this
             compartment.addItem(item);
+            inventory.remove(item);
+            LOGGER.info("Removing item [{}] for player inventory", item.getName());
             return true;
         }
         return false;
@@ -96,6 +102,7 @@ public class PlayerImpl implements Player {
             if (equipped.stream().mapToInt(Item::hands).sum() < 2) {
                 inventory.remove(item);
                 equipped.add(item);
+                LOGGER.info("Equipping item [{}]", item.getName());
                 return true;
             }
         }
@@ -107,6 +114,7 @@ public class PlayerImpl implements Player {
         if (equipped.contains(item)) {
             equipped.remove(item);
             inventory.add(item);
+            LOGGER.info("Unequipping item [{}]", item.getName());
             return true;
         }
         return false;

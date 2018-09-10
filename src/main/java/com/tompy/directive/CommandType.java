@@ -19,7 +19,7 @@ public enum CommandType {
     COMMAND_SEARCH_FEATURE("Search", "Searching"), // TODO
     COMMAND_SEARCH_IN("Search in", "Searching in"), // TODO
     COMMAND_SEARCH_ON("Search on", "Searching on"), // TODO
-    COMMAND_TAKE("Take", "Taking"), COMMAND_TAKE_FROM("Take", "Taking"), // TODO
+    COMMAND_TAKE("Take", "Taking"), COMMAND_TAKE_FROM("Take from", "Taking from"), // TODO
     COMMAND_UNEQUIP("Unequip", "Unequipping"), // TODO
     COMMAND_USE("Use", "Using"); // TODO
 

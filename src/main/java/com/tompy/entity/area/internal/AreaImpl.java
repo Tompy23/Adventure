@@ -1,6 +1,7 @@
 package com.tompy.entity.area.internal;
 
 import com.tompy.adventure.api.Adventure;
+import com.tompy.attribute.api.Attribute;
 import com.tompy.directive.Direction;
 import com.tompy.entity.api.EntityService;
 import com.tompy.entity.area.api.Area;
@@ -25,7 +26,7 @@ public class AreaImpl extends CompartmentImpl implements Area {
     protected Map<Direction, List<Feature>> directionFeatures = new HashMap<>();
 
     protected AreaImpl(Long key, String name, List<String> descriptors, String description, String searchDescription,
-                       String[] searchDirectionDescription, EntityService entityService) {
+        String[] searchDirectionDescription, EntityService entityService) {
         super(key, name, descriptors, description, entityService);
         this.searchDescription = searchDescription;
         this.searchDirectionDescription = searchDirectionDescription;
@@ -41,7 +42,7 @@ public class AreaImpl extends CompartmentImpl implements Area {
         Objects.requireNonNull(exit, "When initializing an exit to a room, the exit must not be null");
 
         LOGGER.info("Installing Exit from [{}] to area [{}]",
-                    new String[]{this.getName(), exit.getConnectedArea(this).getName()});
+            new String[]{this.getName(), exit.getConnectedArea(this).getName()});
 
         // Next we add the exit
         exits.put(direction, exit);
@@ -50,7 +51,7 @@ public class AreaImpl extends CompartmentImpl implements Area {
 
     @Override
     public void installFeature(Feature feature, Direction direction) {
-        LOGGER.info("Installing feature [{}]", feature.getName());
+        LOGGER.info("Installing feature [{}] in [{}]", new String[]{feature.getName(), this.getName()});
         if (null != direction) {
             LOGGER.info("Installing feature in direction [{}]", direction.name());
             if (!directionFeatures.containsKey(direction)) {
@@ -68,9 +69,9 @@ public class AreaImpl extends CompartmentImpl implements Area {
     }
 
     @Override
-    public List<Response> enter(Direction direction, Player player, Adventure adventure) {
+    public List<Response> enter(Player player, Adventure adventure) {
         List<Response> returnValue = new ArrayList<>();
-        LOGGER.info("Entering room [{}] in direction [{}]", this.getName(), direction.name());
+        LOGGER.info("Entering room [{}]", this.getName());
 
         returnValue.add(responseFactory.createBuilder().text(description).source(name).build());
         player.visitArea(name);
@@ -98,8 +99,14 @@ public class AreaImpl extends CompartmentImpl implements Area {
         if (!features.isEmpty()) {
             returnValue.add(responseFactory.createBuilder().text("You find ").source(name).build());
             features.stream().forEach((f) -> returnValue.addAll(f.search()));
-            items.stream().forEach((i) -> returnValue
-                .add(this.responseFactory.createBuilder().source(i.getName()).text(i.getDetailDescription()).build()));
+        }
+
+        if (!items.isEmpty()) {
+            items.stream().forEach((i) -> {
+                returnValue.add(
+                    this.responseFactory.createBuilder().source(i.getName()).text(i.getDetailDescription()).build());
+                entityService.add(i, Attribute.VISIBLE);
+            });
         }
 
         player.searchArea(name);
@@ -118,7 +125,7 @@ public class AreaImpl extends CompartmentImpl implements Area {
                     .build());
         } else {
             returnValue.add(responseFactory.createBuilder().text("Nothing special to the " + direction.getDescription())
-                                .source(name).build());
+                .source(name).build());
         }
 
         if (directionFeatures.containsKey(direction)) {
@@ -195,7 +202,7 @@ public class AreaImpl extends CompartmentImpl implements Area {
         @Override
         public Area build() {
             return new AreaImpl(key, name, this.buildDescriptors(), description, searchDescription,
-                                searchDirectionDescription, entityService);
+                searchDirectionDescription, entityService);
         }
     }
 }

@@ -1,9 +1,10 @@
-package com.tompy.entity.item.interna;
+package com.tompy.entity.item.internal;
 
 import com.tompy.directive.ItemType;
 import com.tompy.entity.api.Entity;
 import com.tompy.entity.api.EntityFacade;
 import com.tompy.entity.api.EntityService;
+import com.tompy.entity.feature.api.Feature;
 import com.tompy.entity.internal.EntityBuilderHelperImpl;
 import com.tompy.entity.internal.EntityImpl;
 import com.tompy.entity.item.api.Item;
@@ -63,6 +64,7 @@ public class ItemImpl extends EntityImpl implements Item {
     public static class ItemBuilderImpl extends EntityBuilderHelperImpl implements ItemBuilder {
         private ItemType type;
         private EntityFacade target;
+        private Feature targetFeature;
 
         public ItemBuilderImpl(Long key, EntityService entityService) {
             super(key, entityService);
@@ -73,7 +75,7 @@ public class ItemImpl extends EntityImpl implements Item {
             Item item;
             switch (type) {
                 case ITEM_KEY:
-                    item = new ItemKeyImpl(key, name, buildDescriptors(), description, entityService, target);
+                    item = new ItemKeyImpl(key, name, buildDescriptors(), description, entityService, targetFeature);
                     if (entityService != null) {
                         entityService.addItem(item);
                     }
@@ -120,6 +122,12 @@ public class ItemImpl extends EntityImpl implements Item {
         @Override
         public ItemBuilder target(EntityFacade target) {
             this.target = target;
+            return this;
+        }
+
+        @Override
+        public ItemBuilder targetFeature(Feature targetFeature) {
+            this.targetFeature = targetFeature;
             return this;
         }
     }

@@ -6,7 +6,6 @@ import com.tompy.command.api.CommandBuilder;
 import com.tompy.command.api.CommandBuilderFactory;
 import com.tompy.directive.CommandType;
 import com.tompy.entity.EntityUtil;
-import com.tompy.entity.api.Entity;
 import com.tompy.entity.api.EntityService;
 import com.tompy.entity.feature.api.Feature;
 import com.tompy.entity.item.api.Item;
@@ -18,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class CommandUseImpl extends CommandBasicImpl implements Command {
     private static final Logger LOGGER = LogManager.getLogger(CommandUseImpl.class);
@@ -40,22 +40,29 @@ public class CommandUseImpl extends CommandBasicImpl implements Command {
 
     @Override
     public List<Response> execute(Player player, Adventure adventure) {
-        LOGGER.info("Executing Command Use");
-        List<Item> items = player.getArea().getAllItems();
+        LOGGER.info("Executing Command Use. subject: {}; target {}", subject, target);
+        List<Item> items = player.getInventory();
         Long itemKey = EntityUtil.findEntityByDescription(items, subject, adventure.getUI());
-        Item source = items.stream().filter((i) -> i.getKey().equals(itemKey)).findFirst().get();
+        Optional<Item> optSource = items.stream().filter((i) -> i.getKey().equals(itemKey)).findFirst();
 
         List<Feature> features = player.getArea().getAllFeatures();
         Long featureKey = EntityUtil.findEntityByDescription(features, target, adventure.getUI());
-        Entity object = features.stream().filter((i) -> i.getKey().equals(featureKey)).findFirst().get();
+        Optional<Feature> optObject = features.stream().filter((i) -> i.getKey().equals(featureKey)).findFirst();
 
-        // Use subject on target
-        if (source != null && object != null && source.hasTarget(object)) {
-            return source.use();
+        if (optSource.isPresent() && optObject.isPresent()) {
+            Item source = optSource.get();
+            Feature object = optObject.get();
+            // Use subject on target
+            if (source.hasTarget(object)) {
+                LOGGER.info("Using [{}] on [{}]", source.getName(), object.getName());
+                return source.use();
+            }
+
+            return Collections.singletonList(responseFactory.createBuilder().source("CommandUse").text(
+                String.format("Cannot use %s on %s", source.getName(), object.getName())).build());
         }
-
         return Collections.singletonList(responseFactory.createBuilder().source("CommandUse").text(
-            String.format("Cannot use %s on %s", source.getName(), object.getName())).build());
+            String.format("Cannot use %s on %s", subject, target)).build());
     }
 
     public static final class CommandUseBuilderImpl extends CommandBuilderImpl {
@@ -70,9 +77,9 @@ public class CommandUseImpl extends CommandBasicImpl implements Command {
 
         @Override
         public CommandBuilder parts(String[] parts) {
-            if (parts.length == 3 && (parts[1].equalsIgnoreCase("on") || parts[1].equalsIgnoreCase("in"))) {
-                subject = parts[0];
-                target = parts[2];
+            if (parts.length == 4 && (parts[2].equalsIgnoreCase("on") || parts[1].equalsIgnoreCase("in"))) {
+                subject = parts[1];
+                target = parts[3];
             }
             return this;
         }

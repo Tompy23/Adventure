@@ -42,7 +42,7 @@ public class CommandMoveImpl extends CommandBasicImpl implements Command {
 
     @Override
     public List<Response> execute(Player player, Adventure adventure) {
-        LOGGER.info("Executing Command Move");
+        LOGGER.info("Executing Command Move.  direction: {}", direction.getDescription());
         List<Response> returnValue = new ArrayList<>();
         Area currentArea = player.getArea();
         Exit targetExit = currentArea.getExitForDirection(direction);
@@ -61,7 +61,7 @@ public class CommandMoveImpl extends CommandBasicImpl implements Command {
                 returnValue.add(responseFactory.createBuilder().text("Success").source(type.getDescription()).build());
                 returnValue.addAll(currentArea.exit(direction, player, adventure));
                 returnValue.addAll(targetExit.passThru(direction));
-                returnValue.addAll(targetArea.enter(AdventureUtils.getOppositeDirection(direction), player, adventure));
+                returnValue.addAll(targetArea.enter(player, adventure));
                 player.setArea(targetArea);
             } else {
                 returnValue.add(responseFactory.createBuilder().text("Failure").source(type.getDescription()).build());

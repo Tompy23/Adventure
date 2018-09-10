@@ -1,9 +1,9 @@
-package com.tompy.entity.item.interna;
+package com.tompy.entity.item.internal;
 
-import com.tompy.entity.EntityUtil;
+import com.tompy.attribute.api.Attribute;
 import com.tompy.entity.api.Entity;
-import com.tompy.entity.api.EntityFacade;
 import com.tompy.entity.api.EntityService;
+import com.tompy.entity.feature.api.Feature;
 import com.tompy.response.api.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,12 +11,15 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A key is used to lock/unlock a feature.
+ */
 public class ItemKeyImpl extends ItemImpl {
     private static final Logger LOGGER = LogManager.getLogger(ItemKeyImpl.class);
-    private final EntityFacade target;
+    private final Feature target;
 
     public ItemKeyImpl(Long key, String name, List<String> descriptors, String description, EntityService entityService,
-                       EntityFacade target) {
+        Feature target) {
         super(key, name, descriptors, description, entityService);
         this.target = target;
     }
@@ -25,15 +28,15 @@ public class ItemKeyImpl extends ItemImpl {
     public List<Response> use() {
         List<Response> returnValue = new ArrayList<>();
 
-        LOGGER.info("Using [{}] on [{}]", new String[] {getName(), target.getEntity().getName()});
+        LOGGER.info("Using key [{}] on [{}]", getName(), target.getName());
 
         returnValue.add(this.responseFactory.createBuilder().source(getSource())
-                            .text(String.format("Using %s on %s", getName(), target.getEntity().getName())).build());
+            .text(String.format("Using %s on %s", getName(), target.getName())).build());
 
-        if (EntityUtil.is(target)) {
-            EntityUtil.remove(target);
+        if (entityService.is(target, Attribute.LOCKED)) {
+            target.unlock();
         } else {
-            EntityUtil.add(target);
+            target.lock();
         }
 
         return returnValue;
@@ -41,7 +44,7 @@ public class ItemKeyImpl extends ItemImpl {
 
     @Override
     public boolean hasTarget(Entity entity) {
-        return entity.getKey().equals(target.getEntity().getKey());
+        return entity.getKey().equals(target.getKey());
     }
 
 }

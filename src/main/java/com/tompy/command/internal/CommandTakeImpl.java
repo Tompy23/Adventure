@@ -1,6 +1,7 @@
 package com.tompy.command.internal;
 
 import com.tompy.adventure.api.Adventure;
+import com.tompy.attribute.api.Attribute;
 import com.tompy.command.api.Command;
 import com.tompy.command.api.CommandBuilder;
 import com.tompy.command.api.CommandBuilderFactory;
@@ -20,7 +21,7 @@ import java.util.Optional;
 
 public class CommandTakeImpl extends CommandBasicImpl implements Command {
     private static final Logger LOGGER = LogManager.getLogger(CommandTakeImpl.class);
-    private final String target;
+    protected final String target;
 
     protected CommandTakeImpl(CommandType type, EntityService entityService, String target) {
         super(type != null ? type : CommandType.COMMAND_TAKE, entityService);
@@ -39,32 +40,63 @@ public class CommandTakeImpl extends CommandBasicImpl implements Command {
     public List<Response> execute(Player player, Adventure adventure) {
         LOGGER.info("Executing Command Take");
         List<Response> returnValue = new ArrayList<>();
+
         List<Item> items = player.getArea().getAllItems();
         Long objectKey = EntityUtil.findEntityByDescription(items, target, adventure.getUI());
-        Optional<Item> object = items.stream().filter((i) -> i.getKey().equals(objectKey)).findFirst();
-        if (object.isPresent() && player.addItem(object.get())) {
-            player.getArea().removeItem(object.get());
-            returnValue.add(responseFactory.createBuilder().source("CommandTake").text(
-                String.format("%s is now in %s's inventory", object.get().getName(), player.getName())).build());
+        Optional<Item> optObject = items.stream().filter((i) -> i.getKey().equals(objectKey)).findFirst();
+
+        if (optObject.isPresent()) {
+            Item object = optObject.get();
+            if (entityService.is(object, Attribute.VISIBLE)) {
+                if (player.addItem(object)) {
+                    player.getArea().removeItem(object);
+                    returnValue.add(responseFactory.createBuilder().source("CommandTake")
+                        .text(String.format("%s is now in %s's inventory", object.getName(), player.getName()))
+                        .build());
+                } else {
+                    // TODO Inventory full?  Or some other issue?
+                    returnValue
+                        .add(responseFactory.createBuilder().source("CommandTake").text("Inventory full.").build());
+                }
+            }
         } else {
             returnValue.add(responseFactory.createBuilder().source("CommandTake")
-                                .text(String.format("%s is not in %s's inventory", target, player.getName())).build());
+                .text(String.format("%s is not in %s's inventory", target, player.getName())).build());
         }
 
         return returnValue;
     }
 
     public static final class CommandTakeBuilderImpl extends CommandBuilderImpl {
+        private String item;
         private String target;
 
         @Override
         public Command build() {
-            return new CommandTakeImpl(type, entityService, target);
+            switch (type) {
+                case COMMAND_TAKE_FROM:
+                    return new CommandTakeFromImpl(type, entityService, item, target);
+                default:
+                    return new CommandTakeImpl(type, entityService, target);
+            }
         }
 
         @Override
         public CommandBuilder parts(String[] parts) {
-            this.target = parts[1];
+            if (parts.length == 4) {
+                this.item = parts[1];
+                this.target = parts[3];
+                this.type = CommandType.COMMAND_TAKE_FROM;
+            } else {
+                this.target = parts[1];
+                this.type = CommandType.COMMAND_TAKE;
+            }
+            return this;
+        }
+
+        @Override
+        public CommandBuilder type(CommandType type) {
+            // type is defined when parsing parts
             return this;
         }
     }

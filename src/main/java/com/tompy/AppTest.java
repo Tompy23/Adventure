@@ -7,7 +7,7 @@ import com.tompy.entity.api.EntityService;
 import com.tompy.entity.internal.EntityServiceImpl;
 import com.tompy.entity.item.api.Item;
 import com.tompy.entity.item.api.ItemBuilder;
-import com.tompy.entity.item.interna.ItemImpl;
+import com.tompy.entity.item.internal.ItemImpl;
 import com.tompy.io.UserInput;
 import com.tompy.io.UserInputTextImpl;
 

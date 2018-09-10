@@ -30,7 +30,7 @@ public abstract class CompartmentImpl extends EntityImpl implements Compartment 
 
     @Override
     public void addItem(Item item) {
-        LOGGER.info("Get Item [{}] from compartment [{}]", item.getName(), this.getName());
+        LOGGER.info("Add Item [{}] to compartment [{}]", item.getName(), this.getName());
         items.add(item);
     }
 

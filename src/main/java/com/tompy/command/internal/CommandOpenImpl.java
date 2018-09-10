@@ -18,6 +18,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * This feature represents objects that can be open/closed, locked/unlocked, trapped...
+ */
 public class CommandOpenImpl extends CommandBasicImpl implements Command {
     private static final Logger LOGGER = LogManager.getLogger(CommandOpenImpl.class);
     private final String target;

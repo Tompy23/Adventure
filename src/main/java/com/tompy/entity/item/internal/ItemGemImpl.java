@@ -1,4 +1,4 @@
-package com.tompy.entity.item.interna;
+package com.tompy.entity.item.internal;
 
 import com.tompy.entity.api.EntityService;
 

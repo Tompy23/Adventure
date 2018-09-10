@@ -67,11 +67,10 @@ public class EntityUtil {
         for (Long finalist : finalists) {
             for (Entity entity : entities) {
                 if (entity.getKey() == finalist) {
-                    choices.put(entity.getKey(), entity.getName());
+                    choices.put(entity.getKey(), entity.getDetailDescription());
                 }
             }
         }
-
 
         return io.getSelection(choices);
     }

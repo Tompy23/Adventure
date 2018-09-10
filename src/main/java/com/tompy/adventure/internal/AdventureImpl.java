@@ -27,14 +27,14 @@ import static com.tompy.directive.ItemType.ITEM_KEY;
 
 public class AdventureImpl implements Adventure {
     private static final Logger LOGGER = LogManager.getLogger(AdventureImpl.class);
-    private final EntityService entityService;
-    private final EntityFacadeBuilderFactory entityFacadeBuilderFactory;
-    private final ExitBuilderFactory exitBuilderFactory;
-    private final UserInput userInput;
-    private boolean proceed = false;
+    protected final EntityService entityService;
+    protected final EntityFacadeBuilderFactory entityFacadeBuilderFactory;
+    protected final ExitBuilderFactory exitBuilderFactory;
+    protected final UserInput userInput;
+    protected boolean proceed = false;
 
     public AdventureImpl(EntityService entityService, EntityFacadeBuilderFactory entityFacadeBuilderFactory,
-                         ExitBuilderFactory exitBuilderFactory, UserInput userInput) {
+        ExitBuilderFactory exitBuilderFactory, UserInput userInput) {
         this.entityService = Objects.requireNonNull(entityService, "Entity Service cannot be null.");
         this.entityFacadeBuilderFactory =
             Objects.requireNonNull(entityFacadeBuilderFactory, "Entity Facade Builder Factory cannot be null.");
@@ -62,13 +62,13 @@ public class AdventureImpl implements Adventure {
             .description("This room has a single torch, making it smoky and dark.")
             .searchDescription("There is nothing to see, but the smoke seems to be building up.")
             .searchDirectionDescription(DIRECTION_WEST, "An iron door.")
-            .searchDirectionDescription(DIRECTION_NORTH, "A dark curatin seems to cover something.").build();
+            .searchDirectionDescription(DIRECTION_NORTH, "A dark curtain seems to cover something.").build();
 
         Area room4 = entityService.createAreabuilder().name("Room4").description("You have made it outside").build();
 
 
         // Exits
-        Exit exit1 = exitBuilderFactory.builder().area(room2).area(room1).state(true).build();
+        Exit exit1 = exitBuilderFactory.builder().area(room2).area(room1).state(false).build();
         Exit exit2 = exitBuilderFactory.builder().area(room3).area(room2).state(false).build();
         Exit exit3 = exitBuilderFactory.builder().area(room3).area(room4).state(false).build();
 
@@ -78,19 +78,20 @@ public class AdventureImpl implements Adventure {
         room3.installExit(DIRECTION_WEST, exit2);
         room3.installExit(DIRECTION_NORTH, exit3);
 
+
         // Features
         Feature room1Chest =
             entityService.createFeatureBuilder().type(FEATURE_CHEST).name("Chest").longName("dusty chest")
                 .description("an old and dusty chest").build();
         Feature room2EastDoor =
-            entityService.createFeatureBuilder().type(FEATURE_DOOR).name("Oak Door").longName("north door")
-                .description("oak door").exit(exit2).build();
+            entityService.createFeatureBuilder().type(FEATURE_DOOR).name("Door").longName("iron door")
+                .description("iron door").exit(exit2).build();
         Feature room2SouthDoor =
-            entityService.createFeatureBuilder().type(FEATURE_DOOR).name("Iron Door").longName("south door")
-                .description("iron door").exit(exit1).build();
+            entityService.createFeatureBuilder().type(FEATURE_DOOR).name("Door").longName("oak door")
+                .description("oak door").exit(exit1).build();
         Feature room3NorthDoor =
-            entityService.createFeatureBuilder().type(FEATURE_DOOR).name("Curtain").longName("Dark curtain")
-                .description("dark curtain").exit(exit3).build();
+            entityService.createFeatureBuilder().type(FEATURE_DOOR).name("Curtain").longName("dark curtain")
+                .description("long dark curtain").exit(exit3).build();
 
         EntityFacade room1ChestLock = entityFacadeBuilderFactory.builder().entity(room1Chest).attribute(LOCKED).build();
         EntityFacade room2EastDoorLock =
@@ -109,9 +110,9 @@ public class AdventureImpl implements Adventure {
 
         // Items.
         Item key1 = entityService.createItemBuilder().type(ITEM_KEY).name("key").longName("blue key")
-            .description("shiny blue key").target(room2EastDoorLock).build();
+            .description("shiny blue key").targetFeature(room2EastDoor).build();
         Item key2 = entityService.createItemBuilder().type(ITEM_KEY).name("key").longName("iron key")
-            .description("dull iron key").target(room1ChestLock).build();
+            .description("dull iron key").targetFeature(room1Chest).build();
         Item gem1 = entityService.createItemBuilder().type(ITEM_GEM).name("Ruby").longName("red ruby")
             .description("sparkling red ruby").build();
 
@@ -119,8 +120,8 @@ public class AdventureImpl implements Adventure {
         EntityUtil.add(gem1Value, 5);
 
         room1Chest.addItem(gem1);
-        room1.addItem(key2);
-        room3.addItem(key1);
+        room1.addItem(key1);
+        room3.addItem(key2);
 
         // Summary
         entityService.addArea(room1);
