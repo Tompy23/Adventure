@@ -84,8 +84,6 @@ public class AreaImpl extends CompartmentImpl implements Area {
         List<Response> returnValue = new ArrayList<>();
         LOGGER.info("Exiting room [{}] in direction [{}]", this.getName(), direction.name());
 
-        returnValue.add(responseFactory.createBuilder().text("bye bye").source(name).build());
-
         return returnValue;
     }
 
@@ -97,7 +95,6 @@ public class AreaImpl extends CompartmentImpl implements Area {
         returnValue.add(responseFactory.createBuilder().text(searchDescription).source(name).build());
 
         if (!features.isEmpty()) {
-            returnValue.add(responseFactory.createBuilder().text("You find ").source(name).build());
             features.stream().forEach((f) -> returnValue.addAll(f.search()));
         }
 
@@ -129,7 +126,6 @@ public class AreaImpl extends CompartmentImpl implements Area {
         }
 
         if (directionFeatures.containsKey(direction)) {
-            returnValue.add(responseFactory.createBuilder().text("You find ").source(name).build());
             directionFeatures.get(direction).stream().forEach((f) -> returnValue.addAll(f.search()));
         }
 
@@ -141,7 +137,7 @@ public class AreaImpl extends CompartmentImpl implements Area {
         LOGGER.info("Retrieving all features from room [{}]", this.getName());
         List<Feature> returnValue = new ArrayList<>();
         returnValue.addAll(features);
-        directionFeatures.values().stream().forEach((f) -> returnValue.addAll(f));
+        directionFeatures.values().stream().forEach(returnValue::addAll);
 
         return returnValue;
     }

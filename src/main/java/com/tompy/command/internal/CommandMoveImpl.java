@@ -58,13 +58,11 @@ public class CommandMoveImpl extends CommandBasicImpl implements Command {
         if (null != targetExit) {
             if (targetExit.isOpen()) {
                 Area targetArea = targetExit.getConnectedArea(currentArea);
-                returnValue.add(responseFactory.createBuilder().text("Success").source(type.getDescription()).build());
                 returnValue.addAll(currentArea.exit(direction, player, adventure));
                 returnValue.addAll(targetExit.passThru(direction));
                 returnValue.addAll(targetArea.enter(player, adventure));
                 player.setArea(targetArea);
             } else {
-                returnValue.add(responseFactory.createBuilder().text("Failure").source(type.getDescription()).build());
                 returnValue.addAll(currentArea.exit(direction, player, adventure));
             }
         } else {

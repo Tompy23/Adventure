@@ -35,12 +35,15 @@ public class CommandSearchFeatureImpl extends CommandSearchImpl {
         if (optObject.isPresent()) {
             Feature object = optObject.get();
             returnValue.addAll(object.search());
-            object.getAllItems().stream().forEach((i) -> {
-                returnValue.add(
-                    responseFactory.createBuilder().source("CommandSearchFeature").text(i.getDetailDescription())
-                        .build());
-                entityService.add(i, Attribute.VISIBLE);
-            });
+            if (entityService.is(object, Attribute.OPEN)) {
+                object.getAllItems().stream().forEach((i) -> {
+                    returnValue.add(
+                        responseFactory.createBuilder().source("CommandSearchFeature").text(i.getDetailDescription())
+                            .build());
+                    entityService.add(i, Attribute.VISIBLE);
+
+                });
+            }
         }
 
         return returnValue;
