@@ -1,7 +1,7 @@
 package com.tompy.entity.area.api;
 
 public interface AreaBuilderFactory {
-    AreaBuilder createAreabuilder();
+    AreaBuilder createAreaBuilder();
 
     void addArea(Area area);
 }

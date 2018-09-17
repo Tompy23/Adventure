@@ -6,7 +6,7 @@ package com.tompy.entity.item.api;
 public interface ItemBuilderFactory {
 
     /**
-     * Creates a new compartment Builder
+     * Creates a new Item Builder
      *
      * @return - the builder
      */

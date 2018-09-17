@@ -3,6 +3,7 @@ package com.tompy.entity.api;
 import com.tompy.attribute.api.Attribute;
 import com.tompy.entity.area.api.Area;
 import com.tompy.entity.area.api.AreaBuilderFactory;
+import com.tompy.entity.event.api.EventBuilderFactory;
 import com.tompy.entity.feature.api.Feature;
 import com.tompy.entity.feature.api.FeatureBuilderFactory;
 import com.tompy.entity.item.api.Item;
@@ -13,7 +14,8 @@ import java.util.OptionalInt;
 /**
  * A service combining entities with various functions and states via an Attribute Manager
  */
-public interface EntityService extends ItemBuilderFactory, FeatureBuilderFactory, AreaBuilderFactory {
+public interface EntityService
+    extends ItemBuilderFactory, FeatureBuilderFactory, AreaBuilderFactory, EventBuilderFactory {
 
     /**
      * Add Attribute to an entity
@@ -84,6 +86,4 @@ public interface EntityService extends ItemBuilderFactory, FeatureBuilderFactory
     void addAttributeDoesNotApply(Entity key, Attribute attribute, String text);
 
     String getAttributeApplicationText(Entity key, Attribute attribute);
-
-
 }

@@ -60,7 +60,7 @@ public class CommandMoveImpl extends CommandBasicImpl implements Command {
                 Area targetArea = targetExit.getConnectedArea(currentArea);
                 returnValue.addAll(currentArea.exit(direction, player, adventure));
                 returnValue.addAll(targetExit.passThru(direction));
-                returnValue.addAll(targetArea.enter(player, adventure));
+                returnValue.addAll(targetArea.enter(AdventureUtils.getOppositeDirection(direction), player, adventure));
                 player.setArea(targetArea);
             } else {
                 returnValue.addAll(currentArea.exit(direction, player, adventure));

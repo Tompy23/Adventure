@@ -5,6 +5,7 @@ import com.tompy.adventure.api.Adventure;
 import com.tompy.adventure.internal.AdventureImpl;
 import com.tompy.attribute.internal.AttributeManagerFactoryImpl;
 import com.tompy.command.api.Command;
+import com.tompy.directive.Direction;
 import com.tompy.entity.api.EntityService;
 import com.tompy.entity.internal.EntityFacadeBuilderFactoryImpl;
 import com.tompy.entity.internal.EntityServiceImpl;
@@ -45,7 +46,8 @@ public class App {
                 player.getName()));
         adventure.create();
         adventure.start(player);
-        player.getArea().enter(player, adventure).stream().forEachOrdered((a) -> outStream.println(a.render()));
+        player.getArea().enter(Direction.DIRECTION_NORTH, player, adventure).stream()
+            .forEachOrdered((a) -> outStream.println(a.render()));
 
         while (adventure.proceed()) {
             LOGGER.info("Start of round");

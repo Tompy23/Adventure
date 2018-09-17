@@ -9,6 +9,8 @@ import com.tompy.entity.area.api.Area;
 import com.tompy.entity.area.api.AreaBuilder;
 import com.tompy.entity.area.internal.AreaImpl;
 import com.tompy.entity.compartment.api.Compartment;
+import com.tompy.entity.event.api.EventBuilder;
+import com.tompy.entity.event.internal.EventImpl;
 import com.tompy.entity.feature.api.Feature;
 import com.tompy.entity.feature.api.FeatureBuilder;
 import com.tompy.entity.feature.internal.FeatureBasicImpl;
@@ -145,7 +147,7 @@ public class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public AreaBuilder createAreabuilder() {
+    public AreaBuilder createAreaBuilder() {
         entityKey++;
         attributeManagers.put(entityKey, attributeManagerFactory.create());
         return AreaImpl.createBuilder(entityKey, this);
@@ -156,5 +158,12 @@ public class EntityServiceImpl implements EntityService {
         if (area != null) {
             areas.add(area);
         }
+    }
+
+    @Override
+    public EventBuilder createEventBuilder() {
+        entityKey++;
+        attributeManagers.put(entityKey, attributeManagerFactory.create());
+        return EventImpl.createBuilder(entityKey, this);
     }
 }

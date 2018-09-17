@@ -1,11 +1,14 @@
 package com.tompy.adventure.internal;
 
 import com.tompy.adventure.api.Adventure;
+import com.tompy.directive.ActionType;
+import com.tompy.directive.TriggerType;
 import com.tompy.entity.EntityUtil;
 import com.tompy.entity.api.EntityFacade;
 import com.tompy.entity.api.EntityFacadeBuilderFactory;
 import com.tompy.entity.api.EntityService;
 import com.tompy.entity.area.api.Area;
+import com.tompy.entity.event.api.Event;
 import com.tompy.entity.feature.api.Feature;
 import com.tompy.entity.item.api.Item;
 import com.tompy.exit.api.Exit;
@@ -46,25 +49,31 @@ public class AdventureImpl implements Adventure {
     public void create() {
         LOGGER.info("Creating adventure...");
         // Areas
-        Area room1 = entityService.createAreabuilder().name("Room1").description(
+        Area room1 = entityService.createAreaBuilder().name("Room1").description(
             "Well lit empty room with bright white walls and dark blue carpet.  In the center of the room sits a " +
             "large wooden box.")
             .searchDescription("There is nothing special about this room.  There is a door to the north.")
             .searchDirectionDescription(DIRECTION_NORTH, "An old wooden door.").build();
 
-        Area room2 = entityService.createAreabuilder().name("Room2").description(
+        Area room2 = entityService.createAreaBuilder().name("Room2").description(
             "A hallway that bends to the right.  It is well let with white walls and a dark blue well worn carpet" +
             ".").searchDescription("Along both sides of the hallway are portraits of previous tenants, some quite old.")
             .searchDirectionDescription(DIRECTION_SOUTH, "An old wooden door")
             .searchDirectionDescription(DIRECTION_EAST, "A rusty iron door.").build();
 
-        Area room3 = entityService.createAreabuilder().name("Room3")
+        Area room3 = entityService.createAreaBuilder().name("Room3")
             .description("This room has a single torch, making it smoky and dark.")
             .searchDescription("There is nothing to see, but the smoke seems to be building up.")
             .searchDirectionDescription(DIRECTION_WEST, "An iron door.")
             .searchDirectionDescription(DIRECTION_NORTH, "A dark curtain seems to cover something.").build();
 
-        Area room4 = entityService.createAreabuilder().name("Room4").description("You have made it outside").build();
+        Area room4 = entityService.createAreaBuilder().name("Room4").description("You have made it outside").build();
+
+        Event e1 = entityService.createEventBuilder().name("room1Describe").actionType(ActionType.DESCRIBE)
+            .triggerType(TriggerType.ALWAYS).longName("describe event").memo("enter room2")
+            .responses(new String[]{"this is line1", "and line 2"}).entity(room2).build();
+
+        room2.insertEnterEvent(e1);
 
 
         // Exits

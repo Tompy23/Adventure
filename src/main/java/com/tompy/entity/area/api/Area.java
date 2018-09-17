@@ -4,6 +4,7 @@ import com.tompy.adventure.api.Adventure;
 import com.tompy.command.api.Command;
 import com.tompy.directive.Direction;
 import com.tompy.entity.compartment.api.Compartment;
+import com.tompy.entity.event.api.Event;
 import com.tompy.entity.feature.api.Feature;
 import com.tompy.exit.api.Exit;
 import com.tompy.player.api.Player;
@@ -50,11 +51,12 @@ public interface Area extends Compartment {
     /**
      * The action which happens when an Area is entered by the {@link Player}
      *
-     * @param player    - The {@link Player} info
+     * @param direction - The {@link Direction} the {@link Player} enters
+     *             * @param player    - The {@link Player} info
      * @param adventure - The {@link Adventure} info
      * @return - A list of {@link Response} to display
      */
-    List<Response> enter(Player player, Adventure adventure);
+    List<Response> enter(Direction direction, Player player, Adventure adventure);
 
     /**
      * The action which happens when a {@link Player} leaves an Area
@@ -91,4 +93,24 @@ public interface Area extends Compartment {
      * @return - A list of {@link Feature} in room
      */
     List<Feature> getAllFeatures();
+
+    void insertEnterEvent(Event event);
+
+    void insertEnterNorthEvent(Event event);
+
+    void insertEnterEastEvent(Event event);
+
+    void insertEnterSouthEvent(Event event);
+
+    void insertEnterWestEvent(Event event);
+
+    void insertExitEvent(Event event);
+
+    void insertExitNorthEvent(Event event);
+
+    void insertExitEastEvent(Event event);
+
+    void insertExitSouthEvent(Event event);
+
+    void insertExitWestEvent(Event event);
 }

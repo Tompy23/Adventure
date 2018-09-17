@@ -2,6 +2,8 @@ package com.tompy.entity;
 
 import com.tompy.entity.api.Entity;
 import com.tompy.entity.api.EntityFacade;
+import com.tompy.entity.feature.api.Feature;
+import com.tompy.entity.item.api.Item;
 import com.tompy.io.UserInput;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,6 +39,30 @@ public class EntityUtil {
         }
 
         return itemKey;
+    }
+
+    /**
+     *
+     * @param items       - The list of items from which to choose
+     * @param description - The description supplied by the user.
+     * @param io          - In case the user must supply a response
+     * @return - The Item selected.
+     */
+    public static Optional<Item> findItemByDescription(List<Item> items, String description, UserInput io) {
+        Long objectKey = EntityUtil.findEntityByDescription(items, description, io);
+        return items.stream().filter((i) -> i.getKey().equals(objectKey)).findFirst();
+    }
+
+    /**
+     *
+     * @param features       - The list of features from which to choose
+     * @param description - The description supplied by the user.
+     * @param io          - In case the user must supply a response
+     * @return - The Item selected.
+     */
+    public static Optional<Feature> findFeatureByDescription(List<Feature> features, String description, UserInput io) {
+        Long objectKey = EntityUtil.findEntityByDescription(features, description, io);
+        return features.stream().filter((i) -> i.getKey().equals(objectKey)).findFirst();
     }
 
     private static Map<Long, Integer> computeScores(List<? extends Entity> items, String description) {

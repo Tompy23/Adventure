@@ -28,9 +28,8 @@ public class CommandSearchFeatureImpl extends CommandSearchImpl {
         LOGGER.info("Executing Search Feature");
         List<Response> returnValue = new ArrayList<>();
 
-        List<Feature> features = player.getArea().getAllFeatures();
-        Long featureKey = EntityUtil.findEntityByDescription(features, target, adventure.getUI());
-        Optional<Feature> optObject = features.stream().filter((i) -> i.getKey().equals(featureKey)).findFirst();
+        Optional<Feature> optObject = EntityUtil.findFeatureByDescription(player.getArea().getAllFeatures(), target,
+            adventure.getUI());
 
         if (optObject.isPresent()) {
             Feature object = optObject.get();

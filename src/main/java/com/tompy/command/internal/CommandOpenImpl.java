@@ -42,9 +42,9 @@ public class CommandOpenImpl extends CommandBasicImpl implements Command {
     public List<Response> execute(Player player, Adventure adventure) {
         LOGGER.info("Executing Command Open");
         List<Response> returnValue = new ArrayList<>();
-        List<Feature> entities = player.getArea().getAllFeatures();
-        Long featureKey = EntityUtil.findEntityByDescription(entities, target, adventure.getUI());
-        Optional<Feature> optObject = entities.stream().filter((i) -> i.getKey().equals(featureKey)).findFirst();
+
+        Optional<Feature> optObject = EntityUtil.findFeatureByDescription(player.getArea().getAllFeatures(), target,
+            adventure.getUI());
 
         if (optObject.isPresent()) {
             Feature object = optObject.get();

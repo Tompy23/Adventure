@@ -41,9 +41,8 @@ public class CommandTakeImpl extends CommandBasicImpl implements Command {
         LOGGER.info("Executing Command Take");
         List<Response> returnValue = new ArrayList<>();
 
-        List<Item> items = player.getArea().getAllItems();
-        Long objectKey = EntityUtil.findEntityByDescription(items, target, adventure.getUI());
-        Optional<Item> optObject = items.stream().filter((i) -> i.getKey().equals(objectKey)).findFirst();
+        Optional<Item> optObject =
+            EntityUtil.findItemByDescription(player.getArea().getAllItems(), target, adventure.getUI());
 
         if (optObject.isPresent()) {
             Item object = optObject.get();

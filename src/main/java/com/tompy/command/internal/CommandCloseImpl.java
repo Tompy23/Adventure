@@ -39,9 +39,9 @@ public class CommandCloseImpl extends CommandBasicImpl implements Command {
     public List<Response> execute(Player player, Adventure adventure) {
         LOGGER.info("Executing Command Close");
         List<Response> returnValue = new ArrayList<>();
-        List<Feature> entities = player.getArea().getAllFeatures();
-        Long featureKey = EntityUtil.findEntityByDescription(entities, target, adventure.getUI());
-        Optional<Feature> objectOpt = entities.stream().filter((i) -> i.getKey().equals(featureKey)).findFirst();
+
+        Optional<Feature> objectOpt =
+            EntityUtil.findFeatureByDescription(player.getArea().getAllFeatures(), target, adventure.getUI());
 
         if (objectOpt.isPresent()) {
             Feature object = objectOpt.get();

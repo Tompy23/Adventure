@@ -41,13 +41,11 @@ public class CommandUseImpl extends CommandBasicImpl implements Command {
     @Override
     public List<Response> execute(Player player, Adventure adventure) {
         LOGGER.info("Executing Command Use. subject: {}; target {}", subject, target);
-        List<Item> items = player.getInventory();
-        Long itemKey = EntityUtil.findEntityByDescription(items, subject, adventure.getUI());
-        Optional<Item> optSource = items.stream().filter((i) -> i.getKey().equals(itemKey)).findFirst();
+        Optional<Item> optSource =
+            EntityUtil.findItemByDescription(player.getInventory(), subject, adventure.getUI());
 
-        List<Feature> features = player.getArea().getAllFeatures();
-        Long featureKey = EntityUtil.findEntityByDescription(features, target, adventure.getUI());
-        Optional<Feature> optObject = features.stream().filter((i) -> i.getKey().equals(featureKey)).findFirst();
+        Optional<Feature> optObject =
+            EntityUtil.findFeatureByDescription(player.getArea().getAllFeatures(), target, adventure.getUI());
 
         if (optSource.isPresent() && optObject.isPresent()) {
             Item source = optSource.get();

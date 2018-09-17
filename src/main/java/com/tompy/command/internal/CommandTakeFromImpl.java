@@ -2,7 +2,6 @@ package com.tompy.command.internal;
 
 import com.tompy.adventure.api.Adventure;
 import com.tompy.attribute.api.Attribute;
-import com.tompy.command.api.Command;
 import com.tompy.directive.CommandType;
 import com.tompy.entity.EntityUtil;
 import com.tompy.entity.api.EntityService;
@@ -32,17 +31,15 @@ public class CommandTakeFromImpl extends CommandTakeImpl {
         LOGGER.info("Executing Command Take From");
         List<Response> returnValue = new ArrayList<>();
 
-        List<Feature> features = player.getArea().getAllFeatures();
-        Long featureKey = EntityUtil.findEntityByDescription(features, target, adventure.getUI());
-        Optional<Feature> optObject = features.stream().filter((i) -> i.getKey().equals(featureKey)).findFirst();
+        Optional<Feature> optObject =
+            EntityUtil.findFeatureByDescription(player.getArea().getAllFeatures(), target, adventure.getUI());
 
         if (optObject.isPresent()) {
             Feature object = optObject.get();
 
             if (entityService.is(object, Attribute.VISIBLE)) {
-                List<Item> items = object.getAllItems();
-                Long objectKey = EntityUtil.findEntityByDescription(items, item, adventure.getUI());
-                Optional<Item> optSource = items.stream().filter((i) -> i.getKey().equals(objectKey)).findFirst();
+                Optional<Item> optSource =
+                    EntityUtil.findItemByDescription(object.getAllItems(), item, adventure.getUI());
 
                 if (optSource.isPresent()) {
                     Item source = optSource.get();

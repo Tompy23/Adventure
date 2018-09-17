@@ -58,4 +58,12 @@ public abstract class EntityImpl extends Responsive implements Entity {
         return name + "[" + getKey() + "]";
     }
 
+    @Override
+    public boolean equals(Object other) {
+        Entity otherEntity = other instanceof Entity ? ((Entity) other) : null;
+        if (otherEntity != null) {
+            return this.key == otherEntity.getKey();
+        }
+        return false;
+    }
 }
