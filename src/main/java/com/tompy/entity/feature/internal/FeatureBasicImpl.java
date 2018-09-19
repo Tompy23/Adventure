@@ -1,16 +1,20 @@
 package com.tompy.entity.feature.internal;
 
+import com.tompy.adventure.api.Adventure;
 import com.tompy.attribute.api.Attribute;
+import com.tompy.directive.EventType;
 import com.tompy.directive.FeatureType;
 import com.tompy.entity.EntityUtil;
 import com.tompy.entity.api.EntityFacade;
 import com.tompy.entity.api.EntityService;
 import com.tompy.entity.compartment.internal.CompartmentImpl;
+import com.tompy.entity.event.api.Event;
 import com.tompy.entity.feature.api.Feature;
 import com.tompy.entity.feature.api.FeatureBuilder;
 import com.tompy.entity.internal.EntityBuilderHelperImpl;
 import com.tompy.entity.internal.EntityFacadeImpl;
 import com.tompy.exit.api.Exit;
+import com.tompy.player.api.Player;
 import com.tompy.response.api.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,7 +29,6 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
     protected final EntityFacade open;
     protected final EntityFacade locked;
     protected final EntityFacade visible;
-
 
     protected FeatureBasicImpl(Long key, String name, List<String> descriptors, String description,
         EntityService entityService) {
@@ -47,15 +50,17 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
     }
 
     @Override
-    public List<Response> search() {
+    public List<Response> search(Player player, Adventure adventure) {
         List<Response> returnValue = new ArrayList<>();
         LOGGER.info("Searching Feature [{}]", getName());
-        assert returnValue.add(responseFactory.createBuilder().source(name).text(description).build());
+
+        entityService.handle(this, EventType.FEATURE_SEARCH, player, adventure);
+
         return returnValue;
     }
 
     @Override
-    public List<Response> open() {
+    public List<Response> open(Player player, Adventure adventure) {
         List<Response> returnValue = new ArrayList<>();
         LOGGER.info("Opening [{}]", this.getName());
 
@@ -64,6 +69,7 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
             returnValue.add(
                 responseFactory.createBuilder().source(this.getName()).text(String.format("%s opens", this.getName()))
                     .build());
+            entityService.handle(this, EventType.FEATURE_OPEN, player, adventure);
         } else {
             returnValue.add(responseFactory.createBuilder().source(this.getName())
                 .text(String.format("%s does not open", this.getName())).build());
@@ -74,7 +80,7 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
     }
 
     @Override
-    public List<Response> close() {
+    public List<Response> close(Player player, Adventure adventure) {
         List<Response> returnValue = new ArrayList<>();
         LOGGER.info("Closing [{}]", this.getName());
 
@@ -83,6 +89,7 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
             returnValue.add(
                 responseFactory.createBuilder().source(this.getName()).text(String.format("%s closes", this.getName()))
                     .build());
+            entityService.handle(this, EventType.FEATURE_CLOSE, player, adventure);
         } else {
             returnValue.add(responseFactory.createBuilder().source(this.getName())
                 .text(String.format("%s does not close", this.getName())).build());
@@ -92,7 +99,7 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
     }
 
     @Override
-    public List<Response> lock() {
+    public List<Response> lock(Player player, Adventure adventure) {
         List<Response> returnValue = new ArrayList<>();
         LOGGER.info("Locking [{}]", this.getName());
 
@@ -100,6 +107,7 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
             EntityUtil.add(locked);
             returnValue.add(responseFactory.createBuilder().source(this.getName())
                 .text(String.format("%s is locked", this.getName())).build());
+            entityService.handle(this, EventType.FEATURE_LOCK, player, adventure);
         } else {
             returnValue.add(responseFactory.createBuilder().source(this.getName())
                 .text(String.format("%s is not locked", this.getName())).build());
@@ -110,16 +118,15 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
     }
 
     @Override
-    public List<Response> unlock() {
+    public List<Response> unlock(Player player, Adventure adventure) {
         List<Response> returnValue = new ArrayList<>();
         LOGGER.info("Unlocking [{}]", this.getName());
 
         if (EntityUtil.is(locked)) {
             EntityUtil.remove(locked);
-            returnValue.add(
-                responseFactory.createBuilder().source(this.getName()).text(String.format("%s is unlocked", this
-                    .getName()))
-                    .build());
+            returnValue.add(responseFactory.createBuilder().source(this.getName())
+                .text(String.format("%s is unlocked", this.getName())).build());
+            entityService.handle(this, EventType.FEATURE_UNLOCK, player, adventure);
         } else {
             returnValue.add(responseFactory.createBuilder().source(this.getName())
                 .text(String.format("%s is already locked", this.getName())).build());
@@ -129,7 +136,7 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
     }
 
     @Override
-    public List<Response> drink() {
+    public List<Response> drink(Player player, Adventure adventure) {
         return notImplemented;
     }
 

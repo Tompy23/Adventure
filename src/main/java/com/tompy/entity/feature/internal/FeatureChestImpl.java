@@ -1,8 +1,10 @@
 package com.tompy.entity.feature.internal;
 
+import com.tompy.adventure.api.Adventure;
 import com.tompy.attribute.api.Attribute;
 import com.tompy.entity.EntityUtil;
 import com.tompy.entity.api.EntityService;
+import com.tompy.player.api.Player;
 import com.tompy.response.api.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,7 +24,7 @@ public class FeatureChestImpl extends FeatureBasicImpl {
     }
 
     @Override
-    public List<Response> search() {
+    public List<Response> search(Player player, Adventure adventure) {
         List<Response> returnValue = new ArrayList<>();
         LOGGER.info("Searching Chest [{}]", getName());
 
@@ -36,7 +38,7 @@ public class FeatureChestImpl extends FeatureBasicImpl {
     }
 
     @Override
-    public List<Response> open() {
+    public List<Response> open(Player player, Adventure adventure) {
         LOGGER.info("Opening [{}]", this.getName());
         List<Response> returnValue = new ArrayList<>();
 
@@ -56,7 +58,7 @@ public class FeatureChestImpl extends FeatureBasicImpl {
     }
 
     @Override
-    public List<Response> close() {
+    public List<Response> close(Player player, Adventure adventure) {
         LOGGER.info("Closing [{}]", this.getName());
         List<Response> returnValue = new ArrayList<>();
 
@@ -75,7 +77,7 @@ public class FeatureChestImpl extends FeatureBasicImpl {
     }
 
     @Override
-    public List<Response> lock() {
+    public List<Response> lock(Player player, Adventure adventure) {
         List<Response> returnValue = new ArrayList<>();
         LOGGER.info("Locking [{}]", this.getName());
 
@@ -94,7 +96,7 @@ public class FeatureChestImpl extends FeatureBasicImpl {
     }
 
     @Override
-    public List<Response> unlock() {
+    public List<Response> unlock(Player player, Adventure adventure) {
         List<Response> returnValue = new ArrayList<>();
         LOGGER.info("Unlocking [{}]", this.getName());
 

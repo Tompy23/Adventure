@@ -1,21 +1,24 @@
 package com.tompy.entity.feature.api;
 
+import com.tompy.adventure.api.Adventure;
 import com.tompy.entity.compartment.api.Compartment;
+import com.tompy.entity.event.api.Event;
+import com.tompy.player.api.Player;
 import com.tompy.response.api.Response;
 
 import java.util.List;
 
 public interface Feature extends Compartment {
 
-    List<Response> search();
+    List<Response> search(Player player, Adventure adventure);
 
-    List<Response> open();
+    List<Response> open(Player player, Adventure adventure);
 
-    List<Response> close();
+    List<Response> close(Player player, Adventure adventure);
 
-    List<Response> lock();
+    List<Response> lock(Player player, Adventure adventure);
 
-    List<Response> unlock();
+    List<Response> unlock(Player player, Adventure adventure);
 
-    List<Response> drink();
+    List<Response> drink(Player player, Adventure adventure);
 }

@@ -1,5 +1,6 @@
 package com.tompy.entity.event.internal;
 
+import com.tompy.adventure.api.Adventure;
 import com.tompy.directive.ActionType;
 import com.tompy.directive.Direction;
 import com.tompy.directive.TriggerType;
@@ -11,6 +12,7 @@ import com.tompy.entity.event.api.EventBuilder;
 import com.tompy.entity.event.api.Trigger;
 import com.tompy.entity.internal.EntityBuilderHelperImpl;
 import com.tompy.entity.internal.EntityImpl;
+import com.tompy.player.api.Player;
 import com.tompy.response.api.Response;
 
 import java.util.List;
@@ -33,13 +35,13 @@ public class EventImpl extends EntityImpl implements Event {
     }
 
     @Override
-    public boolean pull() {
-        return trigger.pull();
+    public boolean pull(Player player, Adventure adventure) {
+        return trigger.pull(player, adventure);
     }
 
     @Override
-    public List<Response> apply() {
-        return action.apply();
+    public List<Response> apply(Player player, Adventure adventure) {
+        return action.apply(player, adventure);
     }
 
     public static final class EventBuilderImpl extends EntityBuilderHelperImpl implements EventBuilder {

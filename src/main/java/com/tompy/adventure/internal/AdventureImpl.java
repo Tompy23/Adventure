@@ -2,6 +2,7 @@ package com.tompy.adventure.internal;
 
 import com.tompy.adventure.api.Adventure;
 import com.tompy.directive.ActionType;
+import com.tompy.directive.EventType;
 import com.tompy.directive.TriggerType;
 import com.tompy.entity.EntityUtil;
 import com.tompy.entity.api.EntityFacade;
@@ -73,7 +74,7 @@ public class AdventureImpl implements Adventure {
             .triggerType(TriggerType.ALWAYS).longName("describe event").memo("enter room2")
             .responses(new String[]{"this is line1", "and line 2"}).entity(room2).build();
 
-        room2.insertEnterEvent(e1);
+        entityService.add(room2, EventType.AREA_SEARCH, e1);
 
 
         // Exits

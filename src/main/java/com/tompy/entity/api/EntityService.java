@@ -1,14 +1,20 @@
 package com.tompy.entity.api;
 
+import com.tompy.adventure.api.Adventure;
 import com.tompy.attribute.api.Attribute;
+import com.tompy.directive.EventType;
 import com.tompy.entity.area.api.Area;
 import com.tompy.entity.area.api.AreaBuilderFactory;
+import com.tompy.entity.event.api.Event;
 import com.tompy.entity.event.api.EventBuilderFactory;
 import com.tompy.entity.feature.api.Feature;
 import com.tompy.entity.feature.api.FeatureBuilderFactory;
 import com.tompy.entity.item.api.Item;
 import com.tompy.entity.item.api.ItemBuilderFactory;
+import com.tompy.player.api.Player;
+import com.tompy.response.api.Response;
 
+import java.util.List;
 import java.util.OptionalInt;
 
 /**
@@ -86,4 +92,14 @@ public interface EntityService
     void addAttributeDoesNotApply(Entity key, Attribute attribute, String text);
 
     String getAttributeApplicationText(Entity key, Attribute attribute);
+
+    // These are functions associated with Event Managers
+
+    EntityService add(Entity entity, EventType type, Event event);
+
+    void remove(Entity entity, EventType type, Event event);
+
+    List<Event> get(Entity entity, EventType type);
+
+    List<Response> handle(Entity entity, EventType type, Player player, Adventure adventure);
 }

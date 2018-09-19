@@ -1,9 +1,11 @@
 package com.tompy.entity.item.internal;
 
+import com.tompy.adventure.api.Adventure;
 import com.tompy.attribute.api.Attribute;
 import com.tompy.entity.api.Entity;
 import com.tompy.entity.api.EntityService;
 import com.tompy.entity.feature.api.Feature;
+import com.tompy.player.api.Player;
 import com.tompy.response.api.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,7 +27,7 @@ public class ItemKeyImpl extends ItemImpl {
     }
 
     @Override
-    public List<Response> use() {
+    public List<Response> use(Player player, Adventure adventure) {
         List<Response> returnValue = new ArrayList<>();
 
         LOGGER.info("Using key [{}] on [{}]", getName(), target.getName());
@@ -34,9 +36,9 @@ public class ItemKeyImpl extends ItemImpl {
             .text(String.format("Using %s on %s", getName(), target.getName())).build());
 
         if (entityService.is(target, Attribute.LOCKED)) {
-            target.unlock();
+            target.unlock(player, adventure);
         } else {
-            target.lock();
+            target.lock(player, adventure);
         }
 
         return returnValue;

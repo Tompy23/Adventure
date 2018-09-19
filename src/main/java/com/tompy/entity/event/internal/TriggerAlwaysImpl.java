@@ -1,6 +1,8 @@
 package com.tompy.entity.event.internal;
 
+import com.tompy.adventure.api.Adventure;
 import com.tompy.entity.api.Entity;
+import com.tompy.player.api.Player;
 
 public class TriggerAlwaysImpl extends TriggerImpl {
 
@@ -9,7 +11,7 @@ public class TriggerAlwaysImpl extends TriggerImpl {
     }
 
     @Override
-    public boolean pull() {
+    public boolean pull(Player player, Adventure adventure) {
         return true;
     }
 }

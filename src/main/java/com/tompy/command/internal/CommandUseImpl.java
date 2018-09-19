@@ -53,7 +53,7 @@ public class CommandUseImpl extends CommandBasicImpl implements Command {
             // Use subject on target
             if (source.hasTarget(object)) {
                 LOGGER.info("Using [{}] on [{}]", source.getName(), object.getName());
-                return source.use();
+                return source.use(player, adventure);
             }
 
             return Collections.singletonList(responseFactory.createBuilder().source("CommandUse").text(

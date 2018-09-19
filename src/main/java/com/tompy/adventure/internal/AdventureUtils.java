@@ -2,6 +2,7 @@ package com.tompy.adventure.internal;
 
 import com.tompy.directive.CommandType;
 import com.tompy.directive.Direction;
+import com.tompy.directive.EventType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,5 +51,50 @@ public class AdventureUtils {
         }
 
         return returnValue;
+    }
+
+    public static EventType getAreaSearchEventType(Direction direction) {
+        switch (direction) {
+            case DIRECTION_NORTH:
+                return EventType.AREA_NORTH_SEARCH;
+            case DIRECTION_EAST:
+                return EventType.AREA_EAST_SEARCH;
+            case DIRECTION_SOUTH:
+                return EventType.AREA_SOUTH_SEARCH;
+            case DIRECTION_WEST:
+                return EventType.AREA_WEST_SEARCH;
+            default:
+                return null;
+        }
+    }
+
+    public static EventType getAreaExitEventType(Direction direction) {
+        switch (direction) {
+            case DIRECTION_NORTH:
+                return EventType.AREA_EXIT_NORTH;
+            case DIRECTION_EAST:
+                return EventType.AREA_EXIT_EAST;
+            case DIRECTION_SOUTH:
+                return EventType.AREA_EXIT_SOUTH;
+            case DIRECTION_WEST:
+                return EventType.AREA_EXIT_WEST;
+            default:
+                return null;
+        }
+    }
+
+    public static EventType getAreaEnterEventType(Direction direction) {
+        switch (direction) {
+            case DIRECTION_NORTH:
+                return EventType.AREA_ENTER_NORTH;
+            case DIRECTION_EAST:
+                return EventType.AREA_ENTER_EAST;
+            case DIRECTION_SOUTH:
+                return EventType.AREA_ENTER_SOUTH;
+            case DIRECTION_WEST:
+                return EventType.AREA_ENTER_WEST;
+            default:
+                return null;
+        }
     }
 }

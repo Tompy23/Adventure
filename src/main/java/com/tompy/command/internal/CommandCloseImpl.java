@@ -46,7 +46,7 @@ public class CommandCloseImpl extends CommandBasicImpl implements Command {
         if (objectOpt.isPresent()) {
             Feature object = objectOpt.get();
             LOGGER.debug("Converted {} to {}", new String[]{target, object.getName()});
-            returnValue.addAll(object.close());
+            returnValue.addAll(object.close(player, adventure));
             returnValue.add(
                 responseFactory.createBuilder().source("CommandClose").text(object.getName() + " is closed.").build());
         } else {

@@ -1,15 +1,20 @@
 package com.tompy.entity.internal;
 
+import com.tompy.adventure.api.Adventure;
 import com.tompy.attribute.api.Attribute;
 import com.tompy.attribute.api.AttributeManager;
 import com.tompy.attribute.api.AttributeManagerFactory;
+import com.tompy.directive.EventType;
 import com.tompy.entity.api.Entity;
 import com.tompy.entity.api.EntityService;
 import com.tompy.entity.area.api.Area;
 import com.tompy.entity.area.api.AreaBuilder;
 import com.tompy.entity.area.internal.AreaImpl;
 import com.tompy.entity.compartment.api.Compartment;
+import com.tompy.entity.event.api.Event;
 import com.tompy.entity.event.api.EventBuilder;
+import com.tompy.entity.event.api.EventManager;
+import com.tompy.entity.event.api.EventManagerFactory;
 import com.tompy.entity.event.internal.EventImpl;
 import com.tompy.entity.feature.api.Feature;
 import com.tompy.entity.feature.api.FeatureBuilder;
@@ -17,6 +22,8 @@ import com.tompy.entity.feature.internal.FeatureBasicImpl;
 import com.tompy.entity.item.api.Item;
 import com.tompy.entity.item.api.ItemBuilder;
 import com.tompy.entity.item.internal.ItemImpl;
+import com.tompy.player.api.Player;
+import com.tompy.response.api.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,17 +32,21 @@ import java.util.*;
 public class EntityServiceImpl implements EntityService {
     private static final Logger LOGGER = LogManager.getLogger(EntityServiceImpl.class);
     private final AttributeManagerFactory attributeManagerFactory;
+    private final EventManagerFactory eventManagerFactory;
     private Map<Long, AttributeManager> attributeManagers;
+    private Map<Long, EventManager> eventManagers;
     private List<Item> items;
     private List<Compartment> compartments;
     private List<Feature> features;
     private List<Area> areas;
     private Long entityKey;
 
-    public EntityServiceImpl(AttributeManagerFactory attributeManagerFactory) {
+    public EntityServiceImpl(AttributeManagerFactory attributeManagerFactory, EventManagerFactory eventManagerFactory) {
         this.attributeManagerFactory =
             Objects.requireNonNull(attributeManagerFactory, "Attribute Manager Factory cannot be null.");
+        this.eventManagerFactory = Objects.requireNonNull(eventManagerFactory, "Event Manager Factory cannot be null>");
         attributeManagers = new HashMap<>();
+        eventManagers = new HashMap<>();
         items = new ArrayList<>();
         compartments = new ArrayList<>();
         features = new ArrayList<>();
@@ -47,6 +58,7 @@ public class EntityServiceImpl implements EntityService {
     public ItemBuilder createItemBuilder() {
         entityKey++;
         attributeManagers.put(entityKey, attributeManagerFactory.create());
+        eventManagers.put(entityKey, eventManagerFactory.create());
         return ItemImpl.createBuilder(entityKey, this);
     }
 
@@ -133,9 +145,34 @@ public class EntityServiceImpl implements EntityService {
     }
 
     @Override
+    public EntityService add(Entity entity, EventType type, Event event) {
+        eventManagers.get(entity.getKey()).add(type, event);
+        return this;
+    }
+
+    @Override
+    public void remove(Entity entity, EventType type, Event event) {
+        eventManagers.get(entity.getKey()).remove(type, event);
+    }
+
+    @Override
+    public List<Event> get(Entity entity, EventType type) {
+        return eventManagers.get(entity.getKey()).getAllOfType(type);
+    }
+
+    @Override
+    public List<Response> handle(Entity entity, EventType type, Player player, Adventure adventure) {
+        List<Response> returnValue = new ArrayList<>();
+        eventManagers.get(entity.getKey()).getAllOfType(type).stream().filter((e) -> e.pull(player, adventure))
+            .forEach((e) -> returnValue.addAll(e.apply(player, adventure)));
+        return returnValue;
+    }
+
+    @Override
     public FeatureBuilder createFeatureBuilder() {
         entityKey++;
         attributeManagers.put(entityKey, attributeManagerFactory.create());
+        eventManagers.put(entityKey, eventManagerFactory.create());
         return FeatureBasicImpl.createBuilder(entityKey, this);
     }
 
@@ -150,6 +187,7 @@ public class EntityServiceImpl implements EntityService {
     public AreaBuilder createAreaBuilder() {
         entityKey++;
         attributeManagers.put(entityKey, attributeManagerFactory.create());
+        eventManagers.put(entityKey, eventManagerFactory.create());
         return AreaImpl.createBuilder(entityKey, this);
     }
 
@@ -164,6 +202,7 @@ public class EntityServiceImpl implements EntityService {
     public EventBuilder createEventBuilder() {
         entityKey++;
         attributeManagers.put(entityKey, attributeManagerFactory.create());
+        eventManagers.put(entityKey, eventManagerFactory.create());
         return EventImpl.createBuilder(entityKey, this);
     }
 }

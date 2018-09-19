@@ -93,24 +93,4 @@ public interface Area extends Compartment {
      * @return - A list of {@link Feature} in room
      */
     List<Feature> getAllFeatures();
-
-    void insertEnterEvent(Event event);
-
-    void insertEnterNorthEvent(Event event);
-
-    void insertEnterEastEvent(Event event);
-
-    void insertEnterSouthEvent(Event event);
-
-    void insertEnterWestEvent(Event event);
-
-    void insertExitEvent(Event event);
-
-    void insertExitNorthEvent(Event event);
-
-    void insertExitEastEvent(Event event);
-
-    void insertExitSouthEvent(Event event);
-
-    void insertExitWestEvent(Event event);
 }

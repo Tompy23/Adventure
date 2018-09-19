@@ -1,6 +1,8 @@
 package com.tompy.entity.item.api;
 
+import com.tompy.adventure.api.Adventure;
 import com.tompy.entity.api.Entity;
+import com.tompy.player.api.Player;
 import com.tompy.response.api.Response;
 
 import java.util.List;
@@ -16,7 +18,7 @@ import java.util.List;
  * NOTE
  */
 public interface Item extends Entity {
-    List<Response> use();
+    List<Response> use(Player player, Adventure adventure);
 
     boolean hasTarget(Entity entity);
 

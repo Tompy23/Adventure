@@ -1,5 +1,6 @@
 package com.tompy.entity.item.internal;
 
+import com.tompy.adventure.api.Adventure;
 import com.tompy.directive.ItemType;
 import com.tompy.entity.api.Entity;
 import com.tompy.entity.api.EntityFacade;
@@ -9,6 +10,7 @@ import com.tompy.entity.internal.EntityBuilderHelperImpl;
 import com.tompy.entity.internal.EntityImpl;
 import com.tompy.entity.item.api.Item;
 import com.tompy.entity.item.api.ItemBuilder;
+import com.tompy.player.api.Player;
 import com.tompy.response.api.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,7 +35,7 @@ public class ItemImpl extends EntityImpl implements Item {
     }
 
     @Override
-    public List<Response> use() {
+    public List<Response> use(Player player, Adventure adventure) {
         List<Response> returnValue = new ArrayList<>();
 
         LOGGER.info("Using [{}]", getName());
