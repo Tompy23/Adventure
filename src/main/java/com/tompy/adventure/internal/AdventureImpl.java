@@ -24,6 +24,7 @@ import java.util.Objects;
 import static com.tompy.attribute.api.Attribute.LOCKED;
 import static com.tompy.attribute.api.Attribute.VALUE;
 import static com.tompy.directive.Direction.*;
+import static com.tompy.directive.EventType.FEATURE_SEARCH;
 import static com.tompy.directive.FeatureType.FEATURE_CHEST;
 import static com.tompy.directive.FeatureType.FEATURE_DOOR;
 import static com.tompy.directive.ItemType.ITEM_GEM;
@@ -50,31 +51,83 @@ public class AdventureImpl implements Adventure {
     public void create() {
         LOGGER.info("Creating adventure...");
         // Areas
-        Area room1 = entityService.createAreaBuilder().name("Room1").description(
-            "Well lit empty room with bright white walls and dark blue carpet.  In the center of the room sits a " +
-            "large wooden box.")
-            .searchDescription("There is nothing special about this room.  There is a door to the north.")
-            .searchDirectionDescription(DIRECTION_NORTH, "An old wooden door.").build();
+        Area room1 = entityService.createAreaBuilder().name("Room1").build();
 
-        Area room2 = entityService.createAreaBuilder().name("Room2").description(
-            "A hallway that bends to the right.  It is well let with white walls and a dark blue well worn carpet" +
-            ".").searchDescription("Along both sides of the hallway are portraits of previous tenants, some quite old.")
-            .searchDirectionDescription(DIRECTION_SOUTH, "An old wooden door")
-            .searchDirectionDescription(DIRECTION_EAST, "A rusty iron door.").build();
+        Area room2 = entityService.createAreaBuilder().name("Room2").build();
 
-        Area room3 = entityService.createAreaBuilder().name("Room3")
-            .description("This room has a single torch, making it smoky and dark.")
-            .searchDescription("There is nothing to see, but the smoke seems to be building up.")
-            .searchDirectionDescription(DIRECTION_WEST, "An iron door.")
-            .searchDirectionDescription(DIRECTION_NORTH, "A dark curtain seems to cover something.").build();
+        Area room3 = entityService.createAreaBuilder().name("Room3").build();
 
-        Area room4 = entityService.createAreaBuilder().name("Room4").description("You have made it outside").build();
+        Area room4 = entityService.createAreaBuilder().name("Room4").build();
 
-        Event e1 = entityService.createEventBuilder().name("room1Describe").actionType(ActionType.DESCRIBE)
-            .triggerType(TriggerType.ALWAYS).longName("describe event").memo("enter room2")
-            .responses(new String[]{"this is line1", "and line 2"}).entity(room2).build();
 
-        entityService.add(room2, EventType.AREA_SEARCH, e1);
+        // Events
+        Event room1Enter = entityService.createEventBuilder().name("room1Describe").actionType(ActionType.DESCRIBE)
+            .triggerType(TriggerType.ALWAYS).longName("describe event").responses(
+                "Well lit empty room with bright white walls and dark blue carpet.  In the center of the room " +
+                "sits large wooden box.").entity(room1).build();
+
+        Event room1Search = entityService.createEventBuilder().name("room1Search").actionType(ActionType.DESCRIBE)
+            .triggerType(TriggerType.ALWAYS).longName("")
+            .responses("There is nothing special about this room.  There is a door to the north.").entity(room1)
+            .build();
+
+        Event room1SearchNorth =
+            entityService.createEventBuilder().name("room1SearchNorth").actionType(ActionType.DESCRIBE)
+                .triggerType(TriggerType.ALWAYS).longName("").responses("An old wooden door").entity(room1).build();
+
+        entityService.add(room1, EventType.AREA_ENTER, room1Enter);
+        entityService.add(room1, EventType.AREA_SEARCH, room1Search);
+        entityService.add(room1, EventType.AREA_NORTH_SEARCH, room1SearchNorth);
+
+        Event room2Enter = entityService.createEventBuilder().name("room2Enter").actionType(ActionType.DESCRIBE)
+            .triggerType(TriggerType.ALWAYS).longName("").responses(
+                "A hallway that bends to the right.  It is well let with white walls and a dark blue well worn carpet" +
+                ".").entity(room2).build();
+
+        Event room2Search = entityService.createEventBuilder().name("room2Search").actionType(ActionType.DESCRIBE)
+            .triggerType(TriggerType.ALWAYS).longName("")
+            .responses("Along both sides of the hallway are portraits of previous tenants, some quite old.")
+            .entity(room2).build();
+
+        Event room2SearchSouth =
+            entityService.createEventBuilder().name("room2SearchSouth").actionType(ActionType.DESCRIBE)
+                .triggerType(TriggerType.ALWAYS).longName("").responses("An old wooden door").entity(room2).build();
+
+        Event room2SearchEast =
+            entityService.createEventBuilder().name("room2SearchEast").actionType(ActionType.DESCRIBE)
+                .triggerType(TriggerType.ALWAYS).longName("").responses("A rusty iron door").entity(room2).build();
+
+        entityService.add(room2, EventType.AREA_ENTER, room2Enter);
+        entityService.add(room2, EventType.AREA_SEARCH, room2Search);
+        entityService.add(room2, EventType.AREA_SOUTH_SEARCH, room2SearchSouth);
+        entityService.add(room2, EventType.AREA_EAST_SEARCH, room2SearchEast);
+
+        Event room3Enter = entityService.createEventBuilder().name("room3Enter").actionType(ActionType.DESCRIBE)
+            .triggerType(TriggerType.ALWAYS).longName("")
+            .responses("This room has a single torch, making it smoky and dark.").entity(room3).build();
+
+        Event room3Search = entityService.createEventBuilder().name("room3Search").actionType(ActionType.DESCRIBE)
+            .triggerType(TriggerType.ALWAYS).longName("")
+            .responses("There is nothing to see, but the smoke seems to be building up.").entity(room3).build();
+
+        Event room3SearchWest =
+            entityService.createEventBuilder().name("room3SearchSouth").actionType(ActionType.DESCRIBE)
+                .triggerType(TriggerType.ALWAYS).longName("").responses("An iron door").entity(room3).build();
+
+        Event room3SearchNorth =
+            entityService.createEventBuilder().name("room3SearchNorth").actionType(ActionType.DESCRIBE)
+                .triggerType(TriggerType.ALWAYS).longName("").responses("A dark curtain seems to cover something.")
+                .entity(room3).build();
+
+        entityService.add(room3, EventType.AREA_ENTER, room3Enter);
+        entityService.add(room3, EventType.AREA_SEARCH, room3Search);
+        entityService.add(room3, EventType.AREA_WEST_SEARCH, room3SearchWest);
+        entityService.add(room3, EventType.AREA_NORTH_SEARCH, room3SearchNorth);
+
+        Event room4Enter = entityService.createEventBuilder().name("room4Enter").actionType(ActionType.DESCRIBE)
+            .triggerType(TriggerType.ALWAYS).longName("").responses("You have made it outside").entity(room4).build();
+
+        entityService.add(room4, EventType.AREA_ENTER, room4Enter);
 
 
         // Exits
@@ -91,21 +144,43 @@ public class AdventureImpl implements Adventure {
 
         // Features
         Feature room1Chest =
-            entityService.createFeatureBuilder().type(FEATURE_CHEST).name("Chest").longName("dusty chest")
-                .description("an old and dusty chest").build();
+            entityService.createFeatureBuilder().type(FEATURE_CHEST).name("Chest").longName("dusty chest").build();
         Feature room2EastDoor =
-            entityService.createFeatureBuilder().type(FEATURE_DOOR).name("Door").longName("iron door")
-                .description("iron door").exit(exit2).build();
+            entityService.createFeatureBuilder().type(FEATURE_DOOR).name("Door").longName("iron door").exit(exit2)
+                .build();
         Feature room2SouthDoor =
-            entityService.createFeatureBuilder().type(FEATURE_DOOR).name("Door").longName("oak door")
-                .description("oak door").exit(exit1).build();
+            entityService.createFeatureBuilder().type(FEATURE_DOOR).name("Door").longName("oak door").exit(exit1)
+                .build();
         Feature room3NorthDoor =
-            entityService.createFeatureBuilder().type(FEATURE_DOOR).name("Curtain").longName("dark curtain")
-                .description("long dark curtain").exit(exit3).build();
+            entityService.createFeatureBuilder().type(FEATURE_DOOR).name("Curtain").longName("dark curtain").exit(exit3)
+                .build();
 
         EntityFacade room1ChestLock = entityFacadeBuilderFactory.builder().entity(room1Chest).attribute(LOCKED).build();
         EntityFacade room2EastDoorLock =
             entityFacadeBuilderFactory.builder().entity(room2EastDoor).attribute(LOCKED).build();
+
+        Event room1ChestSearch =
+            entityService.createEventBuilder().name("room1ChestSearch").actionType(ActionType.DESCRIBE)
+                .triggerType(TriggerType.ALWAYS).longName("").responses("an old and dusty chest").entity(room1Chest)
+                .build();
+        entityService.add(room1Chest, FEATURE_SEARCH, room1ChestSearch);
+
+        Event room2EastDoorSearch =
+            entityService.createEventBuilder().name("room2EastDoorSearch").actionType(ActionType.DESCRIBE)
+                .triggerType(TriggerType.ALWAYS).longName("").responses("iron door").entity(room2EastDoor).build();
+        entityService.add(room2EastDoor, FEATURE_SEARCH, room2EastDoorSearch);
+
+        Event room2SouthDoorSearch =
+            entityService.createEventBuilder().name("room2SouthDoorSearch").actionType(ActionType.DESCRIBE)
+                .triggerType(TriggerType.ALWAYS).longName("").responses("oak door").entity(room2SouthDoor).build();
+        entityService.add(room2SouthDoor, FEATURE_SEARCH, room2SouthDoorSearch);
+
+        Event room3NorthDoorSearch =
+            entityService.createEventBuilder().name("room3NorthDoorSearch").actionType(ActionType.DESCRIBE)
+                .triggerType(TriggerType.ALWAYS).longName("").responses("long dark curtain").entity(room3NorthDoor)
+                .build();
+        entityService.add(room3NorthDoor, FEATURE_SEARCH, room3NorthDoorSearch);
+
 
         EntityUtil.add(room1ChestLock);
         EntityUtil.add(room2EastDoorLock);

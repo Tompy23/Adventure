@@ -10,6 +10,10 @@ import java.util.*;
 public class EventManagerImpl implements EventManager {
     Map<EventType, List<Event>> managed;
 
+    public EventManagerImpl() {
+        managed = new HashMap<>();
+    }
+
     @Override
     public void clear() {
         managed.clear();

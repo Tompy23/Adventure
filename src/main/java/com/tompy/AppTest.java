@@ -4,6 +4,7 @@ import com.tompy.attribute.internal.AttributeManagerFactoryImpl;
 import com.tompy.directive.ItemType;
 import com.tompy.entity.EntityUtil;
 import com.tompy.entity.api.EntityService;
+import com.tompy.entity.event.internal.EventManagerFactoryImpl;
 import com.tompy.entity.internal.EntityServiceImpl;
 import com.tompy.entity.item.api.Item;
 import com.tompy.entity.item.api.ItemBuilder;
@@ -23,7 +24,7 @@ public class AppTest {
 
     public int go(String[] args) {
         // Test 1 - Entity Selection
-        EntityService entityService = new EntityServiceImpl(new AttributeManagerFactoryImpl());
+        EntityService entityService = new EntityServiceImpl(new AttributeManagerFactoryImpl(), new EventManagerFactoryImpl());
         UserInput io = new UserInputTextImpl(System.in, System.out, entityService);
 
         List<Item> items = buildItems(entityService);
@@ -33,7 +34,7 @@ public class AppTest {
         Item choice = items.stream().filter((i) -> i.getKey().equals(key)).findFirst().get();
 
         if (choice != null) {
-            System.out.println(choice.getShortName() + ", " + choice.getDetailDescription());
+            System.out.println(choice.getName() + ", " + choice.getDescription());
         } else {
             System.out.println("No proper choice made.");
         }

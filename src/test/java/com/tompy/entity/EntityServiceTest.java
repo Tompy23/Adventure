@@ -5,11 +5,13 @@ import com.tompy.attribute.api.AttributeManagerFactory;
 import com.tompy.attribute.internal.AttributeManagerFactoryImpl;
 import com.tompy.directive.ItemType;
 import com.tompy.entity.api.EntityService;
+import com.tompy.entity.event.api.EventManagerFactory;
 import com.tompy.entity.internal.EntityServiceImpl;
 import com.tompy.entity.item.api.Item;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.OptionalInt;
@@ -24,10 +26,14 @@ public class EntityServiceTest {
     private AttributeManagerFactory attributeManagerFactory;
     private EntityService entityService;
 
+
+    @Mock
+    private EventManagerFactory mockEventManagerFactory;
+
     @Before
     public void init() {
         attributeManagerFactory = new AttributeManagerFactoryImpl();
-        entityService = new EntityServiceImpl(attributeManagerFactory);
+        entityService = new EntityServiceImpl(attributeManagerFactory, mockEventManagerFactory);
     }
 
     @Test

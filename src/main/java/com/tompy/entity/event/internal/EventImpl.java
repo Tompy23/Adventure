@@ -45,14 +45,13 @@ public class EventImpl extends EntityImpl implements Event {
     }
 
     public static final class EventBuilderImpl extends EntityBuilderHelperImpl implements EventBuilder {
-        private Action action;
-        private Trigger trigger;
         private ActionType actionType;
         private TriggerType triggerType;
         private Entity entity;
         private String[] responses;
         private String text;
         private Direction direction;
+        private int delay;
 
         public EventBuilderImpl(Long key, EntityService entityService) {
             super(key, entityService);
@@ -113,14 +112,8 @@ public class EventImpl extends EntityImpl implements Event {
         }
 
         @Override
-        public EventBuilder action(Action action) {
-            this.action = action;
-            return this;
-        }
-
-        @Override
-        public EventBuilder trigger(Trigger trigger) {
-            this.trigger = trigger;
+        public EventBuilder delay(int delay) {
+            this.delay = delay;
             return this;
         }
 
@@ -144,6 +137,10 @@ public class EventImpl extends EntityImpl implements Event {
                     return new TriggerAlwaysImpl(entity);
                 case ONCE:
                     return new TriggerOnceImpl(entity);
+                case ONCE_DELAY:
+                    return new TriggerOnceAfterDelay(entity, delay);
+                case ALWAYS_DELAY:
+                    return new TriggerAlwaysAfterDelay(entity, delay);
             }
             return null;
         }

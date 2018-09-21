@@ -36,7 +36,6 @@ public class EntityServiceImpl implements EntityService {
     private Map<Long, AttributeManager> attributeManagers;
     private Map<Long, EventManager> eventManagers;
     private List<Item> items;
-    private List<Compartment> compartments;
     private List<Feature> features;
     private List<Area> areas;
     private Long entityKey;
@@ -48,7 +47,6 @@ public class EntityServiceImpl implements EntityService {
         attributeManagers = new HashMap<>();
         eventManagers = new HashMap<>();
         items = new ArrayList<>();
-        compartments = new ArrayList<>();
         features = new ArrayList<>();
         areas = new ArrayList<>();
         entityKey = 0L;

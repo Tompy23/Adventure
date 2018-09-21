@@ -7,6 +7,7 @@ import com.tompy.attribute.internal.AttributeManagerFactoryImpl;
 import com.tompy.command.api.Command;
 import com.tompy.directive.Direction;
 import com.tompy.entity.api.EntityService;
+import com.tompy.entity.event.internal.EventManagerFactoryImpl;
 import com.tompy.entity.internal.EntityFacadeBuilderFactoryImpl;
 import com.tompy.entity.internal.EntityServiceImpl;
 import com.tompy.exit.internal.ExitBuilderFactoryImpl;
@@ -34,7 +35,8 @@ public class App {
     public int go(String[] args) {
         InputStream inStream = System.in;
         PrintStream outStream = System.out;
-        EntityService entityService = new EntityServiceImpl(new AttributeManagerFactoryImpl());
+        EntityService entityService =
+            new EntityServiceImpl(new AttributeManagerFactoryImpl(), new EventManagerFactoryImpl());
         UserInput ui = new UserInputTextImpl(inStream, outStream, entityService);
         Adventure adventure = new AdventureImpl(entityService, new EntityFacadeBuilderFactoryImpl(entityService),
             new ExitBuilderFactoryImpl(), ui);

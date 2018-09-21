@@ -10,8 +10,6 @@ public interface AreaBuilder extends Builder<Area> {
 
     AreaBuilder searchDescription(String searchDesription);
 
-    AreaBuilder searchDirectionDescription(Direction direction, String searchDirectionDescription);
-
     AreaBuilder compartmentName(String compartmentName);
 
     AreaBuilder compartmentDescription(String compartmentDescription);

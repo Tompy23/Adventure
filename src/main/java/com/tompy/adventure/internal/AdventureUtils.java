@@ -1,5 +1,6 @@
 package com.tompy.adventure.internal;
 
+import com.tompy.attribute.api.Attribute;
 import com.tompy.directive.CommandType;
 import com.tompy.directive.Direction;
 import com.tompy.directive.EventType;
@@ -10,6 +11,7 @@ import java.util.Map;
 public class AdventureUtils {
     private static Map<String, Direction> directionMap = new HashMap<>();
     private static Map<String, CommandType> commandTypeMap = new HashMap<>();
+    private static Map<String, Attribute> attributeMap = new HashMap<>();
 
     static {
         for (Direction d : Direction.values()) {
@@ -17,6 +19,9 @@ public class AdventureUtils {
         }
         for (CommandType ct : CommandType.values()) {
             commandTypeMap.put(ct.getDescription().toUpperCase(), ct);
+        }
+        for(Attribute a : Attribute.values()) {
+            attributeMap.put(a.getName().toUpperCase(), a);
         }
     }
 
@@ -30,6 +35,10 @@ public class AdventureUtils {
 
     public static CommandType getCommandType(String type) {
         return commandTypeMap.get(type.toUpperCase());
+    }
+    
+    public static Attribute getAttribute(String name) {
+        return attributeMap.get(name.toUpperCase());
     }
 
     public static Direction getOppositeDirection(Direction direction) {

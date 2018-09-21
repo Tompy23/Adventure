@@ -18,11 +18,11 @@ public abstract class EntityImpl extends Responsive implements Entity {
     private final Long key;
 
     public EntityImpl(Long key, String name, List<String> descriptors, String description,
-                      EntityService entityService) {
+        EntityService entityService) {
         this.key = Objects.requireNonNull(key, "Entity Key cannot be null.");
         this.name = Objects.requireNonNull(name, "Name cannot be null.");
         this.descriptors = Objects.requireNonNull(descriptors, "Descriptors can be empty, but not null.");
-        this.description = Objects.requireNonNull(description, "Description cannot be null.");
+        this.description = description;
         this.entityService = entityService;
     }
 
@@ -33,18 +33,11 @@ public abstract class EntityImpl extends Responsive implements Entity {
 
     @Override
     public String getName() {
-        StringBuilder sb = new StringBuilder();
-        descriptors.stream().forEach(a -> sb.append(a + " "));
-        return sb.toString() + name;
-    }
-
-    @Override
-    public String getShortName() {
         return name;
     }
 
     @Override
-    public String getDetailDescription() {
+    public String getDescription() {
         return description;
     }
 

@@ -33,11 +33,11 @@ public class CommandSearchFeatureImpl extends CommandSearchImpl {
 
         if (optObject.isPresent()) {
             Feature object = optObject.get();
-            returnValue.addAll(object.search());
+            returnValue.addAll(object.search(player, adventure));
             if (entityService.is(object, Attribute.OPEN)) {
                 object.getAllItems().stream().forEach((i) -> {
                     returnValue.add(
-                        responseFactory.createBuilder().source("CommandSearchFeature").text(i.getDetailDescription())
+                        responseFactory.createBuilder().source("CommandSearchFeature").text(i.getDescription())
                             .build());
                     entityService.add(i, Attribute.VISIBLE);
 

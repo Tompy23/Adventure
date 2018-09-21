@@ -22,16 +22,14 @@ import java.util.*;
 public class AreaImpl extends CompartmentImpl implements Area {
     private static final Logger LOGGER = LogManager.getLogger(AreaImpl.class);
     protected final String searchDescription;
-    protected String[] searchDirectionDescription = new String[]{"", "", "", ""};
     protected Map<Direction, Exit> exits = new HashMap<>();
     protected List<Feature> features = new ArrayList<>();
     protected Map<Direction, List<Feature>> directionFeatures = new HashMap<>();
 
     protected AreaImpl(Long key, String name, List<String> descriptors, String description, String searchDescription,
-        String[] searchDirectionDescription, EntityService entityService) {
+        EntityService entityService) {
         super(key, name, descriptors, description, entityService);
         this.searchDescription = searchDescription;
-        this.searchDirectionDescription = searchDirectionDescription;
     }
 
 
@@ -75,7 +73,8 @@ public class AreaImpl extends CompartmentImpl implements Area {
         LOGGER.info("Entering room [{}]", this.getName());
 
         returnValue.addAll(entityService.handle(this, EventType.AREA_ENTER, player, adventure));
-        returnValue.addAll(entityService.handle(this, AdventureUtils.getAreaEnterEventType(direction), player, adventure));
+        returnValue
+            .addAll(entityService.handle(this, AdventureUtils.getAreaEnterEventType(direction), player, adventure));
 
         player.visitArea(name);
 
@@ -88,7 +87,8 @@ public class AreaImpl extends CompartmentImpl implements Area {
         LOGGER.info("Exiting room [{}] in direction [{}]", this.getName(), direction.name());
 
         returnValue.addAll(entityService.handle(this, EventType.AREA_EXIT, player, adventure));
-        returnValue.addAll(entityService.handle(this, AdventureUtils.getAreaExitEventType(direction), player, adventure));
+        returnValue
+            .addAll(entityService.handle(this, AdventureUtils.getAreaExitEventType(direction), player, adventure));
 
         return returnValue;
     }
@@ -99,7 +99,7 @@ public class AreaImpl extends CompartmentImpl implements Area {
         LOGGER.info("Searching room [{}]", this.getName());
 
         if (!features.isEmpty()) {
-            features.stream().forEach((f) -> returnValue.addAll(f.search()));
+            features.stream().forEach((f) -> returnValue.addAll(f.search(player, adventure)));
         }
 
         returnValue.addAll(entityService.handle(this, EventType.AREA_SEARCH, player, adventure));
@@ -107,7 +107,7 @@ public class AreaImpl extends CompartmentImpl implements Area {
         if (!items.isEmpty()) {
             items.stream().forEach((i) -> {
                 returnValue.add(
-                    this.responseFactory.createBuilder().source(i.getName()).text(i.getDetailDescription()).build());
+                    this.responseFactory.createBuilder().source(i.getName()).text(i.getDescription()).build());
                 entityService.add(i, Attribute.VISIBLE);
             });
         }
@@ -133,7 +133,7 @@ public class AreaImpl extends CompartmentImpl implements Area {
         }
 
         if (directionFeatures.containsKey(direction)) {
-            directionFeatures.get(direction).stream().forEach((f) -> returnValue.addAll(f.search()));
+            directionFeatures.get(direction).stream().forEach((f) -> returnValue.addAll(f.search(player, adventure)));
         }
 
         return returnValue;
@@ -158,7 +158,6 @@ public class AreaImpl extends CompartmentImpl implements Area {
         protected String name;
         protected String description;
         protected String searchDescription;
-        protected String[] searchDirectionDescription = new String[4];
         protected String compartmentName;
         protected String compartmentDescription;
 
@@ -185,12 +184,6 @@ public class AreaImpl extends CompartmentImpl implements Area {
         }
 
         @Override
-        public AreaBuilder searchDirectionDescription(Direction direction, String searchDirectionDescription) {
-            this.searchDirectionDescription[direction.ordinal()] = searchDirectionDescription;
-            return this;
-        }
-
-        @Override
         public AreaBuilder compartmentName(String compartmentName) {
             this.compartmentName = compartmentName;
             return this;
@@ -205,7 +198,7 @@ public class AreaImpl extends CompartmentImpl implements Area {
         @Override
         public Area build() {
             return new AreaImpl(key, name, this.buildDescriptors(), description, searchDescription,
-                searchDirectionDescription, entityService);
+                entityService);
         }
     }
 }

@@ -2,6 +2,7 @@ package com.tompy.entity;
 
 import com.tompy.attribute.api.AttributeManagerFactory;
 import com.tompy.directive.ItemType;
+import com.tompy.entity.event.api.EventManagerFactory;
 import com.tompy.entity.internal.EntityServiceImpl;
 import com.tompy.entity.item.api.Item;
 import com.tompy.entity.item.api.ItemBuilder;
@@ -21,9 +22,12 @@ public class ItemTest {
     @Mock
     private AttributeManagerFactory mockAttributeManagerFactory;
 
+    @Mock
+    private EventManagerFactory mockEventManagerFactory;
+
     @Before
     public void init() {
-        itemBuilderFactory = new EntityServiceImpl(mockAttributeManagerFactory);
+        itemBuilderFactory = new EntityServiceImpl(mockAttributeManagerFactory, mockEventManagerFactory);
     }
 
     @Test
@@ -32,7 +36,7 @@ public class ItemTest {
         Item i = builder.type(ItemType.ITEM_TEST).name("item").longName("long lost item").description(
                 "An ancient grail").build();
         assertTrue(i.getName().equals("long lost item"));
-        assertTrue(i.getShortName().equals("item"));
+        assertTrue(i.getName().equals("item"));
     }
 
     @Test
@@ -50,6 +54,6 @@ public class ItemTest {
         ItemBuilder builder = itemBuilderFactory.createItemBuilder();
         Item i = builder.type(ItemType.ITEM_TEST).name("item").longName("long lost item").description(
                 "An ancient grail").build();
-        assertTrue(i.getDetailDescription().equals("An ancient grail"));
+        assertTrue(i.getDescription().equals("An ancient grail"));
     }
 }

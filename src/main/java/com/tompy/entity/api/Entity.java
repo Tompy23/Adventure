@@ -12,25 +12,18 @@ public interface Entity {
     Long getKey();
 
     /**
-     * Get the full descriptive name of the Item
-     *
-     * @return - Item's long name
-     */
-    String getName();
-
-    /**
      * Get the simple name of the Item
      *
      * @return - Item's simple name
      */
-    String getShortName();
+    String getName();
 
     /**
-     * Get the full description of the Item
+     * Get the full descriptive name of the Item
      *
-     * @return - Item's description
+     * @return - Item's long name
      */
-    String getDetailDescription();
+    String getDescription();
 
     /**
      * The descriptive words taken from the name

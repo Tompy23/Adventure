@@ -69,7 +69,7 @@ public class EntityUtil {
         Map<Long, Integer> scores = new HashMap<>();
         items.stream().forEach(e -> scores.put(e.getKey(), 0));
         for (Entity entity : items) {
-            if (description.toUpperCase().contains(entity.getShortName().toUpperCase())) {
+            if (description.toUpperCase().contains(entity.getName().toUpperCase())) {
                 scores.put(entity.getKey(), scores.get(entity.getKey()) + 1);
             }
         }
@@ -93,7 +93,7 @@ public class EntityUtil {
         for (Long finalist : finalists) {
             for (Entity entity : entities) {
                 if (entity.getKey() == finalist) {
-                    choices.put(entity.getKey(), entity.getDetailDescription());
+                    choices.put(entity.getKey(), entity.getDescription());
                 }
             }
         }

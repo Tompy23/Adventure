@@ -25,7 +25,5 @@ public interface EventBuilder extends Builder<Event> {
 
     EventBuilder direction(Direction direction);
 
-    EventBuilder action(Action action);
-
-    EventBuilder trigger(Trigger trigger);
+    EventBuilder delay(int delay);
 }
