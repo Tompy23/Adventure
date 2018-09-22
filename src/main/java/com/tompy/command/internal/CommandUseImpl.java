@@ -64,8 +64,8 @@ public class CommandUseImpl extends CommandBasicImpl implements Command {
     }
 
     public static final class CommandUseBuilderImpl extends CommandBuilderImpl {
-        private String target = null;
-        private String subject = null;
+        private String target;
+        private String subject;
 
 
         @Override
@@ -75,10 +75,27 @@ public class CommandUseImpl extends CommandBasicImpl implements Command {
 
         @Override
         public CommandBuilder parts(String[] parts) {
-            if (parts.length == 4 && (parts[2].equalsIgnoreCase("on") || parts[1].equalsIgnoreCase("in"))) {
-                subject = parts[1];
-                target = parts[3];
+            int on = -1;
+            for (int i = 0; i < parts.length; i++) {
+                if (parts[i].equalsIgnoreCase("on") || parts[i].equalsIgnoreCase("in")) {
+                    on = i;
+                    break;
+                }
             }
+            StringBuilder subjectSb = new StringBuilder();
+            StringBuilder targetSb = new StringBuilder();
+            if (on > 0 && parts.length >= 4) {
+                for (int i = 1; i < parts.length; i++) {
+                    if (i < on) {
+                        subjectSb.append(parts[i] + " ");
+                    } else if (i > on) {
+                        targetSb.append(parts[i] + " ");
+                    }
+                }
+                subject = subjectSb.toString().trim();
+                target = targetSb.toString().trim();
+            }
+
             return this;
         }
     }

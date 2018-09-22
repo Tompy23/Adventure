@@ -59,9 +59,6 @@ public class CommandMoveImpl extends CommandBasicImpl implements Command {
                 player.setArea(targetArea);
                 returnValue.addAll(targetArea.enter(AdventureUtils.getOppositeDirection(direction), player, adventure));
             }
-        } else {
-            returnValue
-                .add(responseFactory.createBuilder().text("Cannot move that way.").source(type.getDescription()).build());
         }
 
         return returnValue;

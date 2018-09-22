@@ -47,12 +47,10 @@ public class CommandCloseImpl extends CommandBasicImpl implements Command {
             Feature object = objectOpt.get();
             LOGGER.debug("Converted {} to {}", new String[]{target, object.getName()});
             returnValue.addAll(object.close(player, adventure));
-            returnValue.add(
-                responseFactory.createBuilder().source("CommandClose").text(object.getName() + " is closed.").build());
         } else {
             LOGGER.debug("Unable to convert {}", target);
             returnValue
-                .add(responseFactory.createBuilder().source("CommandClose").text(target + " is not found.").build());
+                .add(responseFactory.createBuilder().source("CommandClose").text("I do not see that.").build());
         }
         return returnValue;
     }
@@ -62,7 +60,11 @@ public class CommandCloseImpl extends CommandBasicImpl implements Command {
 
         @Override
         public CommandBuilder parts(String[] parts) {
-            target = parts[1];
+            StringBuilder targetSb = new StringBuilder();
+            for (int i = 1; i < parts.length; i++) {
+                targetSb.append(parts[i] + " ");
+            }
+            target = targetSb.toString().trim();
             return this;
         }
 

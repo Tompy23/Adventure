@@ -82,13 +82,32 @@ public class CommandTakeImpl extends CommandBasicImpl implements Command {
 
         @Override
         public CommandBuilder parts(String[] parts) {
-            if (parts.length == 4) {
-                this.item = parts[1];
-                this.target = parts[3];
-                this.type = CommandType.COMMAND_TAKE_FROM;
+            int from = -1;
+            for (int i = 0; i < parts.length; i++) {
+                if (parts[i].equalsIgnoreCase("from")) {
+                    from = i;
+                    break;
+                }
+            }
+            StringBuilder itemSb = new StringBuilder();
+            StringBuilder targetSb = new StringBuilder();
+            if (from > 0) {
+                for (int i = 1; i < parts.length; i++) {
+                    if (i < from) {
+                        itemSb.append(parts[i] + " ");
+                    } else if (i > from) {
+                        targetSb.append(parts[i] + " ");
+                    }
+                }
+                item = itemSb.toString().trim();
+                target = targetSb.toString().trim();
+                type = CommandType.COMMAND_TAKE_FROM;
             } else {
-                this.target = parts[1];
-                this.type = CommandType.COMMAND_TAKE;
+                for (int i = 1; i < parts.length; i++) {
+                    targetSb.append(parts[i] + " ");
+                }
+                target = targetSb.toString().trim();
+                type = CommandType.COMMAND_TAKE;
             }
             return this;
         }

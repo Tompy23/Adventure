@@ -81,7 +81,11 @@ public class CommandSearchImpl extends CommandBasicImpl implements Command {
                     target = parts[2];
                     type = CommandType.COMMAND_SEARCH_ON;
                 } else {
-                    target = parts[1];
+                    StringBuilder targetSb = new StringBuilder();
+                    for (int i = 1; i < parts.length; i++) {
+                        targetSb.append(parts[i] + " ");
+                    }
+                    target = targetSb.toString().trim();
                     type = CommandType.COMMAND_SEARCH_FEATURE;
                 }
             } else {

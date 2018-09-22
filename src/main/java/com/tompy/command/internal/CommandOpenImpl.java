@@ -59,7 +59,11 @@ public class CommandOpenImpl extends CommandBasicImpl implements Command {
 
         @Override
         public CommandBuilder parts(String[] parts) {
-            target = parts[1];
+            StringBuilder targetSb = new StringBuilder();
+            for (int i = 1; i < parts.length; i++) {
+                targetSb.append(parts[i] + " ");
+            }
+            target = targetSb.toString().trim();
             return this;
         }
 

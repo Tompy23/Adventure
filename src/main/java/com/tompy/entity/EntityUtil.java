@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Utility class of functions dealing with Entities.
@@ -84,8 +85,10 @@ public class EntityUtil {
 
     private static List<Long> computeFinalists(Map<Long, Integer> scores) {
         List<Long> finalists = new ArrayList<>();
+        Integer highestScore = scores.values().stream().reduce(Integer::max).get();
+
         for (Long key : scores.keySet()) {
-            if (scores.get(key) > 0) {
+            if (scores.get(key) == highestScore) {
                 finalists.add(key);
             }
         }
