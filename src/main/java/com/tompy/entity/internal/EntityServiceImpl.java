@@ -38,7 +38,9 @@ public class EntityServiceImpl implements EntityService {
     private List<Item> items;
     private List<Feature> features;
     private List<Area> areas;
+    private List<Event> events;
     private Long entityKey;
+    private Map<String, Entity> entityMap;
 
     public EntityServiceImpl(AttributeManagerFactory attributeManagerFactory, EventManagerFactory eventManagerFactory) {
         this.attributeManagerFactory =
@@ -49,7 +51,9 @@ public class EntityServiceImpl implements EntityService {
         items = new ArrayList<>();
         features = new ArrayList<>();
         areas = new ArrayList<>();
+        events = new ArrayList<>();
         entityKey = 0L;
+        entityMap = new HashMap<>();
     }
 
     @Override
@@ -64,6 +68,7 @@ public class EntityServiceImpl implements EntityService {
     public void addItem(Item item) {
         if (item != null) {
             items.add(item);
+            entityMap.put(item.getName(), item);
         }
     }
 
@@ -97,6 +102,11 @@ public class EntityServiceImpl implements EntityService {
     @Override
     public OptionalInt valueFor(Entity entity, Attribute attribute) {
         return attributeManagers.get(entity.getKey()).getValue(attribute);
+    }
+
+    @Override
+    public Entity getEntityByName(String name) {
+        return entityMap.get(name);
     }
 
     @Override
@@ -178,6 +188,7 @@ public class EntityServiceImpl implements EntityService {
     public void addFeature(Feature feature) {
         if (feature != null) {
             features.add(feature);
+            entityMap.put(feature.getName(), feature);
         }
     }
 
@@ -193,6 +204,7 @@ public class EntityServiceImpl implements EntityService {
     public void addArea(Area area) {
         if (area != null) {
             areas.add(area);
+            entityMap.put(area.getName(), area);
         }
     }
 
@@ -202,5 +214,13 @@ public class EntityServiceImpl implements EntityService {
         attributeManagers.put(entityKey, attributeManagerFactory.create());
         eventManagers.put(entityKey, eventManagerFactory.create());
         return EventImpl.createBuilder(entityKey, this);
+    }
+
+    @Override
+    public void addEvent(Event event) {
+        if (event != null) {
+            events.add(event);
+            entityMap.put(event.getName(), event);
+        }
     }
 }

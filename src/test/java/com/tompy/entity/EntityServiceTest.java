@@ -38,46 +38,40 @@ public class EntityServiceTest {
 
     @Test
     public void testCreateItem() {
-        Item i = entityService.createItemBuilder().type(ItemType.ITEM_TEST).name("item").longName(
-                "my item").description("stuff").build();
+        Item i = entityService.createItemBuilder().type(ItemType.ITEM_TEST).name("item").description("stuff").build();
         assertTrue(i.getKey() == 1);
     }
 
     @Test
     public void testAddAttribute() {
-        Item i = entityService.createItemBuilder().type(ItemType.ITEM_TEST).name("item").longName(
-                "my item").description("stuff").build();
+        Item i = entityService.createItemBuilder().type(ItemType.ITEM_TEST).name("item").description("stuff").build();
         entityService.add(i, Attribute.TEST_NORMALA);
         assertTrue(entityService.is(i, Attribute.TEST_NORMALA));
     }
 
     @Test
     public void testAddAttributeValue() {
-        Item i = entityService.createItemBuilder().type(ItemType.ITEM_TEST).name("item").longName(
-                "my item").description("stuff").build();
+        Item i = entityService.createItemBuilder().type(ItemType.ITEM_TEST).name("item").description("stuff").build();
         entityService.add(i, Attribute.TEST_HAS_VALUE, 1);
     }
 
     @Test
     public void testRemoveAttribute() {
-        Item i = entityService.createItemBuilder().type(ItemType.ITEM_TEST).name("item").longName(
-                "my item").description("stuff").build();
+        Item i = entityService.createItemBuilder().type(ItemType.ITEM_TEST).name("item").description("stuff").build();
         entityService.add(i, Attribute.TEST_NORMALA);
         entityService.remove(i, Attribute.TEST_NORMALA);
     }
 
     @Test
     public void testResetAttribute() {
-        Item i = entityService.createItemBuilder().type(ItemType.ITEM_TEST).name("item").longName(
-                "my item").description("stuff").build();
+        Item i = entityService.createItemBuilder().type(ItemType.ITEM_TEST).name("item").description("stuff").build();
         entityService.add(i, Attribute.TEST_NORMALA);
         entityService.reset(i, Attribute.TEST_NORMALA);
     }
 
     @Test
     public void testIsAttribute() {
-        Item i = entityService.createItemBuilder().type(ItemType.ITEM_TEST).name("item").longName(
-                "my item").description("stuff").build();
+        Item i = entityService.createItemBuilder().type(ItemType.ITEM_TEST).name("item").description("stuff").build();
         entityService.add(i, Attribute.TEST_NORMALA);
         boolean check = entityService.is(i, Attribute.TEST_NORMALA);
         assertTrue(check);
@@ -85,8 +79,7 @@ public class EntityServiceTest {
 
     @Test
     public void testIsFalseAttribute() {
-        Item i = entityService.createItemBuilder().type(ItemType.ITEM_TEST).name("item").longName(
-                "my item").description("stuff").build();
+        Item i = entityService.createItemBuilder().type(ItemType.ITEM_TEST).name("item").description("stuff").build();
         entityService.add(i, Attribute.TEST_NORMALA);
         boolean check = entityService.is(i, Attribute.TEST_NORMALB);
         assertFalse(check);
@@ -94,8 +87,7 @@ public class EntityServiceTest {
 
     @Test
     public void testValueAttribute() {
-        Item i = entityService.createItemBuilder().type(ItemType.ITEM_TEST).name("item").longName(
-                "my item").description("stuff").build();
+        Item i = entityService.createItemBuilder().type(ItemType.ITEM_TEST).name("item").description("stuff").build();
         entityService.add(i, Attribute.TEST_HAS_VALUE, 5);
         OptionalInt check = entityService.valueFor(i, Attribute.TEST_HAS_VALUE);
         assertTrue(check.getAsInt() == 5);
@@ -103,8 +95,7 @@ public class EntityServiceTest {
 
     @Test
     public void testNoValueAttribute() {
-        Item i = entityService.createItemBuilder().type(ItemType.ITEM_TEST).name("item").longName(
-                "my item").description("stuff").build();
+        Item i = entityService.createItemBuilder().type(ItemType.ITEM_TEST).name("item").description("stuff").build();
         entityService.reset(i, Attribute.TEST_NORMALA);
         OptionalInt check = entityService.valueFor(i, Attribute.TEST_NORMALA);
         assertTrue(check.equals(OptionalInt.empty()));

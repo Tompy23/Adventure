@@ -11,8 +11,6 @@ import com.tompy.entity.feature.api.Feature;
 public interface ItemBuilder extends Builder<Item> {
     ItemBuilder name(String name);
 
-    ItemBuilder longName(String longName);
-
     ItemBuilder description(String description);
 
     ItemBuilder type(ItemType type);

@@ -43,18 +43,14 @@ public class CommandOpenImpl extends CommandBasicImpl implements Command {
         LOGGER.info("Executing Command Open");
         List<Response> returnValue = new ArrayList<>();
 
-        Optional<Feature> optObject = EntityUtil.findFeatureByDescription(player.getArea().getAllFeatures(), target,
-            adventure.getUI());
+        Optional<Feature> optObject =
+            EntityUtil.findFeatureByDescription(player.getArea().getAllFeatures(), target, adventure.getUI());
 
         if (optObject.isPresent()) {
             Feature object = optObject.get();
             returnValue.addAll(object.open(player, adventure));
-            returnValue.add(
-                responseFactory.createBuilder().source("CommandOpen").text(object.getName() + " is open.").build());
-        } else {
-            returnValue
-                .add(responseFactory.createBuilder().source("CommandOpen").text(target + " is not open.").build());
         }
+
         return returnValue;
     }
 

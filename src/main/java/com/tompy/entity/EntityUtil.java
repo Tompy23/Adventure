@@ -1,7 +1,9 @@
 package com.tompy.entity;
 
+import com.tompy.attribute.api.Attribute;
 import com.tompy.entity.api.Entity;
 import com.tompy.entity.api.EntityFacade;
+import com.tompy.entity.api.EntityService;
 import com.tompy.entity.feature.api.Feature;
 import com.tompy.entity.item.api.Item;
 import com.tompy.io.UserInput;
@@ -9,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Utility class of functions dealing with Entities.
@@ -42,7 +45,6 @@ public class EntityUtil {
     }
 
     /**
-     *
      * @param items       - The list of items from which to choose
      * @param description - The description supplied by the user.
      * @param io          - In case the user must supply a response
@@ -54,8 +56,7 @@ public class EntityUtil {
     }
 
     /**
-     *
-     * @param features       - The list of features from which to choose
+     * @param features    - The list of features from which to choose
      * @param description - The description supplied by the user.
      * @param io          - In case the user must supply a response
      * @return - The Item selected.
@@ -69,8 +70,12 @@ public class EntityUtil {
         Map<Long, Integer> scores = new HashMap<>();
         items.stream().forEach(e -> scores.put(e.getKey(), 0));
         for (Entity entity : items) {
-            if (description.toUpperCase().contains(entity.getName().toUpperCase())) {
-                scores.put(entity.getKey(), scores.get(entity.getKey()) + 1);
+            for (String word : entity.getDescriptionWords()) {
+                for (String d : description.split(Pattern.quote(" "))) {
+                    if (d.toUpperCase().contains(word.toUpperCase())) {
+                        scores.put(entity.getKey(), scores.get(entity.getKey()) + 1);
+                    }
+                }
             }
         }
 
@@ -123,5 +128,9 @@ public class EntityUtil {
 
     public static OptionalInt valueFor(EntityFacade facade) {
         return facade.getService().valueFor(facade.getEntity(), facade.getAttribute());
+    }
+
+    public static void makeVisisble(EntityService entityService, Entity entity) {
+        entityService.add(entity, Attribute.VISIBLE);
     }
 }

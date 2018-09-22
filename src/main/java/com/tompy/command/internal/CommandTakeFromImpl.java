@@ -46,8 +46,8 @@ public class CommandTakeFromImpl extends CommandTakeImpl {
 
                     if (player.addItem(source)) {
                         object.removeItem(source);
-                        returnValue.add(responseFactory.createBuilder().source("CommandTakeFrom")
-                            .text(String.format("%s is now in %s's inventory", source.getName(), player.getName()))
+                        returnValue.add(responseFactory.createBuilder().source("CommandTakeFrom").text(
+                            String.format("%s is now in %s's inventory", source.getDescription(), player.getName()))
                             .build());
                     } else {
                         // TODO Inventory full?  Or some other issue?
@@ -56,16 +56,15 @@ public class CommandTakeFromImpl extends CommandTakeImpl {
                     }
                 } else { // Item not in target
                     returnValue.add(responseFactory.createBuilder().source("CommandTakeFrom")
-                        .text(String.format("%s not in %s", item, target)).build());
+                        .text(String.format("%s not in %s", item.toLowerCase(), target.toLowerCase())).build());
                 }
             } else { // target not visible
-                returnValue.add(
-                    responseFactory.createBuilder().source("CommandTakeFrom").text(String.format("%s not here", target))
-                        .build());
+                returnValue.add(responseFactory.createBuilder().source("CommandTakeFrom")
+                    .text(String.format("%s not here", target.toLowerCase())).build());
             }
         } else { // Target not present
             returnValue.add(responseFactory.createBuilder().source("CommandTakeFrom")
-                .text(String.format("%s does not contain %s", target, item)).build());
+                .text(String.format("%s does not contain %s", target.toLowerCase(), item.toLowerCase())).build());
         }
 
         return returnValue;

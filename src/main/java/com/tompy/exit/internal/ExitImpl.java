@@ -31,9 +31,15 @@ public class ExitImpl extends Responsive implements Exit {
         List<Response> returnValue = new ArrayList<>();
         LOGGER.info("Passing thru exit [{}] connecting areas [{}] and [{}]",
                     new String[]{direction.name(), areas[0].getName(), areas[1].getName()});
-        if (state) {
-            returnValue.add(responseFactory.createBuilder().text(direction.getDescription()).source("Exit").build());
-        } else {
+//        if (state) {
+//            returnValue.add(responseFactory.createBuilder().text(direction.getDescription()).source("Exit").build());
+//        } else {
+//            returnValue.add(
+//                responseFactory.createBuilder().text(String.format("Unable to move %s", direction.getDescription()))
+//                    .source("Exit").build());
+//        }
+
+        if (!state) {
             returnValue.add(
                 responseFactory.createBuilder().text(String.format("Unable to move %s", direction.getDescription()))
                     .source("Exit").build());

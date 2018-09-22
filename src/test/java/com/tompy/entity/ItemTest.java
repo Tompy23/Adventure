@@ -33,7 +33,7 @@ public class ItemTest {
     @Test
     public void testName() {
         ItemBuilder builder = itemBuilderFactory.createItemBuilder();
-        Item i = builder.type(ItemType.ITEM_TEST).name("item").longName("long lost item").description(
+        Item i = builder.type(ItemType.ITEM_TEST).name("item").description(
                 "An ancient grail").build();
         assertTrue(i.getName().equals("long lost item"));
         assertTrue(i.getName().equals("item"));
@@ -42,7 +42,7 @@ public class ItemTest {
     @Test
     public void testDescriptors() {
         ItemBuilder builder = itemBuilderFactory.createItemBuilder();
-        Item i = builder.type(ItemType.ITEM_TEST).name("item").longName("long lost item").description(
+        Item i = builder.type(ItemType.ITEM_TEST).name("item").description(
                 "An ancient grail").build();
         assertTrue(i.getDescriptionWords().get(0).equals("long"));
         assertTrue(i.getDescriptionWords().get(1).equals("lost"));
@@ -52,7 +52,7 @@ public class ItemTest {
     @Test
     public void getDetailDescription() {
         ItemBuilder builder = itemBuilderFactory.createItemBuilder();
-        Item i = builder.type(ItemType.ITEM_TEST).name("item").longName("long lost item").description(
+        Item i = builder.type(ItemType.ITEM_TEST).name("item").description(
                 "An ancient grail").build();
         assertTrue(i.getDescription().equals("An ancient grail"));
     }

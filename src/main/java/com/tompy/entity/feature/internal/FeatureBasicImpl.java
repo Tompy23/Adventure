@@ -8,7 +8,6 @@ import com.tompy.entity.EntityUtil;
 import com.tompy.entity.api.EntityFacade;
 import com.tompy.entity.api.EntityService;
 import com.tompy.entity.compartment.internal.CompartmentImpl;
-import com.tompy.entity.event.api.Event;
 import com.tompy.entity.feature.api.Feature;
 import com.tompy.entity.feature.api.FeatureBuilder;
 import com.tompy.entity.internal.EntityBuilderHelperImpl;
@@ -54,7 +53,7 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
         List<Response> returnValue = new ArrayList<>();
         LOGGER.info("Searching Feature [{}]", getName());
 
-        entityService.handle(this, EventType.FEATURE_SEARCH, player, adventure);
+        returnValue.addAll(entityService.handle(this, EventType.FEATURE_SEARCH, player, adventure));
 
         return returnValue;
     }
@@ -66,13 +65,10 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
 
         if (!EntityUtil.is(open) && !EntityUtil.is(locked)) {
             EntityUtil.add(open);
-            returnValue.add(
-                responseFactory.createBuilder().source(this.getName()).text(String.format("%s opens", this.getName()))
-                    .build());
-            entityService.handle(this, EventType.FEATURE_OPEN, player, adventure);
+            returnValue.addAll(entityService.handle(this, EventType.FEATURE_OPEN, player, adventure));
         } else {
             returnValue.add(responseFactory.createBuilder().source(this.getName())
-                .text(String.format("%s does not open", this.getName())).build());
+                .text(String.format("THe %s does not open.", this.getDescription())).build());
         }
 
 
@@ -86,13 +82,10 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
 
         if (EntityUtil.is(open)) {
             EntityUtil.remove(open);
-            returnValue.add(
-                responseFactory.createBuilder().source(this.getName()).text(String.format("%s closes", this.getName()))
-                    .build());
-            entityService.handle(this, EventType.FEATURE_CLOSE, player, adventure);
+            returnValue.addAll(entityService.handle(this, EventType.FEATURE_CLOSE, player, adventure));
         } else {
             returnValue.add(responseFactory.createBuilder().source(this.getName())
-                .text(String.format("%s does not close", this.getName())).build());
+                .text(String.format("The %s does not close", this.getDescription())).build());
         }
 
         return returnValue;
@@ -105,12 +98,10 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
 
         if (!EntityUtil.is(open) && !EntityUtil.is(locked)) {
             EntityUtil.add(locked);
-            returnValue.add(responseFactory.createBuilder().source(this.getName())
-                .text(String.format("%s is locked", this.getName())).build());
-            entityService.handle(this, EventType.FEATURE_LOCK, player, adventure);
+            returnValue.addAll(entityService.handle(this, EventType.FEATURE_LOCK, player, adventure));
         } else {
             returnValue.add(responseFactory.createBuilder().source(this.getName())
-                .text(String.format("%s is not locked", this.getName())).build());
+                .text(String.format("The %s is not locked", this.getDescription())).build());
         }
 
 
@@ -124,12 +115,10 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
 
         if (EntityUtil.is(locked)) {
             EntityUtil.remove(locked);
-            returnValue.add(responseFactory.createBuilder().source(this.getName())
-                .text(String.format("%s is unlocked", this.getName())).build());
-            entityService.handle(this, EventType.FEATURE_UNLOCK, player, adventure);
+            returnValue.addAll(entityService.handle(this, EventType.FEATURE_UNLOCK, player, adventure));
         } else {
             returnValue.add(responseFactory.createBuilder().source(this.getName())
-                .text(String.format("%s is already locked", this.getName())).build());
+                .text(String.format("The %s is still locked", this.getName())).build());
         }
 
         return returnValue;
@@ -151,12 +140,6 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
         @Override
         public FeatureBuilder name(String name) {
             this.name = name;
-            return this;
-        }
-
-        @Override
-        public FeatureBuilder longName(String longName) {
-            this.longName = longName;
             return this;
         }
 
@@ -191,6 +174,9 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
                 case FEATURE_DOOR:
                     FeatureDoorImpl door =
                         new FeatureDoorImpl(key, name, this.buildDescriptors(), description, entityService, exit);
+                    if (entityService != null) {
+                        entityService.addFeature(door);
+                    }
                     return door;
                 default:
                     FeatureBasicImpl feature =

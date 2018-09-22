@@ -2,6 +2,7 @@ package com.tompy.entity.feature.internal;
 
 import com.tompy.adventure.api.Adventure;
 import com.tompy.attribute.api.Attribute;
+import com.tompy.directive.EventType;
 import com.tompy.entity.EntityUtil;
 import com.tompy.entity.api.EntityService;
 import com.tompy.player.api.Player;
@@ -26,13 +27,10 @@ public class FeatureChestImpl extends FeatureBasicImpl {
     @Override
     public List<Response> search(Player player, Adventure adventure) {
         List<Response> returnValue = new ArrayList<>();
-        LOGGER.info("Searching Chest [{}]", getName());
-
-        returnValue.add(responseFactory.createBuilder().source(name).text(String
-            .format("%s [%s] [%s]", description, (EntityUtil.is(open) ? "open" : "closed"),
-                EntityUtil.is(locked) ? "locked" : "unlocked")).build());
+        LOGGER.info("Searching Feature [{}]", getName());
 
         EntityUtil.add(visible);
+        returnValue.addAll(entityService.handle(this, EventType.FEATURE_SEARCH, player, adventure));
 
         return returnValue;
     }
@@ -45,13 +43,13 @@ public class FeatureChestImpl extends FeatureBasicImpl {
         if (EntityUtil.is(visible)) {
             if (!EntityUtil.is(open) && !EntityUtil.is(locked)) {
                 EntityUtil.add(open);
-                returnValue.add(responseFactory.createBuilder().source(this.getName())
-                    .text(String.format("%s opens", this.getName())).build());
+                returnValue.addAll(entityService.handle(this, EventType.FEATURE_OPEN, player, adventure));
                 items.stream().forEach((i) -> entityService.add(i, Attribute.VISIBLE));
-            } else {
-                returnValue.add(responseFactory.createBuilder().source(this.getName())
-                    .text(String.format("%s does not open", this.getName())).build());
+            } else if (EntityUtil.is(locked)) {
+                returnValue.add(responseFactory.createBuilder().source(name).text("It is locked.").build());
             }
+        } else {
+            returnValue.add(responseFactory.createBuilder().source(name).text("I do not see that.").build());
         }
 
         return returnValue;
@@ -65,12 +63,9 @@ public class FeatureChestImpl extends FeatureBasicImpl {
         if (EntityUtil.is(visible)) {
             if (EntityUtil.is(open)) {
                 EntityUtil.remove(open);
-                returnValue.add(responseFactory.createBuilder().source(this.getName())
-                    .text(String.format("%s closes", this.getName())).build());
-            } else {
-                returnValue.add(responseFactory.createBuilder().source(this.getName())
-                    .text(String.format("%s does not close", this.getName())).build());
+                returnValue.addAll(entityService.handle(this, EventType.FEATURE_CLOSE, player, adventure));
             }
+            returnValue.add(responseFactory.createBuilder().source(this.getName()).text("I do not see that.").build());
         }
 
         return returnValue;
@@ -84,12 +79,13 @@ public class FeatureChestImpl extends FeatureBasicImpl {
         if (EntityUtil.is(visible)) {
             if (!EntityUtil.is(open) && !EntityUtil.is(locked)) {
                 EntityUtil.add(locked);
-                returnValue.add(responseFactory.createBuilder().source(this.getName())
-                    .text(String.format("%s is locked", this.getName())).build());
+                returnValue.addAll(entityService.handle(this, EventType.FEATURE_LOCK, player, adventure));
             } else {
-                returnValue.add(responseFactory.createBuilder().source(this.getName())
-                    .text(String.format("%s is not locked", this.getName())).build());
+                returnValue
+                    .add(responseFactory.createBuilder().source(this.getName()).text("Unable to lock that.").build());
             }
+        } else {
+            returnValue.add(responseFactory.createBuilder().source(this.getName()).text("I do not see that.").build());
         }
 
         return returnValue;
@@ -103,13 +99,15 @@ public class FeatureChestImpl extends FeatureBasicImpl {
         if (EntityUtil.is(visible)) {
             if (!EntityUtil.is(open) && EntityUtil.is(locked)) {
                 EntityUtil.remove(locked);
-                returnValue.add(responseFactory.createBuilder().source(this.getName())
-                    .text(String.format("%s is unlocked", this.getName())).build());
+                returnValue.addAll(entityService.handle(this, EventType.FEATURE_UNLOCK, player, adventure));
             } else {
-                returnValue.add(responseFactory.createBuilder().source(this.getName())
-                    .text(String.format("%s is unable to be locked", this.getName())).build());
+                returnValue
+                    .add(responseFactory.createBuilder().source(this.getName()).text("Unable to unlock that.").build());
             }
+        } else {
+            returnValue.add(responseFactory.createBuilder().source(this.getName()).text("I do not see that.").build());
         }
+
 
         return returnValue;
     }

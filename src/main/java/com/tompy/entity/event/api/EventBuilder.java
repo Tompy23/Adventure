@@ -9,8 +9,6 @@ import com.tompy.entity.api.Entity;
 public interface EventBuilder extends Builder<Event> {
     EventBuilder name(String name);
 
-    EventBuilder longName(String longName);
-
     EventBuilder memo(String memo);
 
     EventBuilder actionType(ActionType actionType);

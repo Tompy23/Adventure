@@ -49,10 +49,6 @@ public class CommandMoveImpl extends CommandBasicImpl implements Command {
 
         if (direction == null) {
             returnValue.add(responseFactory.createBuilder().source("MOVE").text("Unknown direction").build());
-        } else {
-            returnValue.add(
-                responseFactory.createBuilder().text(type.getParticiple() + " " + direction.getDescription())
-                    .source(type.getDescription()).build());
         }
 
         if (null != targetExit) {
@@ -60,14 +56,12 @@ public class CommandMoveImpl extends CommandBasicImpl implements Command {
                 Area targetArea = targetExit.getConnectedArea(currentArea);
                 returnValue.addAll(currentArea.exit(direction, player, adventure));
                 returnValue.addAll(targetExit.passThru(direction));
-                returnValue.addAll(targetArea.enter(AdventureUtils.getOppositeDirection(direction), player, adventure));
                 player.setArea(targetArea);
-            } else {
-                returnValue.addAll(currentArea.exit(direction, player, adventure));
+                returnValue.addAll(targetArea.enter(AdventureUtils.getOppositeDirection(direction), player, adventure));
             }
         } else {
             returnValue
-                .add(responseFactory.createBuilder().text("Can't move that way").source(type.getDescription()).build());
+                .add(responseFactory.createBuilder().text("Cannot move that way.").source(type.getDescription()).build());
         }
 
         return returnValue;

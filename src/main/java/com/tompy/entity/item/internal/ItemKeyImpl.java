@@ -33,12 +33,12 @@ public class ItemKeyImpl extends ItemImpl {
         LOGGER.info("Using key [{}] on [{}]", getName(), target.getName());
 
         returnValue.add(this.responseFactory.createBuilder().source(getSource())
-            .text(String.format("Using %s on %s", getName(), target.getName())).build());
+            .text(String.format("Using %s on %s", getDescription(), target.getDescription())).build());
 
         if (entityService.is(target, Attribute.LOCKED)) {
-            target.unlock(player, adventure);
+            returnValue.addAll(target.unlock(player, adventure));
         } else {
-            target.lock(player, adventure);
+            returnValue.addAll(target.lock(player, adventure));
         }
 
         return returnValue;

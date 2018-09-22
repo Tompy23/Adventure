@@ -36,7 +36,7 @@ public class AdventureUtils {
     public static CommandType getCommandType(String type) {
         return commandTypeMap.get(type.toUpperCase());
     }
-    
+
     public static Attribute getAttribute(String name) {
         return attributeMap.get(name.toUpperCase());
     }

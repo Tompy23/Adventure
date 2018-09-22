@@ -15,7 +15,6 @@ public abstract class EntityBuilderHelperImpl {
     protected final EntityService entityService;
     protected final Long key;
     protected String name;
-    protected String longName;
     protected String description;
 
     public EntityBuilderHelperImpl(Long key, EntityService entityService) {
@@ -30,9 +29,8 @@ public abstract class EntityBuilderHelperImpl {
      */
     protected List<String> buildDescriptors() {
         List<String> descriptors = new ArrayList<>();
-        if (longName != null) {
-            descriptors.addAll(Arrays.asList(longName.split(" ")));
-            descriptors = descriptors.stream().filter(a -> !a.equals(name)).collect(Collectors.toList());
+        if (description != null) {
+            descriptors.addAll(Arrays.asList(description.split(" ")));
         }
 
         return descriptors;

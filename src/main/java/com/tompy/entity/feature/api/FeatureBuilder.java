@@ -8,8 +8,6 @@ public interface FeatureBuilder extends Builder<Feature> {
 
     FeatureBuilder name(String name);
 
-    FeatureBuilder longName(String longName);
-
     FeatureBuilder description(String description);
 
     FeatureBuilder type(FeatureType type);

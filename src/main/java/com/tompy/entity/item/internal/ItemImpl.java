@@ -104,12 +104,6 @@ public class ItemImpl extends EntityImpl implements Item {
         }
 
         @Override
-        public ItemBuilder longName(String longName) {
-            this.longName = longName;
-            return this;
-        }
-
-        @Override
         public ItemBuilder description(String description) {
             this.description = description;
             return this;

@@ -9,7 +9,7 @@ public enum Attribute {
     TEST_STACKABLE(true, false, "TEST STACKABLE", "APPLIES", "DOES NOT APPLY"),
     TEST_HAS_VALUE(false, true, "TEST HAS VALUE", "APPLIES", "DOES NOT APPLY"),
     BONUS(false, true, "Bonus", "bonus", "no bonus"), LOCKED(false, false, "Locked", "locked", "unlocked"),
-    OPEN(false, false, "Open", "open", "closed"), TAKABLE(false, false, "Takable", "can take", "can not take"),
+    OPEN(false, false, "Open", "an open", "a closed"), TAKABLE(false, false, "Takable", "can take", "can not take"),
     TARGETABLE(false, false, "Targetable", "can target", "can not target"),
     USABLE(false, false, "Usable", "usable", "not usable"), VALUE(false, true, "Value", "value of", "no value"),
     VISIBLE(false, false, "Visible", "see", "do not see");

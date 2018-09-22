@@ -50,7 +50,7 @@ public class CommandTakeImpl extends CommandBasicImpl implements Command {
                 if (player.addItem(object)) {
                     player.getArea().removeItem(object);
                     returnValue.add(responseFactory.createBuilder().source("CommandTake")
-                        .text(String.format("%s is now in %s's inventory", object.getName(), player.getName()))
+                        .text(String.format("%s is now in %s's inventory", object.getDescription(), player.getName()))
                         .build());
                 } else {
                     // TODO Inventory full?  Or some other issue?
@@ -60,7 +60,7 @@ public class CommandTakeImpl extends CommandBasicImpl implements Command {
             }
         } else {
             returnValue.add(responseFactory.createBuilder().source("CommandTake")
-                .text(String.format("%s is not in %s's inventory", target, player.getName())).build());
+                .text(String.format("%s is not in %s's inventory", target.toLowerCase(), player.getName())).build());
         }
 
         return returnValue;

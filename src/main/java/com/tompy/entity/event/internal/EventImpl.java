@@ -27,7 +27,6 @@ public class EventImpl extends EntityImpl implements Event {
         super(key, name, descriptors, description, entityService);
         this.action = Objects.requireNonNull(action, "Action cannot be null.");
         this.trigger = Objects.requireNonNull(trigger, "Trigger cannot be null.");
-
     }
 
     public static EventBuilder createBuilder(Long key, EntityService entityService) {
@@ -60,12 +59,6 @@ public class EventImpl extends EntityImpl implements Event {
         @Override
         public EventBuilder name(String name) {
             this.name = name;
-            return this;
-        }
-
-        @Override
-        public EventBuilder longName(String longName) {
-            this.longName = longName;
             return this;
         }
 
@@ -126,7 +119,7 @@ public class EventImpl extends EntityImpl implements Event {
         private Action buildAction() {
             switch (actionType) {
                 case DESCRIBE:
-                    return new ActionDescribeImpl(entity, responses);
+                    return new ActionDescribeImpl(entity, responses, entityService);
             }
             return null;
         }

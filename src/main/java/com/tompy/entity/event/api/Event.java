@@ -1,5 +1,6 @@
 package com.tompy.entity.event.api;
 
-public interface Event extends Action, Trigger {
+import com.tompy.entity.api.Entity;
 
+public interface Event extends Action, Trigger, Entity {
 }

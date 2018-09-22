@@ -76,6 +76,8 @@ public interface EntityService
      */
     OptionalInt valueFor(Entity key, Attribute attribute);
 
+    Entity getEntityByName(String name);
+
     Item getItemByDescription(String description);
 
     Feature getFeatureByDescription(String description);

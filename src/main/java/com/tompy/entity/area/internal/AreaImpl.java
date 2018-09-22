@@ -98,16 +98,18 @@ public class AreaImpl extends CompartmentImpl implements Area {
         List<Response> returnValue = new ArrayList<>();
         LOGGER.info("Searching room [{}]", this.getName());
 
+        returnValue.addAll(entityService.handle(this, EventType.AREA_SEARCH, player, adventure));
+
         if (!features.isEmpty()) {
+            returnValue.add(responseFactory.createBuilder().source(name).text("Also in the room...").build());
             features.stream().forEach((f) -> returnValue.addAll(f.search(player, adventure)));
         }
 
-        returnValue.addAll(entityService.handle(this, EventType.AREA_SEARCH, player, adventure));
-
         if (!items.isEmpty()) {
+            returnValue.add(responseFactory.createBuilder().source(name).text("Items in the room...").build());
             items.stream().forEach((i) -> {
-                returnValue.add(
-                    this.responseFactory.createBuilder().source(i.getName()).text(i.getDescription()).build());
+                returnValue
+                    .add(this.responseFactory.createBuilder().source(i.getName()).text(i.getDescription()).build());
                 entityService.add(i, Attribute.VISIBLE);
             });
         }
@@ -126,10 +128,6 @@ public class AreaImpl extends CompartmentImpl implements Area {
         EventType type = AdventureUtils.getAreaSearchEventType(direction);
         if (!entityService.get(this, type).isEmpty()) {
             returnValue.addAll(entityService.handle(this, type, player, adventure));
-        } else {
-            returnValue.add(
-                responseFactory.createBuilder().text("Nothing found to the " + direction.getDescription()).source(name)
-                    .build());
         }
 
         if (directionFeatures.containsKey(direction)) {
@@ -197,8 +195,7 @@ public class AreaImpl extends CompartmentImpl implements Area {
 
         @Override
         public Area build() {
-            return new AreaImpl(key, name, this.buildDescriptors(), description, searchDescription,
-                entityService);
+            return new AreaImpl(key, name, this.buildDescriptors(), description, searchDescription, entityService);
         }
     }
 }
