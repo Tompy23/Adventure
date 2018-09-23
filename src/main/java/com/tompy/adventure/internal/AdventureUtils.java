@@ -6,7 +6,9 @@ import com.tompy.directive.Direction;
 import com.tompy.directive.EventType;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class AdventureUtils {
     private static Map<String, Direction> directionMap = new HashMap<>();
@@ -20,7 +22,7 @@ public class AdventureUtils {
         for (CommandType ct : CommandType.values()) {
             commandTypeMap.put(ct.getDescription().toUpperCase(), ct);
         }
-        for(Attribute a : Attribute.values()) {
+        for (Attribute a : Attribute.values()) {
             attributeMap.put(a.getName().toUpperCase(), a);
         }
     }
@@ -106,4 +108,36 @@ public class AdventureUtils {
                 return null;
         }
     }
+
+    public static String[] parseCommand(String[] command, List<String> splits) {
+        StringBuilder first = new StringBuilder();
+        StringBuilder second = new StringBuilder();
+        int split = command.length + 1;
+
+        splits = splits.stream().map(String::toUpperCase).collect(Collectors.toList());
+
+        for (int i = 0; i < command.length; i++) {
+            if (splits.contains(command[i].toUpperCase())) {
+                split = i;
+                break;
+            }
+        }
+
+        String[] returnValue = new String[split < command.length + 1 ? 2 : 1];
+
+        for (int i = 1; i < command.length; i++) {
+            if (i < split) {
+                first.append(command[i] + " ");
+            } else if (i > split) {
+                second.append(command[i] + " ");
+            }
+        }
+        returnValue[0] = first.toString().trim();
+        if (returnValue.length > 1) {
+            returnValue[1] = second.toString().trim();
+        }
+
+        return returnValue;
+    }
+
 }

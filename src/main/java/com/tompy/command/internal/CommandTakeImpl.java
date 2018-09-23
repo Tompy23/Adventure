@@ -1,6 +1,7 @@
 package com.tompy.command.internal;
 
 import com.tompy.adventure.api.Adventure;
+import com.tompy.adventure.internal.AdventureUtils;
 import com.tompy.attribute.api.Attribute;
 import com.tompy.command.api.Command;
 import com.tompy.command.api.CommandBuilder;
@@ -14,10 +15,7 @@ import com.tompy.response.api.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 public class CommandTakeImpl extends CommandBasicImpl implements Command {
     private static final Logger LOGGER = LogManager.getLogger(CommandTakeImpl.class);
@@ -82,33 +80,16 @@ public class CommandTakeImpl extends CommandBasicImpl implements Command {
 
         @Override
         public CommandBuilder parts(String[] parts) {
-            int from = -1;
-            for (int i = 0; i < parts.length; i++) {
-                if (parts[i].equalsIgnoreCase("from")) {
-                    from = i;
-                    break;
-                }
-            }
-            StringBuilder itemSb = new StringBuilder();
-            StringBuilder targetSb = new StringBuilder();
-            if (from > 0) {
-                for (int i = 1; i < parts.length; i++) {
-                    if (i < from) {
-                        itemSb.append(parts[i] + " ");
-                    } else if (i > from) {
-                        targetSb.append(parts[i] + " ");
-                    }
-                }
-                item = itemSb.toString().trim();
-                target = targetSb.toString().trim();
-                type = CommandType.COMMAND_TAKE_FROM;
-            } else {
-                for (int i = 1; i < parts.length; i++) {
-                    targetSb.append(parts[i] + " ");
-                }
-                target = targetSb.toString().trim();
+            String[] commands = AdventureUtils.parseCommand(parts, Arrays.asList(new String[] {"from"}));
+            if (commands.length == 1) {
+                target = commands[0];
                 type = CommandType.COMMAND_TAKE;
+            } else {
+                item = commands[0];
+                target = commands[1];
+                type = CommandType.COMMAND_TAKE_FROM;
             }
+
             return this;
         }
 

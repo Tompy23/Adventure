@@ -1,6 +1,7 @@
 package com.tompy.command.internal;
 
 import com.tompy.adventure.api.Adventure;
+import com.tompy.adventure.internal.AdventureUtils;
 import com.tompy.command.api.Command;
 import com.tompy.command.api.CommandBuilder;
 import com.tompy.command.api.CommandBuilderFactory;
@@ -14,10 +15,7 @@ import com.tompy.response.api.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 public class CommandUseImpl extends CommandBasicImpl implements Command {
     private static final Logger LOGGER = LogManager.getLogger(CommandUseImpl.class);
@@ -75,26 +73,9 @@ public class CommandUseImpl extends CommandBasicImpl implements Command {
 
         @Override
         public CommandBuilder parts(String[] parts) {
-            int on = -1;
-            for (int i = 0; i < parts.length; i++) {
-                if (parts[i].equalsIgnoreCase("on") || parts[i].equalsIgnoreCase("in")) {
-                    on = i;
-                    break;
-                }
-            }
-            StringBuilder subjectSb = new StringBuilder();
-            StringBuilder targetSb = new StringBuilder();
-            if (on > 0 && parts.length >= 4) {
-                for (int i = 1; i < parts.length; i++) {
-                    if (i < on) {
-                        subjectSb.append(parts[i] + " ");
-                    } else if (i > on) {
-                        targetSb.append(parts[i] + " ");
-                    }
-                }
-                subject = subjectSb.toString().trim();
-                target = targetSb.toString().trim();
-            }
+            String[] commands = AdventureUtils.parseCommand(parts, Arrays.asList(new String[] {"on", "in"}));
+            subject = commands[0];
+            target = commands[1];
 
             return this;
         }
