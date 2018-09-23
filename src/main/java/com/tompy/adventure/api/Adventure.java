@@ -2,37 +2,19 @@ package com.tompy.adventure.api;
 
 import com.tompy.io.UserInput;
 import com.tompy.player.api.Player;
+import com.tompy.state.api.AdventureState;
+import com.tompy.state.api.AdventureStateFactory;
+import com.tompy.state.api.StateMachine;
 
 /**
  * Defines functions which interact with the state of the adventure.
  */
-public interface Adventure {
+public interface Adventure extends StateMachine {
 
     /**
      * Create the adventure elements
      */
-    void create();
-
-    /**
-     * Begin an adventure for a player
-     *
-     * @param player - The player who is joining the adventure
-     */
-    void start(Player player);
-
-    /**
-     * Gracefully stop an adventure for a specific player
-     *
-     * @param player - The player who is exiting the adventure
-     */
-    void stop(Player player);
-
-    /**
-     * Determines if the Adventure is in a state which is ready for user input.
-     *
-     * @return - True for when the adventure is ready for user input.
-     */
-    boolean proceed();
+    void create(AdventureStateFactory stateFactory);
 
     /**
      * Expose the user input
@@ -40,4 +22,17 @@ public interface Adventure {
      * @return - The user input implementation
      */
     UserInput getUI();
+
+    /**
+     * Begin an adventure for a player
+     *
+     * @param state - The starting state for the adventure
+     */
+    void start(AdventureState state);
+
+    /**
+     * Gracefully stop an adventure for a specific player
+     *
+     */
+    void stop();
 }

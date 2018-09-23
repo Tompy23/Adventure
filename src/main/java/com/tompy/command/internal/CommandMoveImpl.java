@@ -1,7 +1,6 @@
 package com.tompy.command.internal;
 
 import com.tompy.adventure.api.Adventure;
-import com.tompy.adventure.internal.AdventureImpl;
 import com.tompy.adventure.internal.AdventureUtils;
 import com.tompy.command.api.Command;
 import com.tompy.command.api.CommandBuilder;

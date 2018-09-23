@@ -1,7 +1,6 @@
 package com.tompy.command.internal;
 
 import com.tompy.adventure.api.Adventure;
-import com.tompy.adventure.internal.AdventureImpl;
 import com.tompy.command.api.Command;
 import com.tompy.command.api.CommandBuilder;
 import com.tompy.command.api.CommandBuilderFactory;
@@ -37,7 +36,7 @@ public class CommandQuitImpl extends CommandBasicImpl implements Command {
 
         returnValue.add(responseFactory.createBuilder().source(type.getDescription()).text("Goodbye").build());
 
-        adventure.stop(player);
+        adventure.stop();
 
         return returnValue;
     }
