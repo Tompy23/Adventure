@@ -9,18 +9,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.PrintStream;
-import java.util.Objects;
 
 public class StateExploreImpl extends AdventureStateBaseImpl implements AdventureState {
     private final static Logger LOGGER = LogManager.getLogger(StateExploreImpl.class);
-    private final UserInput userInput;
-    private final PrintStream outStream;
 
-    public StateExploreImpl(Player player, Adventure adventure, UserInput userInput,
-        PrintStream outStream) {
-        super(player, adventure);
-        this.userInput = Objects.requireNonNull(userInput, "User Input cannot be null.");
-        this.outStream = Objects.requireNonNull(outStream, "Output Stream cannot be null.");
+
+    public StateExploreImpl(Player player, Adventure adventure, UserInput userInput, PrintStream outStream) {
+        super(player, adventure, userInput, outStream);
+
     }
 
     @Override

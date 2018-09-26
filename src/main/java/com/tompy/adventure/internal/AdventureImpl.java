@@ -78,5 +78,6 @@ public abstract class AdventureImpl implements Adventure {
             LOGGER.info("Start round");
             currentState.process();
         }
+        currentState.end();
     }
 }

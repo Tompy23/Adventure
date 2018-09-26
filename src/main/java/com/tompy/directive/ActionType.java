@@ -1,7 +1,7 @@
 package com.tompy.directive;
 
 public enum ActionType {
-    DESCRIBE("describe");
+    DESCRIBE("describe"), ENCOUNTER("encounter"), EXPLORE("explore"), HORRIBLE_DEATH("death");
 
     private String description;
 

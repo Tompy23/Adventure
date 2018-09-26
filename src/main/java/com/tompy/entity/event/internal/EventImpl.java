@@ -6,6 +6,7 @@ import com.tompy.directive.Direction;
 import com.tompy.directive.TriggerType;
 import com.tompy.entity.api.Entity;
 import com.tompy.entity.api.EntityService;
+import com.tompy.entity.encounter.api.Encounter;
 import com.tompy.entity.event.api.Action;
 import com.tompy.entity.event.api.Event;
 import com.tompy.entity.event.api.EventBuilder;
@@ -14,6 +15,7 @@ import com.tompy.entity.internal.EntityBuilderHelperImpl;
 import com.tompy.entity.internal.EntityImpl;
 import com.tompy.player.api.Player;
 import com.tompy.response.api.Response;
+import com.tompy.state.api.AdventureStateFactory;
 
 import java.util.List;
 import java.util.Objects;
@@ -23,7 +25,7 @@ public class EventImpl extends EntityImpl implements Event {
     private final Trigger trigger;
 
     public EventImpl(Long key, String name, List<String> descriptors, String description, EntityService entityService,
-        Action action, Trigger trigger) {
+            Action action, Trigger trigger) {
         super(key, name, descriptors, description, entityService);
         this.action = Objects.requireNonNull(action, "Action cannot be null.");
         this.trigger = Objects.requireNonNull(trigger, "Trigger cannot be null.");
@@ -33,13 +35,11 @@ public class EventImpl extends EntityImpl implements Event {
         return new EventBuilderImpl(key, entityService);
     }
 
-    @Override
-    public boolean pull(Player player, Adventure adventure) {
+    @Override public boolean pull(Player player, Adventure adventure) {
         return trigger.pull(player, adventure);
     }
 
-    @Override
-    public List<Response> apply(Player player, Adventure adventure) {
+    @Override public List<Response> apply(Player player, Adventure adventure) {
         return action.apply(player, adventure);
     }
 
@@ -50,76 +50,84 @@ public class EventImpl extends EntityImpl implements Event {
         private String[] responses;
         private String text;
         private Direction direction;
+        private Encounter encounter;
+        private AdventureStateFactory stateFactory;
         private int delay;
 
         public EventBuilderImpl(Long key, EntityService entityService) {
             super(key, entityService);
         }
 
-        @Override
-        public EventBuilder name(String name) {
+        @Override public EventBuilder name(String name) {
             this.name = name;
             return this;
         }
 
-        @Override
-        public EventBuilder memo(String memo) {
+        @Override public EventBuilder memo(String memo) {
             this.description = memo;
             return this;
         }
 
-        @Override
-        public EventBuilder actionType(ActionType actionType) {
+        @Override public EventBuilder actionType(ActionType actionType) {
             this.actionType = actionType;
             return this;
         }
 
-        @Override
-        public EventBuilder triggerType(TriggerType triggerType) {
+        @Override public EventBuilder triggerType(TriggerType triggerType) {
             this.triggerType = triggerType;
             return this;
         }
 
-        @Override
-        public EventBuilder entity(Entity entity) {
+        @Override public EventBuilder stateFactory(AdventureStateFactory stateFactory) {
+            this.stateFactory = stateFactory;
+            return this;
+        }
+
+        @Override public EventBuilder entity(Entity entity) {
             this.entity = entity;
             return this;
         }
 
-        @Override
-        public EventBuilder responses(String... responses) {
+        @Override public EventBuilder responses(String... responses) {
             this.responses = responses;
             return this;
         }
 
-        @Override
-        public EventBuilder text(String text) {
+        @Override public EventBuilder text(String text) {
             this.text = text;
             return this;
         }
 
-        @Override
-        public EventBuilder direction(Direction direction) {
+        @Override public EventBuilder direction(Direction direction) {
             this.direction = direction;
             return this;
         }
 
-        @Override
-        public EventBuilder delay(int delay) {
+        @Override public EventBuilder encounter(Encounter encounter) {
+            this.encounter = encounter;
+            return this;
+        }
+
+        @Override public EventBuilder delay(int delay) {
             this.delay = delay;
             return this;
         }
 
-        @Override
-        public Event build() {
+        @Override public Event build() {
             return new EventImpl(key, name, this.buildDescriptors(), description, entityService, buildAction(),
-                buildTrigger());
+                    buildTrigger());
         }
 
         private Action buildAction() {
             switch (actionType) {
                 case DESCRIBE:
-                    return new ActionDescribeImpl(entity, responses, entityService);
+                    return new ActionDescribeImpl(entity, entityService, responses);
+                case ENCOUNTER:
+                    return new ActionEncounterImpl(entity, entityService, responses, encounter, stateFactory);
+                case EXPLORE:
+                    return new ActionExploreImpl(entity, entityService, responses, stateFactory);
+                case HORRIBLE_DEATH:
+                    return new ActionDeathImpl(entity, entityService, responses);
             }
             return null;
         }

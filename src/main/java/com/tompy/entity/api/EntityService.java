@@ -5,6 +5,7 @@ import com.tompy.attribute.api.Attribute;
 import com.tompy.directive.EventType;
 import com.tompy.entity.area.api.Area;
 import com.tompy.entity.area.api.AreaBuilderFactory;
+import com.tompy.entity.encounter.api.EncounterBuilderFactory;
 import com.tompy.entity.event.api.Event;
 import com.tompy.entity.event.api.EventBuilderFactory;
 import com.tompy.entity.feature.api.Feature;
@@ -21,7 +22,8 @@ import java.util.OptionalInt;
  * A service combining entities with various functions and states via an Attribute Manager
  */
 public interface EntityService
-    extends ItemBuilderFactory, FeatureBuilderFactory, AreaBuilderFactory, EventBuilderFactory {
+        extends ItemBuilderFactory, FeatureBuilderFactory, AreaBuilderFactory, EventBuilderFactory,
+        EncounterBuilderFactory {
 
     /**
      * Add Attribute to an entity

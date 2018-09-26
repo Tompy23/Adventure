@@ -10,17 +10,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ActionDescribeImpl extends ActionImpl {
+public class ActionDeathImpl extends ActionImpl {
 
-    public ActionDescribeImpl(Entity entity, EntityService entityService, String[] responses) {
+    public ActionDeathImpl(Entity entity, EntityService entityService, String[] responses) {
         super(entity, entityService, responses);
     }
 
     @Override public List<Response> apply(Player player, Adventure adventure) {
+        adventure.stop();
         List<Response> returnValue = new ArrayList<>();
         returnValue.addAll(responses.stream().
                 map((r) -> responseFactory.createBuilder().source(source).text(substitution(r)).build())
                 .collect(Collectors.toList()));
         return returnValue;
+
     }
 }

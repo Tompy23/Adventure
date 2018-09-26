@@ -16,10 +16,11 @@ public class TriggerOnceAfterDelay extends TriggerImpl {
 
     @Override
     public boolean pull(Player player, Adventure adventure) {
+        boolean returnValue = false;
         if (counter == delay) {
-            return true;
+            returnValue = true;
         }
         counter++;
-        return false;
+        return returnValue;
     }
 }

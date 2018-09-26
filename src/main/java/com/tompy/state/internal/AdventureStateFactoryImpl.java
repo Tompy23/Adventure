@@ -4,6 +4,8 @@ import com.tompy.adventure.api.Adventure;
 import com.tompy.io.UserInput;
 import com.tompy.player.api.Player;
 import com.tompy.state.api.AdventureState;
+import com.tompy.state.api.AdventureStateCombatBuilder;
+import com.tompy.state.api.AdventureStateEncounterBuilder;
 import com.tompy.state.api.AdventureStateFactory;
 
 import java.io.PrintStream;
@@ -14,10 +16,10 @@ public class AdventureStateFactoryImpl implements AdventureStateFactory {
     private final Adventure adventure;
     private final UserInput userInput;
     private final PrintStream outputStream;
+    private AdventureState explore = null;
 
 
-    public AdventureStateFactoryImpl(Player player, Adventure adventure, UserInput userInput,
-        PrintStream outputStream) {
+    public AdventureStateFactoryImpl(Player player, Adventure adventure, UserInput userInput, PrintStream outputStream) {
         this.player = Objects.requireNonNull(player, "Player cannot be null.");
         this.adventure = Objects.requireNonNull(adventure, "Adventure cannot be null.");
         this.userInput = Objects.requireNonNull(userInput, "UserInput cannot be null.");
@@ -25,17 +27,20 @@ public class AdventureStateFactoryImpl implements AdventureStateFactory {
     }
 
     @Override
-    public AdventureState createExploreState() {
-        return new StateExploreImpl(player, adventure, userInput, outputStream);
+    public AdventureState getExploreState() {
+        if (explore == null) {
+            explore = new StateExploreImpl(player, adventure, userInput, outputStream);
+        }
+        return explore;
     }
 
     @Override
-    public AdventureState createEncounterState() {
-        return null;
+    public AdventureStateEncounterBuilder createEncounterState() {
+        return StateEncounterImpl.createBuilder(player, adventure, userInput, outputStream);
     }
 
     @Override
-    public AdventureState createCombatState() {
-        return null;
+    public AdventureStateCombatBuilder createCombatState() {
+        return StateCombatImpl.createBuilder(player, adventure, userInput, outputStream);
     }
 }

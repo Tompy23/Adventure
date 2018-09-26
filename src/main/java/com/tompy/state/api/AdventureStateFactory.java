@@ -2,9 +2,9 @@ package com.tompy.state.api;
 
 public interface AdventureStateFactory {
 
-    AdventureState createExploreState();
+    AdventureState getExploreState();
 
-    AdventureState createEncounterState();
+    AdventureStateEncounterBuilder createEncounterState();
 
-    AdventureState createCombatState();
+    AdventureStateCombatBuilder createCombatState();
 }
