@@ -42,6 +42,11 @@ public abstract class AdventureImpl implements Adventure {
     }
 
     @Override
+    public PrintStream getOutStream() {
+        return outStream;
+    }
+
+    @Override
     public void start(AdventureState state) {
         LOGGER.info("Starting the adventure.");
         player.setArea(entityService.getAreaByName("Room1"));

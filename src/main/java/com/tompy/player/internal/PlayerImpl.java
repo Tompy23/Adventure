@@ -19,6 +19,7 @@ public class PlayerImpl implements Player {
     private Map<String, PlayerInfo> areaInfoMap = new HashMap<>();
     private List<Item> inventory = new ArrayList<>();
     private List<Item> equipped = new ArrayList<>();
+    private int money;
 
     public PlayerImpl(String name, Area area) {
         this.name = name;
@@ -85,6 +86,11 @@ public class PlayerImpl implements Player {
     }
 
     @Override
+    public void removeItem(Item item) {
+        inventory.remove(item);
+    }
+
+    @Override
     public boolean dropItem(Item item, Compartment compartment) {
         if (inventory.contains(item)) {
             // TODO When Compartment is fleshed out, we'll deal with this
@@ -123,5 +129,24 @@ public class PlayerImpl implements Player {
     @Override
     public List<Item> getInventory() {
         return Collections.unmodifiableList(inventory);
+    }
+
+    @Override
+    public int moneyValue() {
+        return money;
+    }
+
+    @Override
+    public void addMoney(int value) {
+        money += value;
+    }
+
+    @Override
+    public boolean pay(int value) {
+        if (money >= value) {
+            money -= value;
+            return true;
+        }
+        return false;
     }
 }

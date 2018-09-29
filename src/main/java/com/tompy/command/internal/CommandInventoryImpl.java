@@ -36,10 +36,12 @@ public class CommandInventoryImpl extends CommandBasicImpl implements Command {
 
         if (!player.getInventory().isEmpty()) {
             player.getInventory().stream().forEach((i) -> returnValue
-                .add(responseFactory.createBuilder().source(player.getName()).text(i.getDescription()).build()));
+                    .add(responseFactory.createBuilder().source(player.getName()).text(i.getDescription()).build()));
         } else {
             returnValue.add(responseFactory.createBuilder().source(player.getName()).text("Inventory Empty").build());
         }
+        returnValue.add(responseFactory.createBuilder().source(player.getName())
+                .text(String.format("$%d", player.moneyValue())).build());
 
         return returnValue;
     }

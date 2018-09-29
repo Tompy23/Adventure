@@ -41,7 +41,7 @@ public class CommandMoveImpl extends CommandBasicImpl implements Command {
 
     @Override
     public List<Response> execute(Player player, Adventure adventure) {
-        LOGGER.info("Executing Command Move.  direction: {}", direction.getDescription());
+        LOGGER.info("Executing Command Move.  direction: {}", direction != null ? direction.getDescription() : "???");
         List<Response> returnValue = new ArrayList<>();
         Area currentArea = player.getArea();
         Exit targetExit = currentArea.getExitForDirection(direction);

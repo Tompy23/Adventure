@@ -23,6 +23,8 @@ public interface Player {
 
     boolean addItem(Item item);
 
+    void removeItem(Item item);
+
     boolean dropItem(Item item, Compartment compartment);
 
     boolean equip(Item item);
@@ -30,4 +32,10 @@ public interface Player {
     boolean unequip(Item item);
 
     List<Item> getInventory();
+
+    int moneyValue();
+
+    void addMoney(int value);
+
+    boolean pay(int value);
 }
