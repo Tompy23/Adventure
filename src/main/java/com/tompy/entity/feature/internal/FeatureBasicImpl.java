@@ -30,10 +30,10 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
     protected final EntityFacade visible;
 
     protected FeatureBasicImpl(Long key, String name, List<String> descriptors, String description,
-        EntityService entityService) {
+            EntityService entityService) {
         super(key, name, descriptors, description, entityService);
         notImplemented =
-            Collections.singletonList(responseFactory.createBuilder().source(name).text("Not Implemented").build());
+                Collections.singletonList(responseFactory.createBuilder().source(name).text("Not Implemented").build());
         open = EntityFacadeImpl.createBuilder(entityService).entity(this).attribute(Attribute.OPEN).build();
         locked = EntityFacadeImpl.createBuilder(entityService).entity(this).attribute(Attribute.LOCKED).build();
         visible = EntityFacadeImpl.createBuilder(entityService).entity(this).attribute(Attribute.VISIBLE).build();
@@ -68,7 +68,7 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
             returnValue.addAll(entityService.handle(this, EventType.FEATURE_OPEN, player, adventure));
         } else {
             returnValue.add(responseFactory.createBuilder().source(this.getName())
-                .text(String.format("THe %s does not open.", this.getDescription())).build());
+                    .text(String.format("THe %s does not open.", this.getDescription())).build());
         }
 
 
@@ -85,7 +85,7 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
             returnValue.addAll(entityService.handle(this, EventType.FEATURE_CLOSE, player, adventure));
         } else {
             returnValue.add(responseFactory.createBuilder().source(this.getName())
-                .text(String.format("The %s does not close", this.getDescription())).build());
+                    .text(String.format("The %s does not close", this.getDescription())).build());
         }
 
         return returnValue;
@@ -101,7 +101,7 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
             returnValue.addAll(entityService.handle(this, EventType.FEATURE_LOCK, player, adventure));
         } else {
             returnValue.add(responseFactory.createBuilder().source(this.getName())
-                .text(String.format("The %s is not locked", this.getDescription())).build());
+                    .text(String.format("The %s is not locked", this.getDescription())).build());
         }
 
 
@@ -118,7 +118,7 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
             returnValue.addAll(entityService.handle(this, EventType.FEATURE_UNLOCK, player, adventure));
         } else {
             returnValue.add(responseFactory.createBuilder().source(this.getName())
-                .text(String.format("The %s is still locked", this.getName())).build());
+                    .text(String.format("The %s is still locked", this.getName())).build());
         }
 
         return returnValue;
@@ -166,21 +166,28 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
             switch (type) {
                 case FEATURE_CHEST:
                     FeatureChestImpl chest =
-                        new FeatureChestImpl(key, name, this.buildDescriptors(), description, entityService);
+                            new FeatureChestImpl(key, name, this.buildDescriptors(), description, entityService);
                     if (entityService != null) {
                         entityService.addFeature(chest);
                     }
                     return chest;
                 case FEATURE_DOOR:
                     FeatureDoorImpl door =
-                        new FeatureDoorImpl(key, name, this.buildDescriptors(), description, entityService, exit);
+                            new FeatureDoorImpl(key, name, this.buildDescriptors(), description, entityService, exit);
                     if (entityService != null) {
                         entityService.addFeature(door);
                     }
                     return door;
+//                case FEATURE_MONSTER:
+//                    FeatureMonsterImpl monster =
+//                            new FeatureMonsterImpl(key, name, this.buildDescriptors(), description, entityService);
+//                    if (entityService != null) {
+//                        entityService.addFeature(monster);
+//                    }
+//                    return monster;
                 default:
                     FeatureBasicImpl feature =
-                        new FeatureBasicImpl(key, name, this.buildDescriptors(), description, entityService);
+                            new FeatureBasicImpl(key, name, this.buildDescriptors(), description, entityService);
                     if (entityService != null) {
                         entityService.addFeature(feature);
                     }
