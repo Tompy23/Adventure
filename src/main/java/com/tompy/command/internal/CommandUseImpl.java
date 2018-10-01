@@ -39,11 +39,10 @@ public class CommandUseImpl extends CommandBasicImpl implements Command {
     @Override
     public List<Response> execute(Player player, Adventure adventure) {
         LOGGER.info("Executing Command Use. subject: {}; target {}", subject, target);
-        Optional<Item> optSource =
-            EntityUtil.findItemByDescription(player.getInventory(), subject, adventure.getUI());
+        Optional<Item> optSource = EntityUtil.findItemByDescription(player.getInventory(), subject, adventure.getUI());
 
         Optional<Feature> optObject =
-            EntityUtil.findFeatureByDescription(player.getArea().getAllFeatures(), target, adventure.getUI());
+                EntityUtil.findFeatureByDescription(player.getArea().getAllFeatures(), target, adventure.getUI());
 
         if (optSource.isPresent() && optObject.isPresent()) {
             Item source = optSource.get();
@@ -54,11 +53,11 @@ public class CommandUseImpl extends CommandBasicImpl implements Command {
                 return source.use(player, adventure);
             }
 
-            return Collections.singletonList(responseFactory.createBuilder().source("CommandUse").text(
-                String.format("Cannot use %s on %s", source.getName(), object.getName())).build());
+            return Collections.singletonList(responseFactory.createBuilder().source("CommandUse")
+                    .text(String.format("Cannot use %s on %s", source.getName(), object.getName())).build());
         }
-        return Collections.singletonList(responseFactory.createBuilder().source("CommandUse").text(
-            String.format("Cannot use %s on %s", subject, target)).build());
+        return Collections.singletonList(responseFactory.createBuilder().source("CommandUse")
+                .text(String.format("Cannot use %s on %s", subject, target)).build());
     }
 
     public static final class CommandUseBuilderImpl extends CommandBuilderImpl {
@@ -73,9 +72,13 @@ public class CommandUseImpl extends CommandBasicImpl implements Command {
 
         @Override
         public CommandBuilder parts(String[] parts) {
-            String[] commands = AdventureUtils.parseCommand(parts, Arrays.asList(new String[] {"on", "in"}));
-            subject = commands[0];
-            target = commands[1];
+            subject = "";
+            target = "";
+            String[] commands = AdventureUtils.parseCommand(parts, Arrays.asList(new String[]{"on", "in"}));
+            if (commands.length == 2) {
+                subject = commands[0];
+                target = commands[1];
+            }
 
             return this;
         }

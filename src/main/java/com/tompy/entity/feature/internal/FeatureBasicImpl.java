@@ -185,6 +185,11 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
 //                        entityService.addFeature(monster);
 //                    }
 //                    return monster;
+                case FEATURE_TABLE:
+                    FeatureTableImpl table = new FeatureTableImpl(key, name, this.buildDescriptors(), description, entityService);
+                    if (entityService != null) {
+                        entityService.addFeature(table);
+                    }
                 default:
                     FeatureBasicImpl feature =
                             new FeatureBasicImpl(key, name, this.buildDescriptors(), description, entityService);

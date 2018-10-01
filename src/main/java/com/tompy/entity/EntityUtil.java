@@ -31,15 +31,17 @@ public class EntityUtil {
      */
     public static Long findEntityByDescription(List<? extends Entity> items, String description, UserInput io) {
         Map<Long, Integer> scores = computeScores(items, description);
-        List<Long> finalists = computeFinalists(scores);
-        Long itemKey;
+        Long itemKey = null;
+        if (!scores.isEmpty()) {
+            List<Long> finalists = computeFinalists(scores);
 
-        if (finalists.size() == 0) {
-            return null;
-        } else if (finalists.size() == 1) {
-            itemKey = finalists.get(0);
-        } else {
-            itemKey = makeChoice(items, finalists, io);
+            if (finalists.size() == 0) {
+                return null;
+            } else if (finalists.size() == 1) {
+                itemKey = finalists.get(0);
+            } else {
+                itemKey = makeChoice(items, finalists, io);
+            }
         }
 
         return itemKey;
