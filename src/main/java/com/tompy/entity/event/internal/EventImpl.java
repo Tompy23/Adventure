@@ -3,6 +3,7 @@ package com.tompy.entity.event.internal;
 import com.tompy.adventure.api.Adventure;
 import com.tompy.directive.ActionType;
 import com.tompy.directive.Direction;
+import com.tompy.directive.EventType;
 import com.tompy.directive.TriggerType;
 import com.tompy.entity.api.Entity;
 import com.tompy.entity.api.EntityService;
@@ -17,6 +18,7 @@ import com.tompy.player.api.Player;
 import com.tompy.response.api.Response;
 import com.tompy.state.api.AdventureStateFactory;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -53,6 +55,8 @@ public class EventImpl extends EntityImpl implements Event {
         private Encounter encounter;
         private AdventureStateFactory stateFactory;
         private int delay;
+        private List<Event> events;
+        private EventType subEventType;
 
         public EventBuilderImpl(Long key, EntityService entityService) {
             super(key, entityService);
@@ -113,6 +117,18 @@ public class EventImpl extends EntityImpl implements Event {
             return this;
         }
 
+        @Override
+        public EventBuilder events(List<Event> events) {
+            this.events = Collections.unmodifiableList(events);
+            return this;
+        }
+
+        @Override
+        public EventBuilder eventType(EventType subType) {
+            this.subEventType = subType;
+            return this;
+        }
+
         @Override public Event build() {
             return new EventImpl(key, name, this.buildDescriptors(), description, entityService, buildAction(),
                     buildTrigger());
@@ -120,6 +136,8 @@ public class EventImpl extends EntityImpl implements Event {
 
         private Action buildAction() {
             switch (actionType) {
+                case ADD_EVENT:
+                    return new ActionAddEventImpl(entity, entityService, responses, subEventType, events);
                 case DESCRIBE:
                     return new ActionDescribeImpl(entity, entityService, responses);
                 case ENCOUNTER:

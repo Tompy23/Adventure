@@ -17,6 +17,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
+import static com.tompy.directive.EventType.FEATURE_TRAP;
+
 public class CommandUseImpl extends CommandBasicImpl implements Command {
     private static final Logger LOGGER = LogManager.getLogger(CommandUseImpl.class);
     private final String subject;
@@ -52,9 +54,12 @@ public class CommandUseImpl extends CommandBasicImpl implements Command {
                 LOGGER.info("Using [{}] on [{}]", source.getName(), object.getName());
                 return source.use(player, adventure);
             }
-
-            return Collections.singletonList(responseFactory.createBuilder().source("CommandUse")
-                    .text(String.format("Cannot use %s on %s", source.getName(), object.getName())).build());
+            List<Response> returnValue = new ArrayList<>();
+            returnValue.addAll(entityService.handle(object, FEATURE_TRAP, player, adventure));
+            returnValue.add(responseFactory.createBuilder().source("CommandUse")
+                    .text(String.format("%s does not work on %s", source.getDescription(), object.getDescription()))
+                    .build());
+            return returnValue;
         }
         return Collections.singletonList(responseFactory.createBuilder().source("CommandUse")
                 .text(String.format("Cannot use %s on %s", subject, target)).build());

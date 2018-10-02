@@ -1,6 +1,7 @@
 package com.tompy.state.internal;
 
 import com.tompy.adventure.api.Adventure;
+import com.tompy.entity.api.EntityService;
 import com.tompy.entity.encounter.api.Encounter;
 import com.tompy.io.UserInput;
 import com.tompy.player.api.Player;
@@ -17,21 +18,23 @@ public class StateEncounterImpl extends AdventureStateBaseImpl implements Advent
     private final Encounter encounter;
 
     public StateEncounterImpl(Player player, Adventure adventure, UserInput userInput, PrintStream outStream,
-            Encounter encounter) {
-        super(player, adventure, userInput, outStream);
+            Encounter encounter, EntityService entityService) {
+        super(player, adventure, userInput, outStream, entityService);
         this.encounter = Objects.requireNonNull(encounter, "Encounter cannot be null.");
     }
 
     public static AdventureStateEncounterBuilder createBuilder(Player player, Adventure adventure, UserInput userInput,
-            PrintStream outputStream) {
-        return new AdventureStateEncounterBuilderImpl(player, adventure, userInput, outputStream);
+            PrintStream outputStream, EntityService entityService) {
+        return new AdventureStateEncounterBuilderImpl(player, adventure, userInput, outputStream, entityService);
     }
 
-    @Override public void start() {
+    @Override
+    public void start() {
 
     }
 
-    @Override public void process() {
+    @Override
+    public void process() {
         // Call the encounter's "list options", returns Map<Long, String>
         Map<Long, String> options = encounter.getOptions();
 
@@ -45,7 +48,8 @@ public class StateEncounterImpl extends AdventureStateBaseImpl implements Advent
         responses.stream().forEachOrdered((r) -> outStream.println(r.render()));
     }
 
-    @Override public void end() {
+    @Override
+    public void end() {
 
     }
 
@@ -54,22 +58,26 @@ public class StateEncounterImpl extends AdventureStateBaseImpl implements Advent
         private final Adventure adventure;
         private final UserInput userInput;
         private final PrintStream outputStream;
+        private final EntityService entityService;
         private Encounter encounter;
 
 
         public AdventureStateEncounterBuilderImpl(Player player, Adventure adventure, UserInput userInput,
-                PrintStream outputStream) {
+                PrintStream outputStream, EntityService entityService) {
             this.player = Objects.requireNonNull(player, "Player cannot be null.");
             this.adventure = Objects.requireNonNull(adventure, "Adventure cannot be null.");
             this.userInput = Objects.requireNonNull(userInput, "UserInput cannot be null.");
             this.outputStream = Objects.requireNonNull(outputStream, "Output Stream cannot be null.");
+            this.entityService = Objects.requireNonNull(entityService, "Entity Service cannot be null.");
         }
 
-        @Override public AdventureState build() {
-            return new StateEncounterImpl(player, adventure, userInput, outputStream, encounter);
+        @Override
+        public AdventureState build() {
+            return new StateEncounterImpl(player, adventure, userInput, outputStream, encounter, entityService);
         }
 
-        @Override public AdventureStateEncounterBuilder encounter(Encounter encounter) {
+        @Override
+        public AdventureStateEncounterBuilder encounter(Encounter encounter) {
             this.encounter = encounter;
             return this;
         }

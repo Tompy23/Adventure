@@ -1,6 +1,7 @@
 package com.tompy.state.internal;
 
 import com.tompy.adventure.api.Adventure;
+import com.tompy.entity.api.EntityService;
 import com.tompy.io.UserInput;
 import com.tompy.player.api.Player;
 import com.tompy.state.api.AdventureState;
@@ -11,24 +12,28 @@ import java.util.Objects;
 
 public class StateCombatImpl extends AdventureStateBaseImpl implements AdventureState {
 
-    public StateCombatImpl(Player player, Adventure adventure, UserInput userInput, PrintStream outStream) {
-        super(player, adventure, userInput, outStream);
+    public StateCombatImpl(Player player, Adventure adventure, UserInput userInput, PrintStream outStream,
+            EntityService entityService) {
+        super(player, adventure, userInput, outStream, entityService);
     }
 
     public static AdventureStateCombatBuilder createBuilder(Player player, Adventure adventure, UserInput userInput,
-            PrintStream outputStream) {
-        return new AdventureStateCombatBuilderImpl(player, adventure, userInput, outputStream);
+            PrintStream outputStream, EntityService entityService) {
+        return new AdventureStateCombatBuilderImpl(player, adventure, userInput, outputStream, entityService);
     }
 
-    @Override public void start() {
-
-    }
-
-    @Override public void process() {
+    @Override
+    public void start() {
 
     }
 
-    @Override public void end() {
+    @Override
+    public void process() {
+
+    }
+
+    @Override
+    public void end() {
 
     }
 
@@ -37,17 +42,20 @@ public class StateCombatImpl extends AdventureStateBaseImpl implements Adventure
         private final Adventure adventure;
         private final UserInput userInput;
         private final PrintStream outputStream;
+        private final EntityService entityService;
 
         public AdventureStateCombatBuilderImpl(Player player, Adventure adventure, UserInput userInput,
-                PrintStream outputStream) {
+                PrintStream outputStream, EntityService entityService) {
             this.player = Objects.requireNonNull(player, "Player cannot be null.");
             this.adventure = Objects.requireNonNull(adventure, "Adventure cannot be null.");
             this.userInput = Objects.requireNonNull(userInput, "UserInput cannot be null.");
             this.outputStream = Objects.requireNonNull(outputStream, "Output Stream cannot be null.");
+            this.entityService = Objects.requireNonNull(entityService, "Entity Service cannot be null.");
         }
 
-        @Override public AdventureState build() {
-            return new StateCombatImpl(player, adventure, userInput, outputStream);
+        @Override
+        public AdventureState build() {
+            return new StateCombatImpl(player, adventure, userInput, outputStream, entityService);
         }
     }
 }

@@ -3,10 +3,13 @@ package com.tompy.entity.event.api;
 import com.tompy.common.Builder;
 import com.tompy.directive.Direction;
 import com.tompy.directive.ActionType;
+import com.tompy.directive.EventType;
 import com.tompy.directive.TriggerType;
 import com.tompy.entity.api.Entity;
 import com.tompy.entity.encounter.api.Encounter;
 import com.tompy.state.api.AdventureStateFactory;
+
+import java.util.List;
 
 public interface EventBuilder extends Builder<Event> {
     EventBuilder name(String name);
@@ -30,4 +33,8 @@ public interface EventBuilder extends Builder<Event> {
     EventBuilder encounter(Encounter encounter);
 
     EventBuilder delay(int delay);
+
+    EventBuilder events(List<Event> events);
+
+    EventBuilder eventType(EventType subType);
 }

@@ -2,6 +2,7 @@ package com.tompy.state.internal;
 
 import com.tompy.adventure.api.Adventure;
 import com.tompy.command.api.Command;
+import com.tompy.entity.api.EntityService;
 import com.tompy.io.UserInput;
 import com.tompy.player.api.Player;
 import com.tompy.state.api.AdventureState;
@@ -10,12 +11,15 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.PrintStream;
 
+import static com.tompy.directive.EventType.EXPLORING;
+
 public class StateExploreImpl extends AdventureStateBaseImpl implements AdventureState {
     private final static Logger LOGGER = LogManager.getLogger(StateExploreImpl.class);
 
 
-    public StateExploreImpl(Player player, Adventure adventure, UserInput userInput, PrintStream outStream) {
-        super(player, adventure, userInput, outStream);
+    public StateExploreImpl(Player player, Adventure adventure, UserInput userInput, PrintStream outStream,
+            EntityService entityService) {
+        super(player, adventure, userInput, outStream, entityService);
 
     }
 
@@ -30,6 +34,8 @@ public class StateExploreImpl extends AdventureStateBaseImpl implements Adventur
         if (null != command) {
             command.execute(player, adventure).stream().forEachOrdered((a) -> outStream.println(a.render()));
         }
+        entityService.handle(null, EXPLORING, player, adventure).stream()
+                .forEachOrdered((a) -> outStream.println(a.render()));
     }
 
     @Override
