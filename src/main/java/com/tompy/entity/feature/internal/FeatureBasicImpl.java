@@ -53,7 +53,7 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
         List<Response> returnValue = new ArrayList<>();
         LOGGER.info("Searching Feature [{}]", getName());
 
-        returnValue.addAll(entityService.handle(this, EventType.FEATURE_SEARCH, player, adventure));
+        returnValue.addAll(entityService.handle(this, EventType.EVENT_FEATURE_SEARCH, player, adventure));
 
         return returnValue;
     }
@@ -65,7 +65,7 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
 
         if (!EntityUtil.is(open) && !EntityUtil.is(locked)) {
             EntityUtil.add(open);
-            returnValue.addAll(entityService.handle(this, EventType.FEATURE_OPEN, player, adventure));
+            returnValue.addAll(entityService.handle(this, EventType.EVENT_FEATURE_OPEN, player, adventure));
         } else {
             returnValue.add(responseFactory.createBuilder().source(this.getName())
                     .text(String.format("THe %s does not open.", this.getDescription())).build());
@@ -82,7 +82,7 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
 
         if (EntityUtil.is(open)) {
             EntityUtil.remove(open);
-            returnValue.addAll(entityService.handle(this, EventType.FEATURE_CLOSE, player, adventure));
+            returnValue.addAll(entityService.handle(this, EventType.EVENT_FEATURE_CLOSE, player, adventure));
         } else {
             returnValue.add(responseFactory.createBuilder().source(this.getName())
                     .text(String.format("The %s does not close", this.getDescription())).build());
@@ -98,7 +98,7 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
 
         if (!EntityUtil.is(open) && !EntityUtil.is(locked)) {
             EntityUtil.add(locked);
-            returnValue.addAll(entityService.handle(this, EventType.FEATURE_LOCK, player, adventure));
+            returnValue.addAll(entityService.handle(this, EventType.EVENT_FEATURE_LOCK, player, adventure));
         } else {
             returnValue.add(responseFactory.createBuilder().source(this.getName())
                     .text(String.format("The %s is not locked", this.getDescription())).build());
@@ -115,7 +115,7 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
 
         if (EntityUtil.is(locked)) {
             EntityUtil.remove(locked);
-            returnValue.addAll(entityService.handle(this, EventType.FEATURE_UNLOCK, player, adventure));
+            returnValue.addAll(entityService.handle(this, EventType.EVENT_FEATURE_UNLOCK, player, adventure));
         } else {
             returnValue.add(responseFactory.createBuilder().source(this.getName())
                     .text(String.format("The %s is still locked", this.getName())).build());
@@ -166,14 +166,16 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
             switch (type) {
                 case FEATURE_CHEST:
                     FeatureChestImpl chest =
-                            new FeatureChestImpl(key, name, this.buildDescriptors(), description, entityService);
+                            new FeatureChestImpl(key, name == null ? "CHEST-" + key : name, this.buildDescriptors(),
+                                    description, entityService);
                     if (entityService != null) {
                         entityService.addFeature(chest);
                     }
                     return chest;
                 case FEATURE_DOOR:
                     FeatureDoorImpl door =
-                            new FeatureDoorImpl(key, name, this.buildDescriptors(), description, entityService, exit);
+                            new FeatureDoorImpl(key, name == null ? "DOOR-" + key : name, this.buildDescriptors(),
+                                    description, entityService, exit);
                     if (entityService != null) {
                         entityService.addFeature(door);
                     }
@@ -186,13 +188,16 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
 //                    }
 //                    return monster;
                 case FEATURE_TABLE:
-                    FeatureTableImpl table = new FeatureTableImpl(key, name, this.buildDescriptors(), description, entityService);
+                    FeatureTableImpl table =
+                            new FeatureTableImpl(key, name == null ? "TABLE-" + key : name, this.buildDescriptors(),
+                                    description, entityService);
                     if (entityService != null) {
                         entityService.addFeature(table);
                     }
                 default:
                     FeatureBasicImpl feature =
-                            new FeatureBasicImpl(key, name, this.buildDescriptors(), description, entityService);
+                            new FeatureBasicImpl(key, name == null ? "FEATURE-" + key : name, this.buildDescriptors(),
+                                    description, entityService);
                     if (entityService != null) {
                         entityService.addFeature(feature);
                     }

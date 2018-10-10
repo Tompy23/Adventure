@@ -1,10 +1,12 @@
 package com.tompy.entity.item.internal;
 
 import com.tompy.adventure.api.Adventure;
+import com.tompy.directive.EventType;
 import com.tompy.directive.ItemType;
 import com.tompy.entity.api.Entity;
 import com.tompy.entity.api.EntityFacade;
 import com.tompy.entity.api.EntityService;
+import com.tompy.entity.event.api.Event;
 import com.tompy.entity.feature.api.Feature;
 import com.tompy.entity.internal.EntityBuilderHelperImpl;
 import com.tompy.entity.internal.EntityImpl;
@@ -67,6 +69,8 @@ public class ItemImpl extends EntityImpl implements Item {
         private ItemType type;
         private EntityFacade target;
         private Feature targetFeature;
+        private Event event;
+        private EventType eventType;
 
         public ItemBuilderImpl(Long key, EntityService entityService) {
             super(key, entityService);
@@ -78,22 +82,23 @@ public class ItemImpl extends EntityImpl implements Item {
             switch (type) {
                 case ITEM_KEY:
                     item = new ItemKeyImpl(key, name, buildDescriptors(), description, entityService, targetFeature);
-                    if (entityService != null) {
-                        entityService.addItem(item);
-                    }
                     break;
                 case ITEM_GEM:
                     item = new ItemGemImpl(key, name, buildDescriptors(), description, entityService);
-                    if (entityService != null) {
-                        entityService.addItem(item);
-                    }
+                    break;
+                case ITEM_POTION:
+                    item = new ItemPotionImpl(key, name, buildDescriptors(), description, entityService, event);
+                    break;
+                case ITEM_WEAPON:
+                    item = new ItemWeaponImpl(key, name, buildDescriptors(), description, entityService, targetFeature);
+                    break;
                 default:
                     item = new ItemImpl(key, name, buildDescriptors(), description, entityService);
-                    if (entityService != null) {
-                        entityService.addItem(item);
-                    }
             }
 
+            if (item != null && entityService != null) {
+                entityService.addItem(item);
+            }
             return item;
         }
 
@@ -124,6 +129,18 @@ public class ItemImpl extends EntityImpl implements Item {
         @Override
         public ItemBuilder targetFeature(Feature targetFeature) {
             this.targetFeature = targetFeature;
+            return this;
+        }
+
+        @Override
+        public ItemBuilder event(Event event) {
+            this.event = event;
+            return this;
+        }
+
+        @Override
+        public ItemBuilder eventType(EventType eventType) {
+            this.eventType = eventType;
             return this;
         }
     }

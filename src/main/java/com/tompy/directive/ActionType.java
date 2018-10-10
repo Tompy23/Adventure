@@ -1,8 +1,9 @@
 package com.tompy.directive;
 
 public enum ActionType {
-    DESCRIBE("describe"), ENCOUNTER("encounter"), EXPLORE("explore"), HORRIBLE_DEATH("death"), MAKE_VISIBLE("visible"),
-    ADD_EVENT("add_event");
+    ACTION_DESCRIBE("describe"), ACTION_ENCOUNTER("encounter"), ACTION_EXPLORE("explore"),
+    ACTION_HORRIBLE_DEATH("death"), ACTION_MAKE_VISIBLE("visible"), ACTION_ADD_EVENT("add_event"),
+    ACTION_REMOVE_EVENT("remove_event");
 
     private String description;
 

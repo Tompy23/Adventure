@@ -35,7 +35,6 @@ public class ItemTest {
         ItemBuilder builder = itemBuilderFactory.createItemBuilder();
         Item i = builder.type(ItemType.ITEM_TEST).name("item").description(
                 "An ancient grail").build();
-        assertTrue(i.getName().equals("long lost item"));
         assertTrue(i.getName().equals("item"));
     }
 
@@ -44,9 +43,7 @@ public class ItemTest {
         ItemBuilder builder = itemBuilderFactory.createItemBuilder();
         Item i = builder.type(ItemType.ITEM_TEST).name("item").description(
                 "An ancient grail").build();
-        assertTrue(i.getDescriptionWords().get(0).equals("long"));
-        assertTrue(i.getDescriptionWords().get(1).equals("lost"));
-        assertTrue(i.getDescriptionWords().size() == 2);
+        assertTrue(i.getDescriptionWords().size() == 3);
     }
 
     @Test

@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.tompy.directive.EventType.INTERACTION;
+import static com.tompy.directive.EventType.EVENT_INTERACTION;
 import static com.tompy.entity.encounter.internal.EncounterConstants.BUY;
 import static com.tompy.entity.encounter.internal.EncounterConstants.SELL;
 
@@ -34,7 +34,7 @@ public class MerchantChat extends MerchantStateBaseImpl implements MerchantState
     @Override
     public Map<Long, String> getOptions() {
         Map<Long, String> returnValue = new HashMap<>();
-        for (Event event : merchant.getEntityService().get(merchant, INTERACTION)) {
+        for (Event event : merchant.getEntityService().get(merchant, EVENT_INTERACTION)) {
             if (event.pull(merchant.getPlayer(), merchant.getAdventure())) {
                 returnValue.put(event.getKey(), event.getDescription());
             }
@@ -51,7 +51,7 @@ public class MerchantChat extends MerchantStateBaseImpl implements MerchantState
             merchant.changeState(choice == BUY ? merchant.getBuyState() : merchant.getSellState());
         } else {
 
-            for (Event event : merchant.getEntityService().get(merchant, INTERACTION)) {
+            for (Event event : merchant.getEntityService().get(merchant, EVENT_INTERACTION)) {
                 if (event.getKey() == option) {
                     return event.apply(merchant.getPlayer(), merchant.getAdventure());
                 }

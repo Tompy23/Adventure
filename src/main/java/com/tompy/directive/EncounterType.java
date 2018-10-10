@@ -1,5 +1,5 @@
 package com.tompy.directive;
 
 public enum EncounterType {
-    ENVIRONMENT, MERCHANT;
+    ENCOUNTER_ENVIRONMENT, ENCOUNTER_MERCHANT;
 }

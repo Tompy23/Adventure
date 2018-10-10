@@ -72,7 +72,7 @@ public class AreaImpl extends CompartmentImpl implements Area {
         List<Response> returnValue = new ArrayList<>();
         LOGGER.info("Entering room [{}]", this.getName());
 
-        returnValue.addAll(entityService.handle(this, EventType.AREA_ENTER, player, adventure));
+        returnValue.addAll(entityService.handle(this, EventType.EVENT_AREA_ENTER, player, adventure));
         returnValue
             .addAll(entityService.handle(this, AdventureUtils.getAreaEnterEventType(direction), player, adventure));
 
@@ -86,7 +86,7 @@ public class AreaImpl extends CompartmentImpl implements Area {
         List<Response> returnValue = new ArrayList<>();
         LOGGER.info("Exiting room [{}] in direction [{}]", this.getName(), direction.name());
 
-        returnValue.addAll(entityService.handle(this, EventType.AREA_EXIT, player, adventure));
+        returnValue.addAll(entityService.handle(this, EventType.EVENT_AREA_EXIT, player, adventure));
         returnValue
             .addAll(entityService.handle(this, AdventureUtils.getAreaExitEventType(direction), player, adventure));
 
@@ -98,7 +98,7 @@ public class AreaImpl extends CompartmentImpl implements Area {
         List<Response> returnValue = new ArrayList<>();
         LOGGER.info("Searching room [{}]", this.getName());
 
-        returnValue.addAll(entityService.handle(this, EventType.AREA_SEARCH, player, adventure));
+        returnValue.addAll(entityService.handle(this, EventType.EVENT_AREA_SEARCH, player, adventure));
 
         if (!features.isEmpty()) {
             returnValue.add(responseFactory.createBuilder().source(name).text("Also in the room...").build());

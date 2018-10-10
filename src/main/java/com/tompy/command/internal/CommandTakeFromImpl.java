@@ -31,40 +31,42 @@ public class CommandTakeFromImpl extends CommandTakeImpl {
         LOGGER.info("Executing Command Take From");
         List<Response> returnValue = new ArrayList<>();
 
-        Optional<Feature> optObject =
-            EntityUtil.findFeatureByDescription(player.getArea().getAllFeatures(), target, adventure.getUI());
+        Optional<Feature> optObject = EntityUtil
+                .findVisibleFeatureByDescription(entityService, player.getArea().getAllFeatures(), target,
+                        adventure.getUI());
 
         if (optObject.isPresent()) {
             Feature object = optObject.get();
 
             if (entityService.is(object, Attribute.VISIBLE)) {
-                Optional<Item> optSource =
-                    EntityUtil.findItemByDescription(object.getAllItems(), item, adventure.getUI());
+                Optional<Item> optSource = EntityUtil
+                        .findVisibleItemByDescription(entityService, object.getAllItems(), item, adventure.getUI());
 
                 if (optSource.isPresent()) {
                     Item source = optSource.get();
 
                     if (player.addItem(source)) {
                         object.removeItem(source);
-                        returnValue.add(responseFactory.createBuilder().source("CommandTakeFrom").text(
-                            String.format("%s is now in %s's inventory", source.getDescription(), player.getName()))
-                            .build());
+                        returnValue.add(responseFactory.createBuilder().source("CommandTakeFrom").text(String
+                                .format("%s is now in %s's inventory", source.getDescription(), player.getName()))
+                                .build());
                     } else {
                         // TODO Inventory full?  Or some other issue?
-                        returnValue.add(
-                            responseFactory.createBuilder().source("CommandTakeFrom").text("Inventory full.").build());
+                        returnValue
+                                .add(responseFactory.createBuilder().source("CommandTakeFrom").text("Inventory full.")
+                                        .build());
                     }
                 } else { // Item not in target
                     returnValue.add(responseFactory.createBuilder().source("CommandTakeFrom")
-                        .text(String.format("%s not in %s", item.toLowerCase(), target.toLowerCase())).build());
+                            .text(String.format("%s not in %s", item.toLowerCase(), target.toLowerCase())).build());
                 }
             } else { // target not visible
                 returnValue.add(responseFactory.createBuilder().source("CommandTakeFrom")
-                    .text(String.format("%s not here", target.toLowerCase())).build());
+                        .text(String.format("%s not here", target.toLowerCase())).build());
             }
         } else { // Target not present
             returnValue.add(responseFactory.createBuilder().source("CommandTakeFrom")
-                .text(String.format("%s does not contain %s", target.toLowerCase(), item.toLowerCase())).build());
+                    .text(String.format("%s does not contain %s", target.toLowerCase(), item.toLowerCase())).build());
         }
 
         return returnValue;

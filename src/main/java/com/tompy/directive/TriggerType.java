@@ -1,7 +1,8 @@
 package com.tompy.directive;
 
 public enum TriggerType {
-    ALWAYS("always"), ONCE("once"), ONCE_DELAY("once_delay"), ALWAYS_DELAY("always_delay");
+    TRIGGER_ALWAYS("always"), TRIGGER_ONCE("once"), TRIGGER_ONCE_DELAY("once_delay"),
+    TRIGGER_ALWAYS_DELAY("always_delay");
 
     private String description;
 

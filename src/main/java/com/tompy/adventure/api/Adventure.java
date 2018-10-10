@@ -36,7 +36,7 @@ public interface Adventure extends StateMachine {
      *
      * @param state - The starting state for the adventure
      */
-    void start(AdventureState state);
+    void start(AdventureState state, String startRoom);
 
     /**
      * Gracefully stop an adventure for a specific player

@@ -26,7 +26,7 @@ public abstract class ActionImpl extends Responsive implements Action {
         this.responses = responses == null ? Collections.emptyList() : Arrays.asList(responses);
     }
 
-    // ${entity|attribute|applies|does not apply} ${required|required|optional|optional}
+    // ${entity|attribute|applies-text|does-not-apply-text} ${required|required|optional|optional}
     protected String substitution(String text) {
         int start = text.indexOf("${");
         int end = text.indexOf("}");

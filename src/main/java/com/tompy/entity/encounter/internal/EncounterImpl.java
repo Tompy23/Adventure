@@ -14,7 +14,7 @@ import com.tompy.response.api.Response;
 
 import java.util.*;
 
-import static com.tompy.directive.EventType.INTERACTION;
+import static com.tompy.directive.EventType.EVENT_INTERACTION;
 
 
 public class EncounterImpl extends EntityImpl implements Encounter {
@@ -37,7 +37,7 @@ public class EncounterImpl extends EntityImpl implements Encounter {
     @Override
     public Map<Long, String> getOptions() {
         Map<Long, String> returnValue = new HashMap<>();
-        for (Event event : entityService.get(this, INTERACTION)) {
+        for (Event event : entityService.get(this, EVENT_INTERACTION)) {
             if (event.pull(player, adventure)) {
                 returnValue.put(event.getKey(), event.getDescription());
             }
@@ -47,7 +47,7 @@ public class EncounterImpl extends EntityImpl implements Encounter {
 
     @Override
     public List<Response> act(Long option) {
-        for (Event event : entityService.get(this, INTERACTION)) {
+        for (Event event : entityService.get(this, EVENT_INTERACTION)) {
             if (event.getKey() == option) {
                 return event.apply(player, adventure);
             }
@@ -97,10 +97,10 @@ public class EncounterImpl extends EntityImpl implements Encounter {
         @Override
         public Encounter build() {
             switch (type) {
-                case ENVIRONMENT:
+                case ENCOUNTER_ENVIRONMENT:
                     return new EncounterEnvironmentImpl(key, name, this.buildDescriptors(), description, entityService,
                             player, adventure);
-                case MERCHANT:
+                case ENCOUNTER_MERCHANT:
                     return new EncounterMerchantImpl(key, name, this.buildDescriptors(), description, entityService,
                             player, adventure, items, sellRate, buyRate);
             }

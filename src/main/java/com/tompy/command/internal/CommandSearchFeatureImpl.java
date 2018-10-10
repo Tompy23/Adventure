@@ -19,7 +19,7 @@ public class CommandSearchFeatureImpl extends CommandSearchImpl {
     private static final Logger LOGGER = LogManager.getLogger(CommandSearchFeatureImpl.class);
 
     public CommandSearchFeatureImpl(CommandType type, EntityService entityService, String target,
-        String secondaryTarget) {
+            String secondaryTarget) {
         super(type, entityService, target, secondaryTarget);
     }
 
@@ -28,17 +28,18 @@ public class CommandSearchFeatureImpl extends CommandSearchImpl {
         LOGGER.info("Executing Search Feature");
         List<Response> returnValue = new ArrayList<>();
 
-        Optional<Feature> optObject = EntityUtil.findFeatureByDescription(player.getArea().getAllFeatures(), target,
-            adventure.getUI());
+        Optional<Feature> optObject = EntityUtil
+                .findVisibleFeatureByDescription(entityService, player.getArea().getAllFeatures(), target,
+                        adventure.getUI());
 
         if (optObject.isPresent()) {
             Feature object = optObject.get();
             returnValue.addAll(object.search(player, adventure));
             if (entityService.is(object, Attribute.OPEN)) {
                 object.getAllItems().stream().forEach((i) -> {
-                    returnValue.add(
-                        responseFactory.createBuilder().source("CommandSearchFeature").text(i.getDescription())
-                            .build());
+                    returnValue
+                            .add(responseFactory.createBuilder().source("CommandSearchFeature").text(i.getDescription())
+                                    .build());
                     entityService.add(i, Attribute.VISIBLE);
 
                 });

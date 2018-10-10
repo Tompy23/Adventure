@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.PrintStream;
 
-import static com.tompy.directive.EventType.EXPLORING;
+import static com.tompy.directive.EventType.EVENT_EXPLORING;
 
 public class StateExploreImpl extends AdventureStateBaseImpl implements AdventureState {
     private final static Logger LOGGER = LogManager.getLogger(StateExploreImpl.class);
@@ -34,7 +34,7 @@ public class StateExploreImpl extends AdventureStateBaseImpl implements Adventur
         if (null != command) {
             command.execute(player, adventure).stream().forEachOrdered((a) -> outStream.println(a.render()));
         }
-        entityService.handle(null, EXPLORING, player, adventure).stream()
+        entityService.handle(null, EVENT_EXPLORING, player, adventure).stream()
                 .forEachOrdered((a) -> outStream.println(a.render()));
     }
 

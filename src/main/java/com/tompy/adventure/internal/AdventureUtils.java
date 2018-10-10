@@ -67,13 +67,13 @@ public class AdventureUtils {
     public static EventType getAreaSearchEventType(Direction direction) {
         switch (direction) {
             case DIRECTION_NORTH:
-                return EventType.AREA_NORTH_SEARCH;
+                return EventType.EVENT_AREA_NORTH_SEARCH;
             case DIRECTION_EAST:
-                return EventType.AREA_EAST_SEARCH;
+                return EventType.EVENT_AREA_EAST_SEARCH;
             case DIRECTION_SOUTH:
-                return EventType.AREA_SOUTH_SEARCH;
+                return EventType.EVENT_AREA_SOUTH_SEARCH;
             case DIRECTION_WEST:
-                return EventType.AREA_WEST_SEARCH;
+                return EventType.EVENT_AREA_WEST_SEARCH;
             default:
                 return null;
         }
@@ -82,13 +82,13 @@ public class AdventureUtils {
     public static EventType getAreaExitEventType(Direction direction) {
         switch (direction) {
             case DIRECTION_NORTH:
-                return EventType.AREA_EXIT_NORTH;
+                return EventType.EVENT_AREA_EXIT_NORTH;
             case DIRECTION_EAST:
-                return EventType.AREA_EXIT_EAST;
+                return EventType.EVENT_AREA_EXIT_EAST;
             case DIRECTION_SOUTH:
-                return EventType.AREA_EXIT_SOUTH;
+                return EventType.EVENT_AREA_EXIT_SOUTH;
             case DIRECTION_WEST:
-                return EventType.AREA_EXIT_WEST;
+                return EventType.EVENT_AREA_EXIT_WEST;
             default:
                 return null;
         }
@@ -97,13 +97,13 @@ public class AdventureUtils {
     public static EventType getAreaEnterEventType(Direction direction) {
         switch (direction) {
             case DIRECTION_NORTH:
-                return EventType.AREA_ENTER_NORTH;
+                return EventType.EVENT_AREA_ENTER_NORTH;
             case DIRECTION_EAST:
-                return EventType.AREA_ENTER_EAST;
+                return EventType.EVENT_AREA_ENTER_EAST;
             case DIRECTION_SOUTH:
-                return EventType.AREA_ENTER_SOUTH;
+                return EventType.EVENT_AREA_ENTER_SOUTH;
             case DIRECTION_WEST:
-                return EventType.AREA_ENTER_WEST;
+                return EventType.EVENT_AREA_ENTER_WEST;
             default:
                 return null;
         }

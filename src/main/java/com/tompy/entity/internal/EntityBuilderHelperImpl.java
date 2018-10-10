@@ -25,7 +25,7 @@ public abstract class EntityBuilderHelperImpl {
     /**
      * Takes the name and pulls it apart to build the descriptors
      *
-     * @return
+     * @return - a list of words used to describe the entity and for searching
      */
     protected List<String> buildDescriptors() {
         List<String> descriptors = new ArrayList<>();

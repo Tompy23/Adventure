@@ -39,26 +39,26 @@ public class CommandTakeImpl extends CommandBasicImpl implements Command {
         LOGGER.info("Executing Command Take");
         List<Response> returnValue = new ArrayList<>();
 
-        Optional<Item> optObject =
-            EntityUtil.findItemByDescription(player.getArea().getAllItems(), target, adventure.getUI());
+        Optional<Item> optObject = EntityUtil
+                .findVisibleItemByDescription(entityService, player.getArea().getAllItems(), target, adventure.getUI());
 
         if (optObject.isPresent()) {
             Item object = optObject.get();
             if (entityService.is(object, Attribute.VISIBLE)) {
                 if (player.addItem(object)) {
                     player.getArea().removeItem(object);
-                    returnValue.add(responseFactory.createBuilder().source("CommandTake")
-                        .text(String.format("%s is now in %s's inventory", object.getDescription(), player.getName()))
-                        .build());
+                    returnValue.add(responseFactory.createBuilder().source("CommandTake").text(String
+                            .format("%s is now in %s's inventory", object.getDescription(), player.getName())).build());
                 } else {
                     // TODO Inventory full?  Or some other issue?
                     returnValue
-                        .add(responseFactory.createBuilder().source("CommandTake").text("Inventory full.").build());
+                            .add(responseFactory.createBuilder().source("CommandTake").text("Inventory full.").build());
                 }
             }
         } else {
             returnValue.add(responseFactory.createBuilder().source("CommandTake")
-                .text(String.format("%s is not in %s's inventory", target.toLowerCase(), player.getName())).build());
+                    .text(String.format("%s is not in %s's inventory", target.toLowerCase(), player.getName()))
+                    .build());
         }
 
         return returnValue;
@@ -80,7 +80,7 @@ public class CommandTakeImpl extends CommandBasicImpl implements Command {
 
         @Override
         public CommandBuilder parts(String[] parts) {
-            String[] commands = AdventureUtils.parseCommand(parts, Arrays.asList(new String[] {"from"}));
+            String[] commands = AdventureUtils.parseCommand(parts, Arrays.asList(new String[]{"from"}));
             if (commands.length == 1) {
                 target = commands[0];
                 type = CommandType.COMMAND_TAKE;

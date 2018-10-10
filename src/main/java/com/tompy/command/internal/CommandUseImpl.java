@@ -17,7 +17,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
-import static com.tompy.directive.EventType.FEATURE_TRAP;
+import static com.tompy.directive.EventType.EVENT_FEATURE_TRAP;
 
 public class CommandUseImpl extends CommandBasicImpl implements Command {
     private static final Logger LOGGER = LogManager.getLogger(CommandUseImpl.class);
@@ -27,7 +27,7 @@ public class CommandUseImpl extends CommandBasicImpl implements Command {
     public CommandUseImpl(CommandType type, EntityService entityService, String subject, String target) {
         super(type, entityService);
         this.subject = Objects.requireNonNull(subject, "Subject cannot be null.");
-        this.target = Objects.requireNonNull(target, "Target cannot be null.");
+        this.target = target;
     }
 
     public static CommandBuilderFactory createBuilderFactory() {
@@ -43,26 +43,41 @@ public class CommandUseImpl extends CommandBasicImpl implements Command {
         LOGGER.info("Executing Command Use. subject: {}; target {}", subject, target);
         Optional<Item> optSource = EntityUtil.findItemByDescription(player.getInventory(), subject, adventure.getUI());
 
-        Optional<Feature> optObject =
-                EntityUtil.findFeatureByDescription(player.getArea().getAllFeatures(), target, adventure.getUI());
+        if (target == null) {
+            return subjectOnlyUse(player, adventure, optSource);
+        } else {
+            Optional<Feature> optObject = EntityUtil
+                    .findVisibleFeatureByDescription(entityService, player.getArea().getAllFeatures(), target,
+                            adventure.getUI());
 
-        if (optSource.isPresent() && optObject.isPresent()) {
-            Item source = optSource.get();
-            Feature object = optObject.get();
-            // Use subject on target
-            if (source.hasTarget(object)) {
-                LOGGER.info("Using [{}] on [{}]", source.getName(), object.getName());
-                return source.use(player, adventure);
+            if (optSource.isPresent() && optObject.isPresent()) {
+                Item source = optSource.get();
+                Feature object = optObject.get();
+                // Use subject on target
+                if (source.hasTarget(object)) {
+                    LOGGER.info("Using [{}] on [{}]", source.getName(), object.getName());
+                    return source.use(player, adventure);
+                }
+                List<Response> returnValue = new ArrayList<>();
+                returnValue.addAll(entityService.handle(object, EVENT_FEATURE_TRAP, player, adventure));
+                returnValue.add(responseFactory.createBuilder().source("CommandUse")
+                        .text(String.format("%s does not work on %s", source.getDescription(), object.getDescription()))
+                        .build());
+                return returnValue;
             }
-            List<Response> returnValue = new ArrayList<>();
-            returnValue.addAll(entityService.handle(object, FEATURE_TRAP, player, adventure));
-            returnValue.add(responseFactory.createBuilder().source("CommandUse")
-                    .text(String.format("%s does not work on %s", source.getDescription(), object.getDescription()))
-                    .build());
-            return returnValue;
+            return Collections.singletonList(responseFactory.createBuilder().source("CommandUse")
+                    .text(String.format("Cannot use %s on %s", subject, target)).build());
         }
-        return Collections.singletonList(responseFactory.createBuilder().source("CommandUse")
-                .text(String.format("Cannot use %s on %s", subject, target)).build());
+
+    }
+
+    private List<Response> subjectOnlyUse(Player player, Adventure adventure, Optional<Item> optSource) {
+        if (optSource.isPresent()) {
+            Item source = optSource.get();
+            return source.use(player, adventure);
+        }
+
+        return Collections.emptyList();
     }
 
     public static final class CommandUseBuilderImpl extends CommandBuilderImpl {
@@ -83,6 +98,9 @@ public class CommandUseImpl extends CommandBasicImpl implements Command {
             if (commands.length == 2) {
                 subject = commands[0];
                 target = commands[1];
+            } else if (commands.length == 1) {
+                subject = commands[0];
+                target = null;
             }
 
             return this;

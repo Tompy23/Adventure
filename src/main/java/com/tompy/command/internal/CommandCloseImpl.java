@@ -40,8 +40,9 @@ public class CommandCloseImpl extends CommandBasicImpl implements Command {
         LOGGER.info("Executing Command Close");
         List<Response> returnValue = new ArrayList<>();
 
-        Optional<Feature> objectOpt =
-            EntityUtil.findFeatureByDescription(player.getArea().getAllFeatures(), target, adventure.getUI());
+        Optional<Feature> objectOpt = EntityUtil
+                .findVisibleFeatureByDescription(entityService, player.getArea().getAllFeatures(), target,
+                        adventure.getUI());
 
         if (objectOpt.isPresent()) {
             Feature object = objectOpt.get();
@@ -49,8 +50,7 @@ public class CommandCloseImpl extends CommandBasicImpl implements Command {
             returnValue.addAll(object.close(player, adventure));
         } else {
             LOGGER.debug("Unable to convert {}", target);
-            returnValue
-                .add(responseFactory.createBuilder().source("CommandClose").text("I do not see that.").build());
+            returnValue.add(responseFactory.createBuilder().source("CommandClose").text("I do not see that.").build());
         }
         return returnValue;
     }

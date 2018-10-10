@@ -37,7 +37,7 @@ public class FeatureDoorImpl extends FeatureBasicImpl {
         if (!EntityUtil.is(open) && !EntityUtil.is(locked)) {
             EntityUtil.add(open);
             exit.open();
-            returnValue.addAll(entityService.handle(this, EventType.FEATURE_OPEN, player, adventure));
+            returnValue.addAll(entityService.handle(this, EventType.EVENT_FEATURE_OPEN, player, adventure));
         } else if (EntityUtil.is(locked)) {
             returnValue.add(responseFactory.createBuilder().source(name).text("It is locked.").build());
         }
@@ -53,7 +53,7 @@ public class FeatureDoorImpl extends FeatureBasicImpl {
         if (EntityUtil.is(open)) {
             EntityUtil.remove(open);
             exit.close();
-            returnValue.addAll(entityService.handle(this, EventType.FEATURE_CLOSE, player, adventure));
+            returnValue.addAll(entityService.handle(this, EventType.EVENT_FEATURE_CLOSE, player, adventure));
         }
 
         return returnValue;

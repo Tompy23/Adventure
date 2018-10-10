@@ -136,31 +136,33 @@ public class EventImpl extends EntityImpl implements Event {
 
         private Action buildAction() {
             switch (actionType) {
-                case ADD_EVENT:
+                case ACTION_ADD_EVENT:
                     return new ActionAddEventImpl(entity, entityService, responses, subEventType, events);
-                case DESCRIBE:
+                case ACTION_DESCRIBE:
                     return new ActionDescribeImpl(entity, entityService, responses);
-                case ENCOUNTER:
+                case ACTION_ENCOUNTER:
                     return new ActionEncounterImpl(entity, entityService, responses, encounter, stateFactory);
-                case EXPLORE:
+                case ACTION_EXPLORE:
                     return new ActionExploreImpl(entity, entityService, responses, stateFactory);
-                case HORRIBLE_DEATH:
+                case ACTION_HORRIBLE_DEATH:
                     return new ActionDeathImpl(entity, entityService, responses);
-                case MAKE_VISIBLE:
+                case ACTION_MAKE_VISIBLE:
                     return new ActionVisibleImp(entity, entityService, responses);
+                case ACTION_REMOVE_EVENT:
+                    return new ActionRemoveEvent(entity, entityService, responses, subEventType, events);
             }
             return null;
         }
 
         private Trigger buildTrigger() {
             switch (triggerType) {
-                case ALWAYS:
+                case TRIGGER_ALWAYS:
                     return new TriggerAlwaysImpl(entity);
-                case ONCE:
+                case TRIGGER_ONCE:
                     return new TriggerOnceImpl(entity);
-                case ONCE_DELAY:
+                case TRIGGER_ONCE_DELAY:
                     return new TriggerOnceAfterDelay(entity, delay);
-                case ALWAYS_DELAY:
+                case TRIGGER_ALWAYS_DELAY:
                     return new TriggerAlwaysAfterDelay(entity, delay);
             }
             return null;

@@ -12,7 +12,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * Utility class of functions dealing with Entities.
@@ -59,6 +58,20 @@ public class EntityUtil {
     }
 
     /**
+     * @param entityService - The entity service where the managers are located.
+     * @param items         - The list of items from which to choose
+     * @param description   - The description supplied by the user.
+     * @param io            - In case the user must supply a response
+     * @return - The Item selected.
+     */
+    public static Optional<Item> findVisibleItemByDescription(EntityService entityService, List<Item> items,
+            String description, UserInput io) {
+        Long objectKey = EntityUtil.findEntityByDescription(items, description, io);
+        return items.stream().filter((i) -> i.getKey().equals(objectKey) && entityService.is(i, Attribute.VISIBLE))
+                .findFirst();
+    }
+
+    /**
      * @param features    - The list of features from which to choose
      * @param description - The description supplied by the user.
      * @param io          - In case the user must supply a response
@@ -67,6 +80,20 @@ public class EntityUtil {
     public static Optional<Feature> findFeatureByDescription(List<Feature> features, String description, UserInput io) {
         Long objectKey = EntityUtil.findEntityByDescription(features, description, io);
         return features.stream().filter((i) -> i.getKey().equals(objectKey)).findFirst();
+    }
+
+    /**
+     * @param entityService - The entity service where the managers are located.
+     * @param features      - The list of features from which to choose
+     * @param description   - The description supplied by the user.
+     * @param io            - In case the user must supply a response
+     * @return - The Item selected.
+     */
+    public static Optional<Feature> findVisibleFeatureByDescription(EntityService entityService, List<Feature> features,
+            String description, UserInput io) {
+        Long objectKey = EntityUtil.findEntityByDescription(features, description, io);
+        return features.stream().filter((i) -> i.getKey().equals(objectKey) && entityService.is(i, Attribute.VISIBLE))
+                .findFirst();
     }
 
     private static Map<Long, Integer> computeScores(List<? extends Entity> items, String description) {
