@@ -18,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
+import static com.tompy.attribute.api.Attribute.VISIBLE;
 import static com.tompy.directive.EventType.*;
 
 public class AreaImpl extends CompartmentImpl implements Area {
@@ -104,12 +105,13 @@ public class AreaImpl extends CompartmentImpl implements Area {
         if (!features.isEmpty()) {
             returnValue.addAll(entityService.handle(this, EVENT_AREA_PRE_FEATURE_SEARCH, player, adventure));
             returnValue.add(responseFactory.createBuilder().source(name).text("Also in the room...").build());
-            features.stream().forEach((f) -> returnValue.addAll(f.search(player, adventure)));
+            features.stream().filter((i) -> entityService.is(i, VISIBLE))
+                    .forEach((f) -> returnValue.addAll(f.search(player, adventure)));
         }
 
         if (!items.isEmpty()) {
             returnValue.addAll(entityService.handle(this, EVENT_AREA_PRE_ITEM_SEARCH, player, adventure));
-            items.stream().forEach((i) -> returnValue
+            items.stream().filter((i) -> entityService.is(i, VISIBLE)).forEach((i) -> returnValue
                     .add(this.responseFactory.createBuilder().source(i.getName()).text(i.getDescription()).build()));
         }
 

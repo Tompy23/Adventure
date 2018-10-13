@@ -144,7 +144,7 @@ public class EventImpl extends EntityImpl implements Event {
                     return new ActionEncounterImpl(entity, entityService, responses, encounter, stateFactory);
                 case ACTION_EXPLORE:
                     return new ActionExploreImpl(entity, entityService, responses, stateFactory);
-                case ACTION_HORRIBLE_DEATH:
+                case ACTION_END_ADVENTURE:
                     return new ActionDeathImpl(entity, entityService, responses);
                 case ACTION_MAKE_VISIBLE:
                     return new ActionVisibleImp(entity, entityService, responses);

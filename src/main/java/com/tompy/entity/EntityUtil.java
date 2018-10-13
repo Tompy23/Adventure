@@ -1,6 +1,5 @@
 package com.tompy.entity;
 
-import com.tompy.attribute.api.Attribute;
 import com.tompy.entity.api.Entity;
 import com.tompy.entity.api.EntityFacade;
 import com.tompy.entity.api.EntityService;
@@ -12,6 +11,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import static com.tompy.attribute.api.Attribute.VISIBLE;
 
 /**
  * Utility class of functions dealing with Entities.
@@ -67,8 +69,7 @@ public class EntityUtil {
     public static Optional<Item> findVisibleItemByDescription(EntityService entityService, List<Item> items,
             String description, UserInput io) {
         Long objectKey = EntityUtil.findEntityByDescription(items, description, io);
-        return items.stream().filter((i) -> i.getKey().equals(objectKey) && entityService.is(i, Attribute.VISIBLE))
-                .findFirst();
+        return items.stream().filter((i) -> i.getKey().equals(objectKey) && entityService.is(i, VISIBLE)).findFirst();
     }
 
     /**
@@ -91,9 +92,10 @@ public class EntityUtil {
      */
     public static Optional<Feature> findVisibleFeatureByDescription(EntityService entityService, List<Feature> features,
             String description, UserInput io) {
-        Long objectKey = EntityUtil.findEntityByDescription(features, description, io);
-        return features.stream().filter((i) -> i.getKey().equals(objectKey) && entityService.is(i, Attribute.VISIBLE))
-                .findFirst();
+        List<Entity> entities =
+                features.stream().filter((f) -> entityService.is(f, VISIBLE)).collect(Collectors.toList());
+        Long objectKey = EntityUtil.findEntityByDescription(entities, description, io);
+        return features.stream().filter((f) -> f.getKey().equals(objectKey)).findFirst();
     }
 
     private static Map<Long, Integer> computeScores(List<? extends Entity> items, String description) {
@@ -163,6 +165,6 @@ public class EntityUtil {
     }
 
     public static void makeVisisble(EntityService entityService, Entity entity) {
-        entityService.add(entity, Attribute.VISIBLE);
+        entityService.add(entity, VISIBLE);
     }
 }
