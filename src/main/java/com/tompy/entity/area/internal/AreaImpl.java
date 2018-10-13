@@ -2,7 +2,6 @@ package com.tompy.entity.area.internal;
 
 import com.tompy.adventure.api.Adventure;
 import com.tompy.adventure.internal.AdventureUtils;
-import com.tompy.attribute.api.Attribute;
 import com.tompy.directive.Direction;
 import com.tompy.directive.EventType;
 import com.tompy.entity.api.EntityService;
@@ -19,6 +18,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
+import static com.tompy.directive.EventType.*;
+
 public class AreaImpl extends CompartmentImpl implements Area {
     private static final Logger LOGGER = LogManager.getLogger(AreaImpl.class);
     protected final String searchDescription;
@@ -27,7 +28,7 @@ public class AreaImpl extends CompartmentImpl implements Area {
     protected Map<Direction, List<Feature>> directionFeatures = new HashMap<>();
 
     protected AreaImpl(Long key, String name, List<String> descriptors, String description, String searchDescription,
-        EntityService entityService) {
+            EntityService entityService) {
         super(key, name, descriptors, description, entityService);
         this.searchDescription = searchDescription;
     }
@@ -42,7 +43,7 @@ public class AreaImpl extends CompartmentImpl implements Area {
         Objects.requireNonNull(exit, "When initializing an exit to a room, the exit must not be null");
 
         LOGGER.info("Installing Exit from [{}] to area [{}]",
-            new String[]{this.getName(), exit.getConnectedArea(this).getName()});
+                new String[]{this.getName(), exit.getConnectedArea(this).getName()});
 
         // Next we add the exit
         exits.put(direction, exit);
@@ -72,9 +73,9 @@ public class AreaImpl extends CompartmentImpl implements Area {
         List<Response> returnValue = new ArrayList<>();
         LOGGER.info("Entering room [{}]", this.getName());
 
-        returnValue.addAll(entityService.handle(this, EventType.EVENT_AREA_ENTER, player, adventure));
         returnValue
-            .addAll(entityService.handle(this, AdventureUtils.getAreaEnterEventType(direction), player, adventure));
+                .addAll(entityService.handle(this, AdventureUtils.getAreaEnterEventType(direction), player, adventure));
+        returnValue.addAll(entityService.handle(this, EVENT_AREA_ENTER, player, adventure));
 
         player.visitArea(name);
 
@@ -86,9 +87,9 @@ public class AreaImpl extends CompartmentImpl implements Area {
         List<Response> returnValue = new ArrayList<>();
         LOGGER.info("Exiting room [{}] in direction [{}]", this.getName(), direction.name());
 
-        returnValue.addAll(entityService.handle(this, EventType.EVENT_AREA_EXIT, player, adventure));
+        returnValue.addAll(entityService.handle(this, EVENT_AREA_EXIT, player, adventure));
         returnValue
-            .addAll(entityService.handle(this, AdventureUtils.getAreaExitEventType(direction), player, adventure));
+                .addAll(entityService.handle(this, AdventureUtils.getAreaExitEventType(direction), player, adventure));
 
         return returnValue;
     }
@@ -98,20 +99,18 @@ public class AreaImpl extends CompartmentImpl implements Area {
         List<Response> returnValue = new ArrayList<>();
         LOGGER.info("Searching room [{}]", this.getName());
 
-        returnValue.addAll(entityService.handle(this, EventType.EVENT_AREA_SEARCH, player, adventure));
+        returnValue.addAll(entityService.handle(this, EVENT_AREA_SEARCH, player, adventure));
 
         if (!features.isEmpty()) {
+            returnValue.addAll(entityService.handle(this, EVENT_AREA_PRE_FEATURE_SEARCH, player, adventure));
             returnValue.add(responseFactory.createBuilder().source(name).text("Also in the room...").build());
             features.stream().forEach((f) -> returnValue.addAll(f.search(player, adventure)));
         }
 
         if (!items.isEmpty()) {
-            returnValue.add(responseFactory.createBuilder().source(name).text("Items in the room...").build());
-            items.stream().forEach((i) -> {
-                returnValue
-                    .add(this.responseFactory.createBuilder().source(i.getName()).text(i.getDescription()).build());
-                entityService.add(i, Attribute.VISIBLE);
-            });
+            returnValue.addAll(entityService.handle(this, EVENT_AREA_PRE_ITEM_SEARCH, player, adventure));
+            items.stream().forEach((i) -> returnValue
+                    .add(this.responseFactory.createBuilder().source(i.getName()).text(i.getDescription()).build()));
         }
 
         player.searchArea(name);
@@ -122,13 +121,10 @@ public class AreaImpl extends CompartmentImpl implements Area {
     @Override
     public List<Response> searchDirection(Direction direction, Player player, Adventure adventure) {
         List<Response> returnValue = new ArrayList<>();
-        boolean nothing = true;
         LOGGER.info("Searching room [{}] in direction [{}]", this.getName(), direction.name());
 
         EventType type = AdventureUtils.getAreaSearchEventType(direction);
-        if (!entityService.get(this, type).isEmpty()) {
-            returnValue.addAll(entityService.handle(this, type, player, adventure));
-        }
+        returnValue.addAll(entityService.handle(this, type, player, adventure));
 
         if (directionFeatures.containsKey(direction)) {
             directionFeatures.get(direction).stream().forEach((f) -> returnValue.addAll(f.search(player, adventure)));

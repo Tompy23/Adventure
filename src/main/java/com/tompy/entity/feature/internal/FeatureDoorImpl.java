@@ -24,7 +24,7 @@ public class FeatureDoorImpl extends FeatureBasicImpl {
     private Exit exit;
 
     protected FeatureDoorImpl(Long key, String name, List<String> descriptors, String description,
-        EntityService entityService, Exit exit) {
+            EntityService entityService, Exit exit) {
         super(key, name, descriptors, description, entityService);
         this.exit = exit;
         EntityUtil.add(visible);
@@ -34,12 +34,16 @@ public class FeatureDoorImpl extends FeatureBasicImpl {
     public List<Response> open(Player player, Adventure adventure) {
         LOGGER.info("Opening [{}, {}]", this.getName(), exit.toString());
         List<Response> returnValue = new ArrayList<>();
-        if (!EntityUtil.is(open) && !EntityUtil.is(locked)) {
-            EntityUtil.add(open);
-            exit.open();
-            returnValue.addAll(entityService.handle(this, EventType.EVENT_FEATURE_OPEN, player, adventure));
-        } else if (EntityUtil.is(locked)) {
-            returnValue.add(responseFactory.createBuilder().source(name).text("It is locked.").build());
+
+        if (EntityUtil.is(visible)) {
+            if (!EntityUtil.is(open) && !EntityUtil.is(locked)) {
+                EntityUtil.add(open);
+                exit.open();
+                returnValue.addAll(entityService.handle(this, EventType.EVENT_FEATURE_OPEN, player, adventure));
+            } else if (EntityUtil.is(locked)) {
+                returnValue
+                        .addAll(entityService.handle(this, EventType.EVENT_FEATURE_OPEN_BUT_LOCKED, player, adventure));
+            }
         }
 
         return returnValue;
@@ -50,10 +54,12 @@ public class FeatureDoorImpl extends FeatureBasicImpl {
         LOGGER.info("Closing [{}, {}]", this.getName(), exit.toString());
         List<Response> returnValue = new ArrayList<>();
 
-        if (EntityUtil.is(open)) {
-            EntityUtil.remove(open);
-            exit.close();
-            returnValue.addAll(entityService.handle(this, EventType.EVENT_FEATURE_CLOSE, player, adventure));
+        if (EntityUtil.is(visible)) {
+            if (EntityUtil.is(open)) {
+                EntityUtil.remove(open);
+                exit.close();
+                returnValue.addAll(entityService.handle(this, EventType.EVENT_FEATURE_CLOSE, player, adventure));
+            }
         }
 
         return returnValue;

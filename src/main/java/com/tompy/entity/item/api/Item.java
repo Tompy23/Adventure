@@ -2,6 +2,7 @@ package com.tompy.entity.item.api;
 
 import com.tompy.adventure.api.Adventure;
 import com.tompy.entity.api.Entity;
+import com.tompy.entity.feature.api.Feature;
 import com.tompy.player.api.Player;
 import com.tompy.response.api.Response;
 
@@ -25,4 +26,6 @@ public interface Item extends Entity {
     int hands();
 
     int encumbrance();
+
+    List<Response> misUse(Feature feature, Player player, Adventure adventure);
 }

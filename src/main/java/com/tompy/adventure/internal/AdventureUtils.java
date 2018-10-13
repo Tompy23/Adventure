@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.tompy.directive.Direction.*;
+import static com.tompy.directive.EventType.*;
+
 public class AdventureUtils {
     private static Map<String, Direction> directionMap = new HashMap<>();
     private static Map<String, CommandType> commandTypeMap = new HashMap<>();
@@ -48,16 +51,16 @@ public class AdventureUtils {
 
         switch (direction) {
             case DIRECTION_NORTH:
-                returnValue = Direction.DIRECTION_SOUTH;
+                returnValue = DIRECTION_SOUTH;
                 break;
             case DIRECTION_EAST:
-                returnValue = Direction.DIRECTION_WEST;
+                returnValue = DIRECTION_WEST;
                 break;
             case DIRECTION_SOUTH:
-                returnValue = Direction.DIRECTION_NORTH;
+                returnValue = DIRECTION_NORTH;
                 break;
             case DIRECTION_WEST:
-                returnValue = Direction.DIRECTION_EAST;
+                returnValue = DIRECTION_EAST;
                 break;
         }
 
@@ -67,13 +70,13 @@ public class AdventureUtils {
     public static EventType getAreaSearchEventType(Direction direction) {
         switch (direction) {
             case DIRECTION_NORTH:
-                return EventType.EVENT_AREA_NORTH_SEARCH;
+                return EVENT_AREA_NORTH_SEARCH;
             case DIRECTION_EAST:
-                return EventType.EVENT_AREA_EAST_SEARCH;
+                return EVENT_AREA_EAST_SEARCH;
             case DIRECTION_SOUTH:
-                return EventType.EVENT_AREA_SOUTH_SEARCH;
+                return EVENT_AREA_SOUTH_SEARCH;
             case DIRECTION_WEST:
-                return EventType.EVENT_AREA_WEST_SEARCH;
+                return EVENT_AREA_WEST_SEARCH;
             default:
                 return null;
         }
@@ -82,13 +85,13 @@ public class AdventureUtils {
     public static EventType getAreaExitEventType(Direction direction) {
         switch (direction) {
             case DIRECTION_NORTH:
-                return EventType.EVENT_AREA_EXIT_NORTH;
+                return EVENT_AREA_EXIT_NORTH;
             case DIRECTION_EAST:
-                return EventType.EVENT_AREA_EXIT_EAST;
+                return EVENT_AREA_EXIT_EAST;
             case DIRECTION_SOUTH:
-                return EventType.EVENT_AREA_EXIT_SOUTH;
+                return EVENT_AREA_EXIT_SOUTH;
             case DIRECTION_WEST:
-                return EventType.EVENT_AREA_EXIT_WEST;
+                return EVENT_AREA_EXIT_WEST;
             default:
                 return null;
         }
@@ -97,13 +100,13 @@ public class AdventureUtils {
     public static EventType getAreaEnterEventType(Direction direction) {
         switch (direction) {
             case DIRECTION_NORTH:
-                return EventType.EVENT_AREA_ENTER_NORTH;
+                return EVENT_AREA_ENTER_NORTH;
             case DIRECTION_EAST:
-                return EventType.EVENT_AREA_ENTER_EAST;
+                return EVENT_AREA_ENTER_EAST;
             case DIRECTION_SOUTH:
-                return EventType.EVENT_AREA_ENTER_SOUTH;
+                return EVENT_AREA_ENTER_SOUTH;
             case DIRECTION_WEST:
-                return EventType.EVENT_AREA_ENTER_WEST;
+                return EVENT_AREA_ENTER_WEST;
             default:
                 return null;
         }

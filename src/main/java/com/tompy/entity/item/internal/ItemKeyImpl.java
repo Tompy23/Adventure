@@ -2,6 +2,7 @@ package com.tompy.entity.item.internal;
 
 import com.tompy.adventure.api.Adventure;
 import com.tompy.attribute.api.Attribute;
+import com.tompy.directive.EventType;
 import com.tompy.entity.api.Entity;
 import com.tompy.entity.api.EntityService;
 import com.tompy.entity.feature.api.Feature;
@@ -12,6 +13,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.tompy.directive.EventType.*;
 
 /**
  * A key is used to lock/unlock a feature.
@@ -32,14 +35,20 @@ public class ItemKeyImpl extends ItemImpl {
 
         LOGGER.info("Using key [{}] on [{}]", getName(), target.getName());
 
-        returnValue.add(this.responseFactory.createBuilder().source(getSource())
-            .text(String.format("Using %s on %s", getDescription(), target.getDescription())).build());
+        returnValue.addAll(entityService.handle(this, EVENT_KEY_BEFORE_USE, player, adventure));
+        returnValue.addAll(entityService.handle(target, EVENT_KEY_BEFORE_USE, player, adventure));
 
         if (entityService.is(target, Attribute.LOCKED)) {
             returnValue.addAll(target.unlock(player, adventure));
+            returnValue.addAll(entityService.handle(this, EVENT_KEY_LOCK, player, adventure));
+            returnValue.addAll(entityService.handle(target, EVENT_KEY_LOCK, player, adventure));
         } else {
             returnValue.addAll(target.lock(player, adventure));
+            returnValue.addAll(entityService.handle(this, EVENT_KEY_UNLOCK, player, adventure));
+            returnValue.addAll(entityService.handle(target, EVENT_KEY_UNLOCK, player, adventure));
         }
+        returnValue.addAll(entityService.handle(this, EVENT_KEY_AFTER_USE, player, adventure));
+        returnValue.addAll(entityService.handle(target, EVENT_KEY_AFTER_USE, player, adventure));
 
         return returnValue;
     }

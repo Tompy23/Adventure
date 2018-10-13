@@ -17,8 +17,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
-import static com.tompy.directive.EventType.EVENT_FEATURE_TRAP;
-
 public class CommandUseImpl extends CommandBasicImpl implements Command {
     private static final Logger LOGGER = LogManager.getLogger(CommandUseImpl.class);
     private final String subject;
@@ -46,6 +44,7 @@ public class CommandUseImpl extends CommandBasicImpl implements Command {
         if (target == null) {
             return subjectOnlyUse(player, adventure, optSource);
         } else {
+            List<Response> returnValue = new ArrayList<>();
             Optional<Feature> optObject = EntityUtil
                     .findVisibleFeatureByDescription(entityService, player.getArea().getAllFeatures(), target,
                             adventure.getUI());
@@ -53,22 +52,26 @@ public class CommandUseImpl extends CommandBasicImpl implements Command {
             if (optSource.isPresent() && optObject.isPresent()) {
                 Item source = optSource.get();
                 Feature object = optObject.get();
+
                 // Use subject on target
                 if (source.hasTarget(object)) {
                     LOGGER.info("Using [{}] on [{}]", source.getName(), object.getName());
-                    return source.use(player, adventure);
+                    returnValue.addAll(source.use(player, adventure));
+                } else {
+                    returnValue.addAll(source.misUse(object, player, adventure));
+                    returnValue.addAll(object.misUse(source, player, adventure));
                 }
-                List<Response> returnValue = new ArrayList<>();
-                returnValue.addAll(entityService.handle(object, EVENT_FEATURE_TRAP, player, adventure));
-                returnValue.add(responseFactory.createBuilder().source("CommandUse")
-                        .text(String.format("%s does not work on %s", source.getDescription(), object.getDescription()))
-                        .build());
-                return returnValue;
-            }
-            return Collections.singletonList(responseFactory.createBuilder().source("CommandUse")
-                    .text(String.format("Cannot use %s on %s", subject, target)).build());
-        }
 
+            } else {
+                if (optSource.isPresent()) {
+                    returnValue.addAll(optSource.get().misUse(null, player, adventure));
+                } else {
+                    returnValue.addAll(optObject.get().misUse(null, player, adventure));
+                }
+            }
+
+            return returnValue;
+        }
     }
 
     private List<Response> subjectOnlyUse(Player player, Adventure adventure, Optional<Item> optSource) {

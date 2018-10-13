@@ -1,7 +1,6 @@
 package com.tompy.entity.feature.internal;
 
 import com.tompy.adventure.api.Adventure;
-import com.tompy.attribute.api.Attribute;
 import com.tompy.directive.EventType;
 import com.tompy.directive.FeatureType;
 import com.tompy.entity.EntityUtil;
@@ -12,6 +11,7 @@ import com.tompy.entity.feature.api.Feature;
 import com.tompy.entity.feature.api.FeatureBuilder;
 import com.tompy.entity.internal.EntityBuilderHelperImpl;
 import com.tompy.entity.internal.EntityFacadeImpl;
+import com.tompy.entity.item.api.Item;
 import com.tompy.exit.api.Exit;
 import com.tompy.player.api.Player;
 import com.tompy.response.api.Response;
@@ -21,6 +21,8 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static com.tompy.attribute.api.Attribute.*;
 
 public class FeatureBasicImpl extends CompartmentImpl implements Feature {
     private static final Logger LOGGER = LogManager.getLogger(FeatureBasicImpl.class);
@@ -34,9 +36,9 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
         super(key, name, descriptors, description, entityService);
         notImplemented =
                 Collections.singletonList(responseFactory.createBuilder().source(name).text("Not Implemented").build());
-        open = EntityFacadeImpl.createBuilder(entityService).entity(this).attribute(Attribute.OPEN).build();
-        locked = EntityFacadeImpl.createBuilder(entityService).entity(this).attribute(Attribute.LOCKED).build();
-        visible = EntityFacadeImpl.createBuilder(entityService).entity(this).attribute(Attribute.VISIBLE).build();
+        open = EntityFacadeImpl.createBuilder(entityService).entity(this).attribute(OPEN).build();
+        locked = EntityFacadeImpl.createBuilder(entityService).entity(this).attribute(LOCKED).build();
+        visible = EntityFacadeImpl.createBuilder(entityService).entity(this).attribute(VISIBLE).build();
     }
 
     public static FeatureBuilder createBuilder(Long key, EntityService entityService) {
@@ -53,39 +55,42 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
         List<Response> returnValue = new ArrayList<>();
         LOGGER.info("Searching Feature [{}]", getName());
 
-        returnValue.addAll(entityService.handle(this, EventType.EVENT_FEATURE_SEARCH, player, adventure));
+        if (EntityUtil.is(visible)) {
+            returnValue.addAll(entityService.handle(this, EventType.EVENT_FEATURE_SEARCH, player, adventure));
+        }
 
         return returnValue;
     }
 
     @Override
     public List<Response> open(Player player, Adventure adventure) {
-        List<Response> returnValue = new ArrayList<>();
         LOGGER.info("Opening [{}]", this.getName());
+        List<Response> returnValue = new ArrayList<>();
 
-        if (!EntityUtil.is(open) && !EntityUtil.is(locked)) {
-            EntityUtil.add(open);
-            returnValue.addAll(entityService.handle(this, EventType.EVENT_FEATURE_OPEN, player, adventure));
-        } else {
-            returnValue.add(responseFactory.createBuilder().source(this.getName())
-                    .text(String.format("THe %s does not open.", this.getDescription())).build());
+        if (EntityUtil.is(visible)) {
+            if (!EntityUtil.is(open) && !EntityUtil.is(locked)) {
+                EntityUtil.add(open);
+                returnValue.addAll(entityService.handle(this, EventType.EVENT_FEATURE_OPEN, player, adventure));
+                items.stream().forEach((i) -> entityService.add(i, VISIBLE));
+            } else if (EntityUtil.is(locked)) {
+                returnValue
+                        .addAll(entityService.handle(this, EventType.EVENT_FEATURE_OPEN_BUT_LOCKED, player, adventure));
+            }
         }
-
 
         return returnValue;
     }
 
     @Override
     public List<Response> close(Player player, Adventure adventure) {
-        List<Response> returnValue = new ArrayList<>();
         LOGGER.info("Closing [{}]", this.getName());
+        List<Response> returnValue = new ArrayList<>();
 
-        if (EntityUtil.is(open)) {
-            EntityUtil.remove(open);
-            returnValue.addAll(entityService.handle(this, EventType.EVENT_FEATURE_CLOSE, player, adventure));
-        } else {
-            returnValue.add(responseFactory.createBuilder().source(this.getName())
-                    .text(String.format("The %s does not close", this.getDescription())).build());
+        if (EntityUtil.is(visible)) {
+            if (EntityUtil.is(open)) {
+                EntityUtil.remove(open);
+                returnValue.addAll(entityService.handle(this, EventType.EVENT_FEATURE_CLOSE, player, adventure));
+            }
         }
 
         return returnValue;
@@ -96,14 +101,15 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
         List<Response> returnValue = new ArrayList<>();
         LOGGER.info("Locking [{}]", this.getName());
 
-        if (!EntityUtil.is(open) && !EntityUtil.is(locked)) {
-            EntityUtil.add(locked);
-            returnValue.addAll(entityService.handle(this, EventType.EVENT_FEATURE_LOCK, player, adventure));
-        } else {
-            returnValue.add(responseFactory.createBuilder().source(this.getName())
-                    .text(String.format("The %s is not locked", this.getDescription())).build());
+        if (EntityUtil.is(visible)) {
+            if (!EntityUtil.is(open) && !EntityUtil.is(locked)) {
+                EntityUtil.add(locked);
+                returnValue.addAll(entityService.handle(this, EventType.EVENT_FEATURE_LOCK, player, adventure));
+            } else {
+                returnValue
+                        .addAll(entityService.handle(this, EventType.EVENT_FEATURE_UNABLE_TO_LOCK, player, adventure));
+            }
         }
-
 
         return returnValue;
     }
@@ -113,14 +119,25 @@ public class FeatureBasicImpl extends CompartmentImpl implements Feature {
         List<Response> returnValue = new ArrayList<>();
         LOGGER.info("Unlocking [{}]", this.getName());
 
-        if (EntityUtil.is(locked)) {
-            EntityUtil.remove(locked);
-            returnValue.addAll(entityService.handle(this, EventType.EVENT_FEATURE_UNLOCK, player, adventure));
-        } else {
-            returnValue.add(responseFactory.createBuilder().source(this.getName())
-                    .text(String.format("The %s is still locked", this.getName())).build());
+        if (EntityUtil.is(visible)) {
+            if (!EntityUtil.is(open) && EntityUtil.is(locked)) {
+                EntityUtil.remove(locked);
+                returnValue.addAll(entityService.handle(this, EventType.EVENT_FEATURE_UNLOCK, player, adventure));
+            } else {
+                returnValue.addAll(entityService
+                        .handle(this, EventType.EVENT_FEATURE_UNABLE_TO_UNLOCK, player, adventure));
+            }
         }
 
+        return returnValue;
+    }
+
+    @Override
+    public List<Response> misUse(Item item, Player player, Adventure adventure) {
+        List<Response> returnValue = new ArrayList<>();
+        if (item != null) {
+            returnValue.addAll(entityService.handle(this, EventType.EVENT_FEATURE_TRAP, player, adventure));
+        }
         return returnValue;
     }
 

@@ -47,8 +47,6 @@ public class CommandTakeImpl extends CommandBasicImpl implements Command {
             if (entityService.is(object, Attribute.VISIBLE)) {
                 if (player.addItem(object)) {
                     player.getArea().removeItem(object);
-                    returnValue.add(responseFactory.createBuilder().source("CommandTake").text(String
-                            .format("%s is now in %s's inventory", object.getDescription(), player.getName())).build());
                 } else {
                     // TODO Inventory full?  Or some other issue?
                     returnValue
@@ -57,7 +55,7 @@ public class CommandTakeImpl extends CommandBasicImpl implements Command {
             }
         } else {
             returnValue.add(responseFactory.createBuilder().source("CommandTake")
-                    .text(String.format("%s is not in %s's inventory", target.toLowerCase(), player.getName()))
+                    .text(String.format("Can't see %s", target.toLowerCase()))
                     .build());
         }
 

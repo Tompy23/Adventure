@@ -47,9 +47,6 @@ public class CommandTakeFromImpl extends CommandTakeImpl {
 
                     if (player.addItem(source)) {
                         object.removeItem(source);
-                        returnValue.add(responseFactory.createBuilder().source("CommandTakeFrom").text(String
-                                .format("%s is now in %s's inventory", source.getDescription(), player.getName()))
-                                .build());
                     } else {
                         // TODO Inventory full?  Or some other issue?
                         returnValue

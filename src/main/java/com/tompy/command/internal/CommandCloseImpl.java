@@ -50,7 +50,6 @@ public class CommandCloseImpl extends CommandBasicImpl implements Command {
             returnValue.addAll(object.close(player, adventure));
         } else {
             LOGGER.debug("Unable to convert {}", target);
-            returnValue.add(responseFactory.createBuilder().source("CommandClose").text("I do not see that.").build());
         }
         return returnValue;
     }

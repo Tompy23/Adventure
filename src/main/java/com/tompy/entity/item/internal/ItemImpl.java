@@ -1,14 +1,17 @@
 package com.tompy.entity.item.internal;
 
 import com.tompy.adventure.api.Adventure;
+import com.tompy.attribute.api.Attribute;
 import com.tompy.directive.EventType;
 import com.tompy.directive.ItemType;
+import com.tompy.entity.EntityUtil;
 import com.tompy.entity.api.Entity;
 import com.tompy.entity.api.EntityFacade;
 import com.tompy.entity.api.EntityService;
 import com.tompy.entity.event.api.Event;
 import com.tompy.entity.feature.api.Feature;
 import com.tompy.entity.internal.EntityBuilderHelperImpl;
+import com.tompy.entity.internal.EntityFacadeImpl;
 import com.tompy.entity.internal.EntityImpl;
 import com.tompy.entity.item.api.Item;
 import com.tompy.entity.item.api.ItemBuilder;
@@ -20,16 +23,22 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.tompy.attribute.api.Attribute.ENCUMBRANCE;
+import static com.tompy.attribute.api.Attribute.HANDS;
+import static com.tompy.attribute.api.Attribute.VISIBLE;
+
 public class ItemImpl extends EntityImpl implements Item {
     private static final Logger LOGGER = LogManager.getLogger(ItemImpl.class);
-    private int hands;
-    private int encumbrance;
+    protected final EntityFacade visible;
+    protected final EntityFacade hands;
+    protected final EntityFacade encumbrance;
 
     protected ItemImpl(Long key, String name, List<String> descriptors, String description,
-                       EntityService entityService) {
+            EntityService entityService) {
         super(key, name, descriptors, description, entityService);
-        hands = 1;
-        encumbrance = 0;
+        visible = EntityFacadeImpl.createBuilder(entityService).entity(this).attribute(VISIBLE).build();
+        hands = EntityFacadeImpl.createBuilder(entityService).entity(this).attribute(HANDS).build();
+        encumbrance = EntityFacadeImpl.createBuilder(entityService).entity(this).attribute(ENCUMBRANCE).build();
     }
 
     public static ItemBuilder createBuilder(Long key, EntityService entityService) {
@@ -57,12 +66,18 @@ public class ItemImpl extends EntityImpl implements Item {
 
     @Override
     public int hands() {
-        return hands;
+        return EntityUtil.valueFor(hands).getAsInt();
     }
 
     @Override
     public int encumbrance() {
-        return encumbrance;
+        return EntityUtil.valueFor(encumbrance).getAsInt();
+    }
+
+    @Override
+    public List<Response> misUse(Feature feature, Player player, Adventure adventure) {
+        List<Response> returnValue = new ArrayList<>();
+        return returnValue;
     }
 
     public static class ItemBuilderImpl extends EntityBuilderHelperImpl implements ItemBuilder {

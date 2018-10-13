@@ -28,16 +28,18 @@ public class ItemWeaponImpl extends ItemImpl {
     @Override
     public List<Response> use(Player player, Adventure adventure) {
         List<Response> returnValue = new ArrayList<>();
+
+        returnValue.addAll(entityService.handle(this, EventType.EVENT_WEAPON_BEFORE_ATTACK, player, adventure));
+
         if (entityService.valueFor(this, Attribute.VALUE).getAsInt() >
                 entityService.valueFor(target, Attribute.VALUE).getAsInt()) {
-            returnValue.add(responseFactory.createBuilder().source(name).text("Attack success!").build());
-            returnValue.addAll(entityService.handle(this, EventType.EVENT_ATTACK_SUCCESS, player, adventure));
-
+            returnValue.addAll(entityService.handle(this, EventType.EVENT_WEAPON_ATTACK_SUCCESS, player, adventure));
         } else {
-            returnValue.add(responseFactory.createBuilder().source(name).text("Attack failed!").build());
-            returnValue.addAll(entityService.handle(this, EventType.EVENT_ATTACK_FAILURE, player, adventure));
-
+            returnValue.addAll(entityService.handle(this, EventType.EVENT_WEAPON_ATTACK_FAILURE, player, adventure));
         }
+
+        returnValue.addAll(entityService.handle(this, EventType.EVENT_WEAPON_AFTER_ATTACK, player, adventure));
+
         return returnValue;
     }
 
