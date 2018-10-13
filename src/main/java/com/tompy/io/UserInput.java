@@ -1,6 +1,6 @@
 package com.tompy.io;
 
-import com.tompy.command.api.Command;
+import com.tompy.command.Command;
 
 import java.util.Map;
 

@@ -1,11 +1,7 @@
 package com.tompy.command;
 
-import com.tompy.adventure.internal.AdventureUtils;
-import com.tompy.command.api.Command;
-import com.tompy.command.api.CommandBuilder;
-import com.tompy.command.api.CommandBuilderFactory;
-import com.tompy.command.internal.*;
-import com.tompy.entity.api.EntityService;
+import com.tompy.adventure.AdventureUtils;
+import com.tompy.entity.EntityService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

@@ -2,8 +2,8 @@ package com.tompy.io;
 
 import com.tompy.command.CommandFactory;
 import com.tompy.command.CommandFactoryImpl;
-import com.tompy.command.api.Command;
-import com.tompy.entity.api.EntityService;
+import com.tompy.command.Command;
+import com.tompy.entity.EntityService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

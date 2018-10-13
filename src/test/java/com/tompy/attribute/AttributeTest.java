@@ -1,13 +1,8 @@
 package com.tompy.attribute;
 
-import com.tompy.adventure.api.Adventure;
-import com.tompy.attribute.api.Attribute;
-import com.tompy.attribute.api.AttributeManager;
-import com.tompy.attribute.internal.AttributeManagerFactoryImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.OptionalInt;

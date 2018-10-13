@@ -1,6 +1,6 @@
 package com.tompy.directive;
 
-import com.tompy.response.api.Response;
+import com.tompy.response.Response;
 
 /**
  * Command types for executions

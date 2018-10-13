@@ -1,10 +1,7 @@
 package com.tompy.entity;
 
-import com.tompy.entity.api.Entity;
-import com.tompy.entity.api.EntityFacade;
-import com.tompy.entity.api.EntityService;
-import com.tompy.entity.feature.api.Feature;
-import com.tompy.entity.item.api.Item;
+import com.tompy.entity.feature.Feature;
+import com.tompy.entity.item.Item;
 import com.tompy.io.UserInput;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,7 +10,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static com.tompy.attribute.api.Attribute.VISIBLE;
+import static com.tompy.attribute.Attribute.VISIBLE;
 
 /**
  * Utility class of functions dealing with Entities.
@@ -68,8 +65,10 @@ public class EntityUtil {
      */
     public static Optional<Item> findVisibleItemByDescription(EntityService entityService, List<Item> items,
             String description, UserInput io) {
-        Long objectKey = EntityUtil.findEntityByDescription(items, description, io);
-        return items.stream().filter((i) -> i.getKey().equals(objectKey) && entityService.is(i, VISIBLE)).findFirst();
+        List<Entity> entities =
+                items.stream().filter((f) -> entityService.is(f, VISIBLE)).collect(Collectors.toList());
+        Long objectKey = EntityUtil.findEntityByDescription(entities, description, io);
+        return items.stream().filter((i) -> i.getKey().equals(objectKey) ).findFirst();
     }
 
     /**

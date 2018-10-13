@@ -1,13 +1,11 @@
 package com.tompy.entity;
 
-import com.tompy.attribute.api.Attribute;
-import com.tompy.attribute.api.AttributeManagerFactory;
-import com.tompy.attribute.internal.AttributeManagerFactoryImpl;
+import com.tompy.attribute.Attribute;
+import com.tompy.attribute.AttributeManagerFactory;
+import com.tompy.attribute.AttributeManagerFactoryImpl;
 import com.tompy.directive.ItemType;
-import com.tompy.entity.api.EntityService;
-import com.tompy.entity.event.api.EventManagerFactory;
-import com.tompy.entity.internal.EntityServiceImpl;
-import com.tompy.entity.item.api.Item;
+import com.tompy.entity.event.EventManagerFactory;
+import com.tompy.entity.item.Item;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
