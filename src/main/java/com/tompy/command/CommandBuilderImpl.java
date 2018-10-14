@@ -1,6 +1,5 @@
 package com.tompy.command;
 
-import com.tompy.command.CommandBuilder;
 import com.tompy.directive.CommandType;
 import com.tompy.entity.EntityService;
 

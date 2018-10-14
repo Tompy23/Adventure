@@ -7,6 +7,8 @@ import com.tompy.entity.encounter.Encounter;
 import com.tompy.player.Player;
 import com.tompy.response.Response;
 import com.tompy.state.AdventureStateFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +16,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ActionEncounterImpl extends ActionImpl {
+    public static final Logger LOGGER = LogManager.getLogger(ActionEncounterImpl.class);
     private final Encounter encounter;
     private final AdventureStateFactory stateFactory;
 
@@ -24,6 +27,7 @@ public class ActionEncounterImpl extends ActionImpl {
     }
 
     @Override public List<Response> apply(Player player, Adventure adventure) {
+        LOGGER.info("Starting Encounter [{}]", encounter.getName());
         adventure.changeState(stateFactory.createEncounterState().encounter(encounter).build());
         List<Response> returnValue = new ArrayList<>();
         returnValue.addAll(responses.stream().

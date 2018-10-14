@@ -24,6 +24,7 @@ public class AdventureStateFactoryImpl implements AdventureStateFactory {
         this.userInput = Objects.requireNonNull(userInput, "UserInput cannot be null.");
         this.outputStream = Objects.requireNonNull(outputStream, "Output Stream cannot be null.");
         this.entityService = Objects.requireNonNull(entityService, "Entity Service cannot be null.");
+        adventure.setStateFactory(this);
     }
 
     @Override

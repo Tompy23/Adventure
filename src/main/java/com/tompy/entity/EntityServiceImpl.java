@@ -172,6 +172,7 @@ public class EntityServiceImpl implements EntityService {
 
     @Override
     public List<Response> handle(Entity entity, EventType type, Player player, Adventure adventure) {
+        LOGGER.info("Handling event type [{}]", type.name());
         List<Response> returnValue = new ArrayList<>();
         if (entity == null) {
             for (Long key : eventManagers.keySet()) {

@@ -2,10 +2,14 @@ package com.tompy.attribute;
 
 import com.tompy.attribute.Attribute;
 import com.tompy.attribute.AttributeManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
 public class AttributeManagerImpl implements AttributeManager {
+    private static final Logger LOGGER = LogManager.getLogger(AttributeManagerFactoryImpl.class);
+
     private Map<Attribute, Integer> managed;
     private Map<Attribute, String> doesApply;
     private Map<Attribute, String> doesNotApply;
@@ -28,6 +32,7 @@ public class AttributeManagerImpl implements AttributeManager {
 
     @Override
     public void add(Attribute attribute, Integer value) {
+        LOGGER.info("Adding attribute [{}] with value [{}]", attribute.name(), value);
         if (managed.containsKey(attribute)) {
             if (attribute.stackable()) {
                 managed.put(attribute, managed.get(attribute) + value);
@@ -39,6 +44,7 @@ public class AttributeManagerImpl implements AttributeManager {
 
     @Override
     public void remove(Attribute attribute) {
+        LOGGER.info("Removing attribute [{}]", attribute.name());
         if (managed.containsKey(attribute)) {
             if (attribute.stackable()) {
                 if (managed.get(attribute) > 1) {

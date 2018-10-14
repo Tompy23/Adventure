@@ -26,6 +26,7 @@ public class ItemPotionImpl extends ItemImpl {
 
     @Override
     public List<Response> use(Player player, Adventure adventure) {
+        LOGGER.info("Drinking potion.");
         List<Response> returnValue = new ArrayList<>();
 
         returnValue.addAll(entityService.handle(this, EVENT_BEFORE_POTION, player, adventure));

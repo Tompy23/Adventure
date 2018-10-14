@@ -73,9 +73,27 @@ public interface AttributeManager {
      */
     boolean is(Attribute attribute);
 
+    /**
+     * Add a String for Response parsing when the attribute applies
+     *
+     * @param attribute
+     * @param text
+     */
     void addApply(Attribute attribute, String text);
 
+    /**
+     * Add a String for Repsonse parsing when the attribute does not apply
+     * @param attribute
+     * @param text
+     */
     void addDesNotApply(Attribute attribute, String text);
 
+    /**
+     * Determines if the attribute applies or not and return appropriate String
+     *
+     * @param attribute
+     * @param apply
+     * @return
+     */
     String getApplication(Attribute attribute, boolean apply);
 }

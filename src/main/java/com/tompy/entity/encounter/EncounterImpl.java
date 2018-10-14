@@ -2,13 +2,15 @@ package com.tompy.entity.encounter;
 
 import com.tompy.adventure.Adventure;
 import com.tompy.directive.EncounterType;
-import com.tompy.entity.EntityService;
-import com.tompy.entity.event.Event;
 import com.tompy.entity.EntityBuilderHelperImpl;
 import com.tompy.entity.EntityImpl;
+import com.tompy.entity.EntityService;
+import com.tompy.entity.event.Event;
 import com.tompy.entity.item.Item;
 import com.tompy.player.Player;
 import com.tompy.response.Response;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
@@ -16,6 +18,7 @@ import static com.tompy.directive.EventType.EVENT_INTERACTION;
 
 
 public class EncounterImpl extends EntityImpl implements Encounter {
+    public static final Logger LOGGER = LogManager.getLogger(EncounterImpl.class);
     protected final Player player;
     protected final Adventure adventure;
 
@@ -34,6 +37,7 @@ public class EncounterImpl extends EntityImpl implements Encounter {
 
     @Override
     public Map<Long, String> getOptions() {
+        LOGGER.info("Retrieving options for encounter.");
         Map<Long, String> returnValue = new HashMap<>();
         for (Event event : entityService.get(this, EVENT_INTERACTION)) {
             if (event.pull(player, adventure)) {
@@ -45,6 +49,7 @@ public class EncounterImpl extends EntityImpl implements Encounter {
 
     @Override
     public List<Response> act(Long option) {
+        LOGGER.info("Acting on chosen option for encounter.");
         for (Event event : entityService.get(this, EVENT_INTERACTION)) {
             if (event.getKey() == option) {
                 return event.apply(player, adventure);

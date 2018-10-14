@@ -15,7 +15,6 @@ import static com.tompy.directive.EventType.EVENT_EXPLORING;
 public class StateExploreImpl extends AdventureStateBaseImpl implements AdventureState {
     private final static Logger LOGGER = LogManager.getLogger(StateExploreImpl.class);
 
-
     public StateExploreImpl(Player player, Adventure adventure, UserInput userInput, PrintStream outStream,
             EntityService entityService) {
         super(player, adventure, userInput, outStream, entityService);
@@ -35,6 +34,8 @@ public class StateExploreImpl extends AdventureStateBaseImpl implements Adventur
         }
         entityService.handle(null, EVENT_EXPLORING, player, adventure).stream()
                 .forEachOrdered((a) -> outStream.println(a.render()));
+
+        outStream.println();
     }
 
     @Override

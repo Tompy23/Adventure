@@ -6,6 +6,7 @@ import com.tompy.directive.ActionType;
 import com.tompy.directive.EventType;
 import com.tompy.directive.TriggerType;
 import com.tompy.entity.Entity;
+import com.tompy.entity.area.Area;
 import com.tompy.entity.encounter.Encounter;
 import com.tompy.state.AdventureStateFactory;
 
@@ -35,6 +36,8 @@ public interface EventBuilder extends Builder<Event> {
     EventBuilder delay(int delay);
 
     EventBuilder events(List<Event> events);
+
+    EventBuilder area(Area area);
 
     EventBuilder eventType(EventType subType);
 }

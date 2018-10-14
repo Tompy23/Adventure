@@ -7,18 +7,22 @@ import com.tompy.directive.EventType;
 import com.tompy.directive.TriggerType;
 import com.tompy.entity.Entity;
 import com.tompy.entity.EntityService;
+import com.tompy.entity.area.Area;
 import com.tompy.entity.encounter.Encounter;
 import com.tompy.entity.EntityBuilderHelperImpl;
 import com.tompy.entity.EntityImpl;
 import com.tompy.player.Player;
 import com.tompy.response.Response;
 import com.tompy.state.AdventureStateFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 public class EventImpl extends EntityImpl implements Event {
+    public static final Logger LOGGER = LogManager.getLogger(EventImpl.class);
     private final Action action;
     private final Trigger trigger;
 
@@ -52,6 +56,7 @@ public class EventImpl extends EntityImpl implements Event {
         private AdventureStateFactory stateFactory;
         private int delay;
         private List<Event> events;
+        private Area area;
         private EventType subEventType;
 
         public EventBuilderImpl(Long key, EntityService entityService) {
@@ -125,7 +130,14 @@ public class EventImpl extends EntityImpl implements Event {
             return this;
         }
 
+        @Override
+        public EventBuilder area(Area area) {
+            this.area = area;
+            return this;
+        }
+
         @Override public Event build() {
+            LOGGER.info("Building event [{}]", key);
             return new EventImpl(key, name, this.buildDescriptors(), description, entityService, buildAction(),
                     buildTrigger());
         }
@@ -146,6 +158,8 @@ public class EventImpl extends EntityImpl implements Event {
                     return new ActionVisibleImp(entity, entityService, responses);
                 case ACTION_REMOVE_EVENT:
                     return new ActionRemoveEvent(entity, entityService, responses, subEventType, events);
+                case ACTION_SEND_TO_AREA:
+                    return new ActionSendImpl(entity, entityService, responses, area, direction);
             }
             return null;
         }

@@ -76,6 +76,12 @@ public class AreaImpl extends CompartmentImpl implements Area {
                 .addAll(entityService.handle(this, AdventureUtils.getAreaEnterEventType(direction), player, adventure));
         returnValue.addAll(entityService.handle(this, EVENT_AREA_ENTER, player, adventure));
 
+        if (!items.isEmpty()) {
+            items.stream().filter((i) -> entityService.is(i, VISIBLE)).forEach((i) -> returnValue
+                    .add(this.responseFactory.createBuilder().source(i.getName()).text(i.getDescription()).build()));
+        }
+
+
         player.visitArea(name);
 
         return returnValue;
@@ -102,7 +108,6 @@ public class AreaImpl extends CompartmentImpl implements Area {
 
         if (!features.isEmpty()) {
             returnValue.addAll(entityService.handle(this, EVENT_AREA_PRE_FEATURE_SEARCH, player, adventure));
-            returnValue.add(responseFactory.createBuilder().source(name).text("Also in the room...").build());
             features.stream().filter((i) -> entityService.is(i, VISIBLE))
                     .forEach((f) -> returnValue.addAll(f.search(player, adventure)));
         }

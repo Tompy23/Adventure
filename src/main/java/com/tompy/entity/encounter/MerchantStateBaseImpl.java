@@ -1,7 +1,5 @@
 package com.tompy.entity.encounter;
 
-import com.tompy.entity.encounter.Merchant;
-
 import java.util.Objects;
 
 public abstract class MerchantStateBaseImpl {

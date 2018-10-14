@@ -78,12 +78,24 @@ public interface EntityService
      */
     OptionalInt valueFor(Entity key, Attribute attribute);
 
+    /**
+     * Retrieve entity by its name
+     *
+     * @param name
+     * @return
+     */
     Entity getEntityByName(String name);
 
     Item getItemByDescription(String description);
 
     Feature getFeatureByDescription(String description);
 
+    /**
+     * Retrieve a specific area by its name
+     *
+     * @param name
+     * @return
+     */
     Area getAreaByName(String name);
 
     String getAttributeDescription(Entity key, Attribute attribute);
@@ -99,11 +111,41 @@ public interface EntityService
 
     // These are functions associated with Event Managers
 
+    /**
+     * Associate an event with an entity and one of its event types.
+     * @param entity
+     * @param type
+     * @param event
+     * @return
+     */
     EntityService add(Entity entity, EventType type, Event event);
 
+    /**
+     * Remove an event from an entity of a certain type
+     *
+     * @param entity
+     * @param type
+     * @param event
+     */
     void remove(Entity entity, EventType type, Event event);
 
+    /**
+     * Get a list of all events for an entity and a type
+     *
+     * @param entity
+     * @param type
+     * @return
+     */
     List<Event> get(Entity entity, EventType type);
 
+    /**
+     * Handle the events for an entity and type
+     *
+     * @param entity
+     * @param type
+     * @param player
+     * @param adventure
+     * @return
+     */
     List<Response> handle(Entity entity, EventType type, Player player, Adventure adventure);
 }

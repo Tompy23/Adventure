@@ -19,13 +19,45 @@ import java.util.List;
  * NOTE
  */
 public interface Item extends Entity {
+
+    /**
+     * User the item
+     *
+     * @param player
+     * @param adventure
+     * @return
+     */
     List<Response> use(Player player, Adventure adventure);
 
+    /**
+     * Determine if a given target entity is appropriate
+     *
+     * @param entity
+     * @return
+     */
     boolean hasTarget(Entity entity);
 
+    /**
+     * Number of hands the item takes to use
+     *
+     * @return
+     */
     int hands();
 
+    /**
+     * Encumbrance value of the item when carried.
+     *
+     * @return
+     */
     int encumbrance();
 
+    /**
+     * Behavior when the item is misused, possibly on a specific feature
+     *
+     * @param feature
+     * @param player
+     * @param adventure
+     * @return
+     */
     List<Response> misUse(Feature feature, Player player, Adventure adventure);
 }

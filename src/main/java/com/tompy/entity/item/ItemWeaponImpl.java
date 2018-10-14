@@ -27,14 +27,17 @@ public class ItemWeaponImpl extends ItemImpl {
 
     @Override
     public List<Response> use(Player player, Adventure adventure) {
+        LOGGER.info("Using weapon.");
         List<Response> returnValue = new ArrayList<>();
 
         returnValue.addAll(entityService.handle(this, EventType.EVENT_WEAPON_BEFORE_ATTACK, player, adventure));
 
         if (entityService.valueFor(this, Attribute.VALUE).getAsInt() >
                 entityService.valueFor(target, Attribute.VALUE).getAsInt()) {
+            LOGGER.info("Weapon use success.");
             returnValue.addAll(entityService.handle(this, EventType.EVENT_WEAPON_ATTACK_SUCCESS, player, adventure));
         } else {
+            LOGGER.info("Weapon use failure");
             returnValue.addAll(entityService.handle(this, EventType.EVENT_WEAPON_ATTACK_FAILURE, player, adventure));
         }
 

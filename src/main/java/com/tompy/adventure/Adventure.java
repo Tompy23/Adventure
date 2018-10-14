@@ -1,5 +1,6 @@
 package com.tompy.adventure;
 
+import com.tompy.directive.Direction;
 import com.tompy.io.UserInput;
 import com.tompy.state.AdventureState;
 import com.tompy.state.AdventureStateFactory;
@@ -15,7 +16,14 @@ public interface Adventure extends StateMachine {
     /**
      * Create the adventure elements
      */
-    void create(AdventureStateFactory stateFactory);
+    void create();
+
+    /**
+     * Set the state factory for the adventure
+     *
+     * @param stateFactory - The state factory
+     */
+    void setStateFactory(AdventureStateFactory stateFactory);
 
     /**
      * Expose the user input
@@ -36,7 +44,7 @@ public interface Adventure extends StateMachine {
      *
      * @param state - The starting state for the adventure
      */
-    void start(AdventureState state, String startRoom);
+    void start(AdventureState state, String startRoom, Direction direction);
 
     /**
      * Gracefully stop an adventure for a specific player

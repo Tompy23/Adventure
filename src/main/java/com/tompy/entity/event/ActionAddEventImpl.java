@@ -4,14 +4,18 @@ import com.tompy.adventure.Adventure;
 import com.tompy.directive.EventType;
 import com.tompy.entity.Entity;
 import com.tompy.entity.EntityService;
+import com.tompy.entity.encounter.MerchantSell;
 import com.tompy.player.Player;
 import com.tompy.response.Response;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ActionAddEventImpl extends ActionImpl {
+    public static final Logger LOGGER = LogManager.getLogger(ActionAddEventImpl.class);
     private final List<Event> events;
     private final EventType type;
 
@@ -24,10 +28,12 @@ public class ActionAddEventImpl extends ActionImpl {
 
     @Override
     public List<Response> apply(Player player, Adventure adventure) {
+        LOGGER.info("Applying Add Event Action");
         List<Response> returnValue = new ArrayList<>();
 
         if (events != null) {
             for (Event event : events) {
+                LOGGER.info("Adding Event [{}]", event.getName());
                 entityService.add(entity, type, event);
             }
             returnValue.addAll(responses.stream().

@@ -6,13 +6,19 @@ import com.tompy.entity.encounter.Encounter;
 import com.tompy.io.UserInput;
 import com.tompy.player.Player;
 import com.tompy.response.Response;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.tompy.directive.EventType.EVENT_ENCOUNTER_END;
+import static com.tompy.directive.EventType.EVENT_ENCOUNTER_START;
+
 public class StateEncounterImpl extends AdventureStateBaseImpl implements AdventureState {
+    private final static Logger LOGGER = LogManager.getLogger(StateEncounterImpl.class);
     private final Encounter encounter;
 
     public StateEncounterImpl(Player player, Adventure adventure, UserInput userInput, PrintStream outStream,
@@ -28,6 +34,9 @@ public class StateEncounterImpl extends AdventureStateBaseImpl implements Advent
 
     @Override
     public void start() {
+        LOGGER.info("Encounter [{}] state start", encounter.getName());
+        entityService.handle(encounter, EVENT_ENCOUNTER_START, player, adventure).stream()
+                .forEachOrdered((a) -> outStream.println(a.render()));
 
     }
 
@@ -44,11 +53,14 @@ public class StateEncounterImpl extends AdventureStateBaseImpl implements Advent
 
         // Render the list of responses to outStream
         responses.stream().forEachOrdered((r) -> outStream.println(r.render()));
+        outStream.println();
     }
 
     @Override
     public void end() {
-
+        LOGGER.info("Encounter [{}] state end.", encounter.getName());
+        entityService.handle(encounter, EVENT_ENCOUNTER_END, player, adventure).stream()
+                .forEachOrdered((a) -> outStream.println(a.render()));
     }
 
     public static final class AdventureStateEncounterBuilderImpl implements AdventureStateEncounterBuilder {

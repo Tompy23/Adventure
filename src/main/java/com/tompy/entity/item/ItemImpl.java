@@ -90,6 +90,7 @@ public class ItemImpl extends EntityImpl implements Item {
 
         @Override
         public Item build() {
+            LOGGER.info("Building item [{}]", key);
             Item item;
             switch (type) {
                 case ITEM_KEY:

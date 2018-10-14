@@ -13,6 +13,9 @@ import java.util.stream.Collectors;
 import static com.tompy.directive.Direction.*;
 import static com.tompy.directive.EventType.*;
 
+/**
+ * Util class for handling Directions, EventTypes and Attributes
+ */
 public class AdventureUtils {
     private static Map<String, Direction> directionMap = new HashMap<>();
     private static Map<String, CommandType> commandTypeMap = new HashMap<>();
@@ -30,22 +33,52 @@ public class AdventureUtils {
         }
     }
 
+    /**
+     * Validates the String can be mapped to a Direction
+     *
+     * @param dir
+     * @return
+     */
     public static boolean isDirection(String dir) {
         return (directionMap.containsKey(dir.toUpperCase()));
     }
 
+    /**
+     * Converts a String to a Direction
+     *
+     * @param dir
+     * @return
+     */
     public static Direction getDirection(String dir) {
         return directionMap.get(dir.toUpperCase());
     }
 
+    /**
+     * Converts a String to a CommandType
+     *
+     * @param type
+     * @return
+     */
     public static CommandType getCommandType(String type) {
         return commandTypeMap.get(type.toUpperCase());
     }
 
+    /**
+     * Converts a String to an Attribute
+     *
+     * @param name
+     * @return
+     */
     public static Attribute getAttribute(String name) {
         return attributeMap.get(name.toUpperCase());
     }
 
+    /**
+     * Returns opposite direction
+     *
+     * @param direction
+     * @return
+     */
     public static Direction getOppositeDirection(Direction direction) {
         Direction returnValue = null;
 
@@ -67,6 +100,12 @@ public class AdventureUtils {
         return returnValue;
     }
 
+    /**
+     * Converts a direction into an Area Search EventType
+     *
+     * @param direction
+     * @return
+     */
     public static EventType getAreaSearchEventType(Direction direction) {
         switch (direction) {
             case DIRECTION_NORTH:
@@ -82,6 +121,12 @@ public class AdventureUtils {
         }
     }
 
+    /**
+     * Converts a Direction to an Area Exit EventType
+     *
+     * @param direction
+     * @return
+     */
     public static EventType getAreaExitEventType(Direction direction) {
         switch (direction) {
             case DIRECTION_NORTH:
@@ -97,6 +142,12 @@ public class AdventureUtils {
         }
     }
 
+    /**
+     * Converts a Direction to an Area Enter EventType
+     *
+     * @param direction
+     * @return
+     */
     public static EventType getAreaEnterEventType(Direction direction) {
         switch (direction) {
             case DIRECTION_NORTH:
@@ -112,6 +163,13 @@ public class AdventureUtils {
         }
     }
 
+    /**
+     * Parses a command into its component parts
+     *
+     * @param command
+     * @param splits
+     * @return
+     */
     public static String[] parseCommand(String[] command, List<String> splits) {
         StringBuilder first = new StringBuilder();
         StringBuilder second = new StringBuilder();

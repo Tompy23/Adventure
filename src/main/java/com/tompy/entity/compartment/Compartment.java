@@ -5,6 +5,9 @@ import com.tompy.entity.item.Item;
 
 import java.util.List;
 
+/**
+ * An interface allowing an Entity to contain Items
+ */
 public interface Compartment extends Entity {
     List<Item> getAllItems();
 

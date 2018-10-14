@@ -5,13 +5,15 @@ import com.tompy.entity.EntityService;
 import com.tompy.entity.item.Item;
 import com.tompy.player.Player;
 import com.tompy.response.Response;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class EncounterMerchantImpl extends EncounterImpl implements MerchantStateMachine, Merchant {
-
+    public static final Logger LOGGER = LogManager.getLogger(EncounterMerchantImpl.class);
     private final MerchantChat chat;
     private final MerchantBuy buy;
     private final MerchantSell sell;
@@ -46,6 +48,7 @@ public class EncounterMerchantImpl extends EncounterImpl implements MerchantStat
 
     @Override
     public void process() {
+        LOGGER.info("Processing a Merchant encounter.");
         // Call the encounter's "list options", returns Map<Long, String>
         Map<Long, String> options = currentState.getOptions();
 
