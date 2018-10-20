@@ -19,8 +19,8 @@ public class ItemWeaponImpl extends ItemImpl {
     private final Feature target;
 
     public ItemWeaponImpl(Long key, String name, List<String> descriptors, String description,
-            EntityService entityService, Feature target) {
-        super(key, name, descriptors, description, entityService);
+            EntityService entityService, Feature target, int manipulationTicks) {
+        super(key, name, descriptors, description, entityService, manipulationTicks);
         this.target = target;
 
     }
@@ -30,6 +30,7 @@ public class ItemWeaponImpl extends ItemImpl {
         LOGGER.info("Using weapon.");
         List<Response> returnValue = new ArrayList<>();
 
+        adventure.setActionTicks(manipulationTicks);
         returnValue.addAll(entityService.handle(this, EventType.EVENT_WEAPON_BEFORE_ATTACK, player, adventure));
 
         if (entityService.valueFor(this, Attribute.VALUE).getAsInt() >

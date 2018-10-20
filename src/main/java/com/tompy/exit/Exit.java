@@ -57,4 +57,11 @@ public interface Exit {
      * @return - True, usable; False, not usable
      */
     boolean isOpen();
+
+    /**
+     * Returns the number of ticks to pass thru this exit
+     *
+     * @return - The number of ticks
+     */
+    int getPassThruTicks();
 }

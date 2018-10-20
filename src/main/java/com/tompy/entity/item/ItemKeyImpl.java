@@ -23,8 +23,8 @@ public class ItemKeyImpl extends ItemImpl {
     private final Feature target;
 
     public ItemKeyImpl(Long key, String name, List<String> descriptors, String description, EntityService entityService,
-        Feature target) {
-        super(key, name, descriptors, description, entityService);
+        Feature target, int manipulationTicks) {
+        super(key, name, descriptors, description, entityService, manipulationTicks);
         this.target = target;
     }
 
@@ -34,6 +34,7 @@ public class ItemKeyImpl extends ItemImpl {
 
         LOGGER.info("Using key [{}] on [{}]", getName(), target.getName());
 
+        adventure.setActionTicks(manipulationTicks);
         returnValue.addAll(entityService.handle(this, EVENT_KEY_BEFORE_USE, player, adventure));
         returnValue.addAll(entityService.handle(target, EVENT_KEY_BEFORE_USE, player, adventure));
 

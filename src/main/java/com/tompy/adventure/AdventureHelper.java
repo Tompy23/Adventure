@@ -83,8 +83,8 @@ public abstract class AdventureHelper {
      * @param open
      * @return
      */
-    protected Exit buildExit(Area a1, Direction d1, Area a2, Direction d2, boolean open) {
-        Exit e = exitBuilderFactory.builder().area(a1).area(a2).state(open).build();
+    protected Exit buildExit(Area a1, Direction d1, Area a2, Direction d2, boolean open, int ticks) {
+        Exit e = exitBuilderFactory.builder().area(a1).area(a2).state(open).passThruTicks(ticks).build();
         a1.installExit(d1, e);
         a2.installExit(d2, e);
         return e;

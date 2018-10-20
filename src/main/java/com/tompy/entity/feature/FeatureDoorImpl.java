@@ -27,8 +27,8 @@ public class FeatureDoorImpl extends FeatureBasicImpl {
     private Exit exit;
 
     protected FeatureDoorImpl(Long key, String name, List<String> descriptors, String description,
-            EntityService entityService, Exit exit) {
-        super(key, name, descriptors, description, entityService);
+            EntityService entityService, Exit exit, int manipulationTicks) {
+        super(key, name, descriptors, description, entityService, manipulationTicks);
         this.exit = exit;
         EntityUtil.add(visible);
     }
@@ -42,6 +42,7 @@ public class FeatureDoorImpl extends FeatureBasicImpl {
             if (!EntityUtil.is(open) && !EntityUtil.is(locked)) {
                 EntityUtil.add(open);
                 exit.open();
+                adventure.setActionTicks(manipulationTicks);
                 returnValue.addAll(entityService.handle(this, EVENT_FEATURE_OPEN, player, adventure));
             } else if (EntityUtil.is(locked)) {
                 returnValue
@@ -61,6 +62,7 @@ public class FeatureDoorImpl extends FeatureBasicImpl {
             if (EntityUtil.is(open)) {
                 EntityUtil.remove(open);
                 exit.close();
+                adventure.setActionTicks(manipulationTicks);
                 returnValue.addAll(entityService.handle(this, EVENT_FEATURE_CLOSE, player, adventure));
             }
         }

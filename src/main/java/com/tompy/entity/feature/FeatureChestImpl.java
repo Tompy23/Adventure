@@ -14,8 +14,8 @@ public class FeatureChestImpl extends FeatureBasicImpl {
     private static final Logger LOGGER = LogManager.getLogger(FeatureChestImpl.class);
 
     protected FeatureChestImpl(Long key, String name, List<String> descriptors, String description,
-            EntityService entityService) {
-        super(key, name, descriptors, description, entityService);
+            EntityService entityService, int manipulationTicks) {
+        super(key, name, descriptors, description, entityService, manipulationTicks);
         EntityUtil.add(visible);
     }
 }

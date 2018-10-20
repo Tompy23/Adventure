@@ -14,10 +14,12 @@ public class ExitImpl extends Responsive implements Exit {
     private static final Logger LOGGER = LogManager.getLogger(ExitImpl.class);
     private final Area[] areas;
     private boolean state;
+    private final int passThruTicks;
 
-    private ExitImpl(Area[] areas, boolean state) {
+    private ExitImpl(Area[] areas, boolean state, int ticks) {
         this.areas = areas;
         this.state = state;
+        this.passThruTicks = ticks;
     }
 
     public static ExitBuilder createBuilder() {
@@ -27,21 +29,15 @@ public class ExitImpl extends Responsive implements Exit {
     @Override
     public List<Response> passThru(Direction direction) {
         List<Response> returnValue = new ArrayList<>();
-        LOGGER.info("Passing thru exit [{}] connecting areas [{}] and [{}]",
+        LOGGER.info("Attempting to pass thru exit [{}] connecting areas [{}] and [{}]",
                     new String[]{direction.name(), areas[0].getName(), areas[1].getName()});
-//        if (state) {
-//            returnValue.add(responseFactory.createBuilder().text(direction.getDescription()).source("Exit").build());
-//        } else {
-//            returnValue.add(
-//                responseFactory.createBuilder().text(String.format("Unable to move %s", direction.getDescription()))
-//                    .source("Exit").build());
-//        }
 
         if (!state) {
             returnValue.add(
                 responseFactory.createBuilder().text(String.format("Unable to move %s", direction.getDescription()))
                     .source("Exit").build());
         }
+
         return returnValue;
     }
 
@@ -71,6 +67,11 @@ public class ExitImpl extends Responsive implements Exit {
     }
 
     @Override
+    public int getPassThruTicks() {
+        return passThruTicks;
+    }
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(this.areas[0].getName());
@@ -85,11 +86,12 @@ public class ExitImpl extends Responsive implements Exit {
     public static class ExitBuilderImpl implements ExitBuilder {
         private List<Area> areas = new ArrayList<>();
         private boolean state;
+        private int passThruTicks = 0;
 
         @Override
         public Exit build() {
             if (areas.size() == 2) {
-                return new ExitImpl(areas.toArray(new Area[2]), state);
+                return new ExitImpl(areas.toArray(new Area[2]), state, passThruTicks);
             } else {
                 return null;
             }
@@ -104,6 +106,12 @@ public class ExitImpl extends Responsive implements Exit {
         @Override
         public ExitBuilder state(boolean state) {
             this.state = state;
+            return this;
+        }
+
+        @Override
+        public ExitBuilder passThruTicks(int ticks) {
+            this.passThruTicks = ticks;
             return this;
         }
     }
