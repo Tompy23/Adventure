@@ -2,6 +2,7 @@ package com.tompy.entity.area;
 
 import com.tompy.adventure.Adventure;
 import com.tompy.adventure.AdventureUtils;
+import com.tompy.common.Coordinates;
 import com.tompy.directive.Direction;
 import com.tompy.directive.EventType;
 import com.tompy.entity.EntityService;
@@ -26,12 +27,14 @@ public class AreaImpl extends CompartmentImpl implements Area {
     protected List<Feature> features = new ArrayList<>();
     protected Map<Direction, List<Feature>> directionFeatures = new HashMap<>();
     protected int searchTicks;
+    protected Coordinates coordinates;
 
     protected AreaImpl(Long key, String name, List<String> descriptors, String description, String searchDescription,
-            EntityService entityService, int searchTicks) {
+            EntityService entityService, int searchTicks, Coordinates coordinates) {
         super(key, name, descriptors, description, entityService);
         this.searchDescription = searchDescription;
         this.searchTicks = searchTicks;
+        this.coordinates = Objects.requireNonNull(coordinates, "Coordinates cannot be null.");
     }
 
 
@@ -162,6 +165,7 @@ public class AreaImpl extends CompartmentImpl implements Area {
         protected String compartmentName;
         protected String compartmentDescription;
         protected int searchTicks;
+        protected Coordinates coordinates;
 
         public AreaBuilderImpl(Long key, EntityService entityService) {
             super(key, entityService);
@@ -204,9 +208,15 @@ public class AreaImpl extends CompartmentImpl implements Area {
         }
 
         @Override
+        public AreaBuilder coordinates(Coordinates coordinates) {
+            this.coordinates = coordinates;
+            return this;
+        }
+
+        @Override
         public Area build() {
             return new AreaImpl(key, name, this.buildDescriptors(), description, searchDescription, entityService,
-                    searchTicks);
+                    searchTicks, coordinates);
         }
     }
 }

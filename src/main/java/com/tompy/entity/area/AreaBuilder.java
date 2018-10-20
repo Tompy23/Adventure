@@ -1,6 +1,7 @@
 package com.tompy.entity.area;
 
 import com.tompy.common.Builder;
+import com.tompy.common.Coordinates;
 
 public interface AreaBuilder extends Builder<Area> {
     AreaBuilder name(String name);
@@ -14,4 +15,6 @@ public interface AreaBuilder extends Builder<Area> {
     AreaBuilder compartmentDescription(String compartmentDescription);
 
     AreaBuilder searchTicks(int searchTicks);
+
+    AreaBuilder coordinates(Coordinates coordinates);
 }

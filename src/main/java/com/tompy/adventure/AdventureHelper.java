@@ -1,6 +1,7 @@
 package com.tompy.adventure;
 
 import com.tompy.attribute.Attribute;
+import com.tompy.common.Coordinates;
 import com.tompy.directive.*;
 import com.tompy.entity.Entity;
 import com.tompy.entity.EntityService;
@@ -67,8 +68,8 @@ public abstract class AdventureHelper {
      * @param name
      * @return
      */
-    protected Area buildArea(String name) {
-        Area area = entityService.createAreaBuilder().name(name).build();
+    protected Area buildArea(String name, Coordinates coordinates) {
+        Area area = entityService.createAreaBuilder().name(name).coordinates(coordinates).build();
         entityService.addArea(area);
         return area;
     }
