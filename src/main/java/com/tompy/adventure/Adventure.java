@@ -1,5 +1,6 @@
 package com.tompy.adventure;
 
+import com.tompy.common.Clock;
 import com.tompy.directive.Direction;
 import com.tompy.io.UserInput;
 import com.tompy.state.AdventureState;
@@ -11,7 +12,7 @@ import java.io.PrintStream;
 /**
  * Defines functions which interact with the state of the adventure.
  */
-public interface Adventure extends StateMachine {
+public interface Adventure extends StateMachine, Clock {
 
     /**
      * Create the adventure elements

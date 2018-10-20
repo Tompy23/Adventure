@@ -12,4 +12,6 @@ public interface AreaBuilder extends Builder<Area> {
     AreaBuilder compartmentName(String compartmentName);
 
     AreaBuilder compartmentDescription(String compartmentDescription);
+
+    AreaBuilder searchTicks(int searchTicks);
 }

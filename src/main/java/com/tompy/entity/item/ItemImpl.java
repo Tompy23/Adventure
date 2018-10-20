@@ -3,15 +3,9 @@ package com.tompy.entity.item;
 import com.tompy.adventure.Adventure;
 import com.tompy.directive.EventType;
 import com.tompy.directive.ItemType;
-import com.tompy.entity.EntityUtil;
-import com.tompy.entity.Entity;
-import com.tompy.entity.EntityFacade;
-import com.tompy.entity.EntityService;
+import com.tompy.entity.*;
 import com.tompy.entity.event.Event;
 import com.tompy.entity.feature.Feature;
-import com.tompy.entity.EntityBuilderHelperImpl;
-import com.tompy.entity.EntityFacadeImpl;
-import com.tompy.entity.EntityImpl;
 import com.tompy.player.Player;
 import com.tompy.response.Response;
 import org.apache.logging.log4j.LogManager;
@@ -20,22 +14,22 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.tompy.attribute.Attribute.ENCUMBRANCE;
-import static com.tompy.attribute.Attribute.HANDS;
-import static com.tompy.attribute.Attribute.VISIBLE;
+import static com.tompy.attribute.Attribute.*;
 
 public class ItemImpl extends EntityImpl implements Item {
     private static final Logger LOGGER = LogManager.getLogger(ItemImpl.class);
     protected final EntityFacade visible;
     protected final EntityFacade hands;
     protected final EntityFacade encumbrance;
+    protected int manipulationTicks;
 
-    protected ItemImpl(Long key, String name, List<String> descriptors, String description,
-            EntityService entityService) {
+    protected ItemImpl(Long key, String name, List<String> descriptors, String description, EntityService entityService,
+            int manipulationTicks) {
         super(key, name, descriptors, description, entityService);
         visible = EntityFacadeImpl.createBuilder(entityService).entity(this).attribute(VISIBLE).build();
         hands = EntityFacadeImpl.createBuilder(entityService).entity(this).attribute(HANDS).build();
         encumbrance = EntityFacadeImpl.createBuilder(entityService).entity(this).attribute(ENCUMBRANCE).build();
+        this.manipulationTicks = manipulationTicks;
     }
 
     public static ItemBuilder createBuilder(Long key, EntityService entityService) {
@@ -83,6 +77,7 @@ public class ItemImpl extends EntityImpl implements Item {
         private Feature targetFeature;
         private Event event;
         private EventType eventType;
+        private int manipulationTicks = 0;
 
         public ItemBuilderImpl(Long key, EntityService entityService) {
             super(key, entityService);
@@ -94,19 +89,23 @@ public class ItemImpl extends EntityImpl implements Item {
             Item item;
             switch (type) {
                 case ITEM_KEY:
-                    item = new ItemKeyImpl(key, name, buildDescriptors(), description, entityService, targetFeature);
+                    item = new ItemKeyImpl(key, name, buildDescriptors(), description, entityService, targetFeature,
+                            manipulationTicks);
                     break;
                 case ITEM_GEM:
-                    item = new ItemGemImpl(key, name, buildDescriptors(), description, entityService);
+                    item = new ItemGemImpl(key, name, buildDescriptors(), description, entityService,
+                            manipulationTicks);
                     break;
                 case ITEM_POTION:
-                    item = new ItemPotionImpl(key, name, buildDescriptors(), description, entityService, event);
+                    item = new ItemPotionImpl(key, name, buildDescriptors(), description, entityService, event,
+                            manipulationTicks);
                     break;
                 case ITEM_WEAPON:
-                    item = new ItemWeaponImpl(key, name, buildDescriptors(), description, entityService, targetFeature);
+                    item = new ItemWeaponImpl(key, name, buildDescriptors(), description, entityService, targetFeature,
+                            manipulationTicks);
                     break;
                 default:
-                    item = new ItemImpl(key, name, buildDescriptors(), description, entityService);
+                    item = new ItemImpl(key, name, buildDescriptors(), description, entityService, manipulationTicks);
             }
 
             if (item != null && entityService != null) {
@@ -154,6 +153,12 @@ public class ItemImpl extends EntityImpl implements Item {
         @Override
         public ItemBuilder eventType(EventType eventType) {
             this.eventType = eventType;
+            return this;
+        }
+
+        @Override
+        public ItemBuilder manipulationTicks(int ticks) {
+            this.manipulationTicks = ticks;
             return this;
         }
     }

@@ -13,4 +13,6 @@ public interface FeatureBuilder extends Builder<Feature> {
     FeatureBuilder type(FeatureType type);
 
     FeatureBuilder exit(Exit exit);
+
+    FeatureBuilder manipulationTicks(int ticks);
 }

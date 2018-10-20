@@ -25,11 +25,13 @@ public class AreaImpl extends CompartmentImpl implements Area {
     protected Map<Direction, Exit> exits = new HashMap<>();
     protected List<Feature> features = new ArrayList<>();
     protected Map<Direction, List<Feature>> directionFeatures = new HashMap<>();
+    protected int searchTicks;
 
     protected AreaImpl(Long key, String name, List<String> descriptors, String description, String searchDescription,
-            EntityService entityService) {
+            EntityService entityService, int searchTicks) {
         super(key, name, descriptors, description, entityService);
         this.searchDescription = searchDescription;
+        this.searchTicks = searchTicks;
     }
 
 
@@ -164,6 +166,7 @@ public class AreaImpl extends CompartmentImpl implements Area {
         protected String searchDescription;
         protected String compartmentName;
         protected String compartmentDescription;
+        protected int searchTicks;
 
         public AreaBuilderImpl(Long key, EntityService entityService) {
             super(key, entityService);
@@ -200,8 +203,15 @@ public class AreaImpl extends CompartmentImpl implements Area {
         }
 
         @Override
+        public AreaBuilder searchTicks(int searchTicks) {
+            this.searchTicks = searchTicks;
+            return this;
+        }
+
+        @Override
         public Area build() {
-            return new AreaImpl(key, name, this.buildDescriptors(), description, searchDescription, entityService);
+            return new AreaImpl(key, name, this.buildDescriptors(), description, searchDescription, entityService,
+                    searchTicks);
         }
     }
 }

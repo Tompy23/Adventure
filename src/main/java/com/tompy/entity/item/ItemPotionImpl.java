@@ -19,8 +19,8 @@ public class ItemPotionImpl extends ItemImpl {
     private final Event event;
 
     public ItemPotionImpl(Long key, String name, List<String> descriptors, String description,
-            EntityService entityService, Event event) {
-        super(key, name, descriptors, description, entityService);
+            EntityService entityService, Event event, int manipulationTicks) {
+        super(key, name, descriptors, description, entityService, manipulationTicks);
         this.event = event;
     }
 
@@ -29,6 +29,7 @@ public class ItemPotionImpl extends ItemImpl {
         LOGGER.info("Drinking potion.");
         List<Response> returnValue = new ArrayList<>();
 
+        adventure.setActionTicks(manipulationTicks);
         returnValue.addAll(entityService.handle(this, EVENT_BEFORE_POTION, player, adventure));
 
         if (event.pull(player, adventure)) {

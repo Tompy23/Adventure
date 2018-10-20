@@ -7,4 +7,6 @@ public interface ExitBuilder extends Builder<Exit> {
     ExitBuilder area(Area area);
 
     ExitBuilder state(boolean state);
+
+    ExitBuilder passThruTicks(int ticks);
 }

@@ -22,6 +22,9 @@ public abstract class AdventureImpl extends AdventureHelper implements Adventure
     private final PrintStream outStream;
     private boolean proceed;
     private AdventureState currentState;
+    private int currentTick;
+    private int actionTicks;
+
 
     public AdventureImpl(Player player, EntityService entityService,
             EntityFacadeBuilderFactory entityFacadeBuilderFactory, ExitBuilderFactory exitBuilderFactory,
@@ -85,10 +88,36 @@ public abstract class AdventureImpl extends AdventureHelper implements Adventure
     }
 
     private void processState() {
-        while (proceed) {
-            LOGGER.info("Start round");
-            currentState.process();
+        if (currentState != null) {
+            while (proceed) {
+                LOGGER.info(String.format("Start round.  Current ticks [%d]", getCurrentTicks()));
+                setActionTicks(0);
+                currentState.process();
+                LOGGER.info(
+                        String.format("End round.  Ticks + [%d] -> [%d]", getCurrentActionTicks(), getCurrentTicks()));
+            }
+            currentState.end();
         }
-        currentState.end();
+    }
+
+    @Override
+    public int getCurrentTicks() {
+        return currentTick;
+    }
+
+    @Override
+    public void setActionTicks(int ticks) {
+        actionTicks =+ ticks;
+    }
+
+    @Override
+    public int getCurrentActionTicks() {
+        return actionTicks;
+    }
+
+    @Override
+    public void endAction() {
+        currentTick = +actionTicks;
+        actionTicks = 0;
     }
 }

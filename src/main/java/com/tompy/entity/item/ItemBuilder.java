@@ -24,4 +24,6 @@ public interface ItemBuilder extends Builder<Item> {
     ItemBuilder event(Event event);
 
     ItemBuilder eventType(EventType eventType);
+
+    ItemBuilder manipulationTicks(int ticks);
 }
