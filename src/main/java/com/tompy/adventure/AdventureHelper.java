@@ -3,6 +3,8 @@ package com.tompy.adventure;
 import com.tompy.attribute.Attribute;
 import com.tompy.common.Coordinates;
 import com.tompy.directive.*;
+import com.tompy.entity.Actor.Actor;
+import com.tompy.entity.Actor.MoveStrategyFactory;
 import com.tompy.entity.Entity;
 import com.tompy.entity.EntityService;
 import com.tompy.entity.area.Area;
@@ -23,6 +25,7 @@ import com.tompy.state.AdventureStateFactory;
 import java.util.Objects;
 
 import static com.tompy.directive.ActionType.ACTION_DESCRIBE;
+import static com.tompy.directive.EventType.EVENT_ACTOR_PROGRAM;
 import static com.tompy.directive.TriggerType.TRIGGER_ALWAYS;
 
 /**
@@ -34,6 +37,7 @@ public abstract class AdventureHelper {
     protected final ExitBuilderFactory exitBuilderFactory;
     protected final MessageHandler messages;
     protected AdventureStateFactory stateFactory;
+    protected MoveStrategyFactory moveStrategyFactory;
     private Adventure thisAdventure;
 
     public AdventureHelper(Player player, EntityService entityService, ExitBuilderFactory exitBuilderFactory) {
@@ -99,7 +103,9 @@ public abstract class AdventureHelper {
      * @return
      */
     protected Feature buildFeature(FeatureType type, String description) {
-        return featureBuilder(type, description).build();
+        Feature feature = featureBuilder(type, description).build();
+        entityService.addFeature(feature);
+        return feature;
     }
 
     /**
@@ -111,7 +117,9 @@ public abstract class AdventureHelper {
      * @return
      */
     protected Feature buildFeature(FeatureType type, String description, String name) {
-        return featureBuilder(type, description).name(name).build();
+        Feature feature = featureBuilder(type, description).name(name).build();
+        entityService.addFeature(feature);
+        return feature;
     }
 
     /**
@@ -192,7 +200,9 @@ public abstract class AdventureHelper {
      * @return
      */
     protected Encounter buildEncounter(EncounterType t) {
-        return encounterBuilder(t).build();
+        Encounter encounter = encounterBuilder(t).build();
+        entityService.addEncounter(encounter);
+        return encounter;
     }
 
     protected EncounterBuilder encounterBuilder(EncounterType t) {
@@ -207,7 +217,9 @@ public abstract class AdventureHelper {
      * @return
      */
     protected Item buildItem(ItemType t, String d) {
-        return itemBuilder(t, d).build();
+        Item item = itemBuilder(t, d).build();
+        entityService.addItem(item);
+        return item;
     }
 
     /**
@@ -219,5 +231,29 @@ public abstract class AdventureHelper {
      */
     protected ItemBuilder itemBuilder(ItemType t, String d) {
         return entityService.createItemBuilder().type(t).description(messages.get(d));
+    }
+
+    /**
+     * Actor
+     *
+     * @param name
+     * @param description
+     * @return
+     */
+    protected Actor buildActor(String name, String description, MoveStrategyType moveType) {
+        Actor actor = entityService.createActorBuilder().name(name).description(description).build();
+        actor.assignMoveStrategy(moveStrategyFactory.createMoveStrategy(actor, moveType));
+        entityService.addActor(actor);
+        return actor;
+    }
+
+    /**
+     * Add an event to an actor
+     *
+     * @param actor
+     * @param event
+     */
+    protected void programActor(Actor actor, Event event) {
+        addEvent(actor, EVENT_ACTOR_PROGRAM, event);
     }
 }

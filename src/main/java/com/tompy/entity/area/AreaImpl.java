@@ -5,6 +5,7 @@ import com.tompy.adventure.AdventureUtils;
 import com.tompy.common.Coordinates;
 import com.tompy.directive.Direction;
 import com.tompy.directive.EventType;
+import com.tompy.entity.Actor.Actor;
 import com.tompy.entity.EntityService;
 import com.tompy.entity.compartment.CompartmentBuilderHelperImpl;
 import com.tompy.entity.compartment.CompartmentImpl;
@@ -26,6 +27,7 @@ public class AreaImpl extends CompartmentImpl implements Area {
     protected Map<Direction, Exit> exits = new HashMap<>();
     protected List<Feature> features = new ArrayList<>();
     protected Map<Direction, List<Feature>> directionFeatures = new HashMap<>();
+    protected List<Actor> actors = new ArrayList<>();
     protected int searchTicks;
     protected Coordinates coordinates;
 
@@ -123,6 +125,12 @@ public class AreaImpl extends CompartmentImpl implements Area {
                     .add(this.responseFactory.createBuilder().source(i.getName()).text(i.getDescription()).build()));
         }
 
+        if (!actors.isEmpty()) {
+            returnValue.add(responseFactory.createBuilder().source(name).text("Others...").build());
+            actors.stream().filter((a) -> entityService.is(a, VISIBLE)).forEach(
+                    (a) -> returnValue.add(responseFactory.createBuilder().source(name).text(a.getName()).build()));
+        }
+
         player.searchArea(name);
 
         return returnValue;
@@ -154,8 +162,36 @@ public class AreaImpl extends CompartmentImpl implements Area {
     }
 
     @Override
+    public void addActor(Actor actor) {
+        actors.add(actor);
+    }
+
+    @Override
+    public void removeActor(Actor actor) {
+        actors.remove(actor);
+    }
+
+    @Override
+    public boolean isActor(Actor actor) {
+        return actors.contains(actor);
+    }
+
+    @Override
+    public List<Actor> getAllActors() {
+        return Collections.unmodifiableList(actors);
+    }
+
+    @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof Area) {
+            return this.getKey().equals(((Area) other).getKey());
+        }
+        return false;
     }
 
     public static class AreaBuilderImpl extends CompartmentBuilderHelperImpl implements AreaBuilder {

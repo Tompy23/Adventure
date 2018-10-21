@@ -30,10 +30,12 @@ public class StateExploreImpl extends AdventureStateBaseImpl implements Adventur
     public void process() {
         Command command = userInput.getCommand();
         if (null != command) {
-            command.execute(player, adventure).stream().forEachOrdered((a) -> outStream.println(a.render()));
+            command.execute(player, adventure).stream().forEachOrdered((r) -> outStream.println(r.render()));
+            entityService.getActors().stream().forEachOrdered((a) -> a.takeAction(player, adventure).stream()
+                    .forEachOrdered((r) -> outStream.println(r.render())));
+            entityService.handle(null, EVENT_EXPLORING, player, adventure).stream()
+                    .forEachOrdered((a) -> outStream.println(a.render()));
         }
-        entityService.handle(null, EVENT_EXPLORING, player, adventure).stream()
-                .forEachOrdered((a) -> outStream.println(a.render()));
 
         outStream.println();
     }

@@ -3,6 +3,7 @@ package com.tompy.entity.area;
 import com.tompy.adventure.Adventure;
 import com.tompy.command.Command;
 import com.tompy.directive.Direction;
+import com.tompy.entity.Actor.Actor;
 import com.tompy.entity.compartment.Compartment;
 import com.tompy.entity.feature.Feature;
 import com.tompy.exit.Exit;
@@ -87,9 +88,38 @@ public interface Area extends Compartment {
     List<Response> searchDirection(Direction direction, Player player, Adventure adventure);
 
     /**
-     * Return all features in the room
+     * Return all features in the area
      *
      * @return - A list of {@link Feature} in room
      */
     List<Feature> getAllFeatures();
+
+    /**
+     * Add a Actor to an area when he enters
+     *
+     * @param actor
+     */
+    void addActor(Actor actor);
+
+    /**
+     * Remove a Actor from an area when he exits
+     *
+     * @param actor
+     */
+    void removeActor(Actor actor);
+
+    /**
+     * Return if there is a Actor in this area
+     *
+     * @param actor
+     * @return
+     */
+    boolean isActor(Actor actor);
+
+    /**
+     * Get a list of all characters in area
+     *
+     * @return
+     */
+    List<Actor> getAllActors();
 }
