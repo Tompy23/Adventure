@@ -5,6 +5,7 @@ import com.tompy.directive.Direction;
 import com.tompy.directive.ActionType;
 import com.tompy.directive.EventType;
 import com.tompy.directive.TriggerType;
+import com.tompy.entity.Actor.Actor;
 import com.tompy.entity.Entity;
 import com.tompy.entity.area.Area;
 import com.tompy.entity.encounter.Encounter;
@@ -38,6 +39,8 @@ public interface EventBuilder extends Builder<Event> {
     EventBuilder events(List<Event> events);
 
     EventBuilder area(Area area);
+
+    EventBuilder actor(Actor actor);
 
     EventBuilder eventType(EventType subType);
 }

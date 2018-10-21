@@ -5,6 +5,9 @@ import com.tompy.attribute.Attribute;
 import com.tompy.attribute.AttributeManager;
 import com.tompy.attribute.AttributeManagerFactory;
 import com.tompy.directive.EventType;
+import com.tompy.entity.Actor.Actor;
+import com.tompy.entity.Actor.ActorBuilder;
+import com.tompy.entity.Actor.ActorImpl;
 import com.tompy.entity.area.Area;
 import com.tompy.entity.area.AreaBuilder;
 import com.tompy.entity.area.AreaImpl;
@@ -40,6 +43,7 @@ public class EntityServiceImpl implements EntityService {
     private List<Area> areas;
     private List<Event> events;
     private List<Encounter> encounters;
+    private List<Actor> actors;
     private Long entityKey;
     private Map<String, Entity> entityMap;
 
@@ -54,6 +58,7 @@ public class EntityServiceImpl implements EntityService {
         areas = new ArrayList<>();
         events = new ArrayList<>();
         encounters = new ArrayList<>();
+        actors = new ArrayList<>();
         entityKey = 0L;
         entityMap = new HashMap<>();
     }
@@ -187,6 +192,11 @@ public class EntityServiceImpl implements EntityService {
     }
 
     @Override
+    public List<Actor> getActors() {
+        return actors;
+    }
+
+    @Override
     public FeatureBuilder createFeatureBuilder() {
         entityKey++;
         attributeManagers.put(entityKey, attributeManagerFactory.create());
@@ -247,6 +257,22 @@ public class EntityServiceImpl implements EntityService {
         if (encounter != null) {
             encounters.add(encounter);
             entityMap.put(encounter.getName(), encounter);
+        }
+    }
+
+    @Override
+    public ActorBuilder createActorBuilder() {
+        entityKey++;
+        attributeManagers.put(entityKey, attributeManagerFactory.create());
+        eventManagers.put(entityKey, eventManagerFactory.create());
+        return ActorImpl.createBuilder(entityKey, this);
+    }
+
+    @Override
+    public void addActor(Actor actor) {
+        if (actor != null) {
+            actors.add(actor);
+            entityMap.put(actor.getName(), actor);
         }
     }
 }

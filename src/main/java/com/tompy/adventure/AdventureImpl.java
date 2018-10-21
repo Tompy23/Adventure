@@ -1,6 +1,7 @@
 package com.tompy.adventure;
 
 import com.tompy.directive.Direction;
+import com.tompy.entity.Actor.MoveStrategyFactory;
 import com.tompy.entity.EntityFacadeBuilderFactory;
 import com.tompy.entity.EntityService;
 import com.tompy.entity.area.Area;
@@ -39,6 +40,11 @@ public abstract class AdventureImpl extends AdventureHelper implements Adventure
     @Override
     public void setStateFactory(AdventureStateFactory stateFactory) {
         this.stateFactory = Objects.requireNonNull(stateFactory, "State Factory cannot be null.");
+    }
+
+    @Override
+    public void setMoveStrategyFactory(MoveStrategyFactory moveStrategyFactory) {
+        this.moveStrategyFactory = Objects.requireNonNull(moveStrategyFactory, "Move Strategy Factory cannot be null.");
     }
 
     @Override

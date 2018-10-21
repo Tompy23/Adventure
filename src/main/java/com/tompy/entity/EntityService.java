@@ -3,6 +3,8 @@ package com.tompy.entity;
 import com.tompy.adventure.Adventure;
 import com.tompy.attribute.Attribute;
 import com.tompy.directive.EventType;
+import com.tompy.entity.Actor.Actor;
+import com.tompy.entity.Actor.ActorBuilderFactory;
 import com.tompy.entity.area.Area;
 import com.tompy.entity.area.AreaBuilderFactory;
 import com.tompy.entity.encounter.EncounterBuilderFactory;
@@ -23,7 +25,7 @@ import java.util.OptionalInt;
  */
 public interface EntityService
         extends ItemBuilderFactory, FeatureBuilderFactory, AreaBuilderFactory, EventBuilderFactory,
-        EncounterBuilderFactory {
+        EncounterBuilderFactory, ActorBuilderFactory {
 
     /**
      * Add Attribute to an entity
@@ -148,4 +150,11 @@ public interface EntityService
      * @return
      */
     List<Response> handle(Entity entity, EventType type, Player player, Adventure adventure);
+
+    /**
+     * Return a list of all Actors in the adventure
+     *
+     * @return List of actors
+     */
+    List<Actor> getActors();
 }

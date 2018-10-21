@@ -8,6 +8,7 @@ import com.tompy.directive.EventType;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import static com.tompy.directive.Direction.*;
@@ -20,6 +21,7 @@ public class AdventureUtils {
     private static Map<String, Direction> directionMap = new HashMap<>();
     private static Map<String, CommandType> commandTypeMap = new HashMap<>();
     private static Map<String, Attribute> attributeMap = new HashMap<>();
+    private static Random r = new Random();
 
     static {
         for (Direction d : Direction.values()) {
@@ -98,6 +100,20 @@ public class AdventureUtils {
         }
 
         return returnValue;
+    }
+
+    public static Direction getRandomDirection() {
+        switch(r.nextInt(4)){
+            case 0:
+                return DIRECTION_NORTH;
+            case 1:
+                return DIRECTION_EAST;
+            case 2:
+                return DIRECTION_SOUTH;
+            case 3:
+                return DIRECTION_WEST;
+        }
+        return null;
     }
 
     /**

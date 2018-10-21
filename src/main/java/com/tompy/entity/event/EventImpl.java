@@ -5,6 +5,8 @@ import com.tompy.directive.ActionType;
 import com.tompy.directive.Direction;
 import com.tompy.directive.EventType;
 import com.tompy.directive.TriggerType;
+import com.tompy.entity.Actor.ActionActorMove;
+import com.tompy.entity.Actor.Actor;
 import com.tompy.entity.Entity;
 import com.tompy.entity.EntityService;
 import com.tompy.entity.area.Area;
@@ -57,6 +59,7 @@ public class EventImpl extends EntityImpl implements Event {
         private int delay;
         private List<Event> events;
         private Area area;
+        private Actor actor;
         private EventType subEventType;
 
         public EventBuilderImpl(Long key, EntityService entityService) {
@@ -136,6 +139,12 @@ public class EventImpl extends EntityImpl implements Event {
             return this;
         }
 
+        @Override
+        public EventBuilder actor(Actor actor) {
+            this.actor = actor;
+            return this;
+        }
+
         @Override public Event build() {
             LOGGER.info("Building event [{}]", key);
             return new EventImpl(key, name, this.buildDescriptors(), description, entityService, buildAction(),
@@ -160,6 +169,8 @@ public class EventImpl extends EntityImpl implements Event {
                     return new ActionRemoveEvent(entity, entityService, responses, subEventType, events);
                 case ACTION_SEND_TO_AREA:
                     return new ActionSendImpl(entity, entityService, responses, area, direction);
+                case ACTION_ACTOR_MOVE:
+                    return new ActionActorMove(entity, entityService, responses, actor);
             }
             return null;
         }

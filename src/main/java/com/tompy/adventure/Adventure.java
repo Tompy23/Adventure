@@ -2,6 +2,7 @@ package com.tompy.adventure;
 
 import com.tompy.common.Clock;
 import com.tompy.directive.Direction;
+import com.tompy.entity.Actor.MoveStrategyFactory;
 import com.tompy.io.UserInput;
 import com.tompy.state.AdventureState;
 import com.tompy.state.AdventureStateFactory;
@@ -25,6 +26,13 @@ public interface Adventure extends StateMachine, Clock {
      * @param stateFactory - The state factory
      */
     void setStateFactory(AdventureStateFactory stateFactory);
+
+    /**
+     * Set the move strategy factory for Actors
+     *
+     * @param moveStrategyFactory - The move strategy factory
+     */
+    void setMoveStrategyFactory(MoveStrategyFactory moveStrategyFactory);
 
     /**
      * Expose the user input
