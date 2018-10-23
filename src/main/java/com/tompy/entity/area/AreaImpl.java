@@ -106,13 +106,13 @@ public class AreaImpl extends CompartmentImpl implements Area {
 
         returnValue.addAll(entityService.handle(this, EVENT_AREA_SEARCH, player, adventure));
 
-        if (!features.isEmpty()) {
+        if (0 < features.stream().filter((i) -> entityService.is(i, VISIBLE)).count()) {
             returnValue.addAll(entityService.handle(this, EVENT_AREA_PRE_FEATURE_SEARCH, player, adventure));
             features.stream().filter((i) -> entityService.is(i, VISIBLE))
                     .forEach((f) -> returnValue.addAll(f.search(player, adventure)));
         }
 
-        if (!items.isEmpty()) {
+        if (0 < items.stream().filter((i) -> entityService.is(i, VISIBLE)).count()) {
             returnValue.addAll(entityService.handle(this, EVENT_AREA_PRE_ITEM_SEARCH, player, adventure));
             items.stream().filter((i) -> entityService.is(i, VISIBLE)).forEach((i) -> returnValue
                     .add(this.responseFactory.createBuilder().source(i.getName()).text(i.getDescription()).build()));
@@ -132,7 +132,12 @@ public class AreaImpl extends CompartmentImpl implements Area {
         returnValue.addAll(entityService.handle(this, type, player, adventure));
 
         if (directionFeatures.containsKey(direction)) {
-            directionFeatures.get(direction).stream().forEach((f) -> returnValue.addAll(f.search(player, adventure)));
+            if (0 < directionFeatures.get(direction).stream().filter((i) -> entityService.is(i, VISIBLE)).count()) {
+                returnValue
+                        .addAll(entityService.handle(this, EVENT_AREA_PRE_FEATURE_DIRECTION_SEARCH, player, adventure));
+                directionFeatures.get(direction).stream()
+                        .forEach((f) -> returnValue.addAll(f.search(player, adventure)));
+            }
         }
 
         return returnValue;

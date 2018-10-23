@@ -23,7 +23,7 @@ public class ItemKeyImpl extends ItemImpl {
     private final Feature target;
 
     public ItemKeyImpl(Long key, String name, List<String> descriptors, String description, EntityService entityService,
-        Feature target) {
+            Feature target) {
         super(key, name, descriptors, description, entityService);
         this.target = target;
     }
@@ -49,6 +49,14 @@ public class ItemKeyImpl extends ItemImpl {
         returnValue.addAll(entityService.handle(this, EVENT_KEY_AFTER_USE, player, adventure));
         returnValue.addAll(entityService.handle(target, EVENT_KEY_AFTER_USE, player, adventure));
 
+        return returnValue;
+    }
+
+    @Override
+    public List<Response> misUse(Feature feature, Player player, Adventure adventure) {
+        List<Response> returnValue = new ArrayList<>();
+        returnValue.addAll(entityService.handle(this, EVENT_ITEM_MISUSE, player, adventure));
+        returnValue.addAll(entityService.handle(feature, EVENT_FEATURE_MISUSE, player, adventure));
         return returnValue;
     }
 

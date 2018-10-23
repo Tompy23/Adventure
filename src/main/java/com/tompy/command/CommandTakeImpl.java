@@ -3,8 +3,8 @@ package com.tompy.command;
 import com.tompy.adventure.Adventure;
 import com.tompy.adventure.AdventureUtils;
 import com.tompy.directive.CommandType;
-import com.tompy.entity.EntityUtil;
 import com.tompy.entity.EntityService;
+import com.tompy.entity.EntityUtil;
 import com.tompy.entity.item.Item;
 import com.tompy.player.Player;
 import com.tompy.response.Response;
@@ -47,6 +47,8 @@ public class CommandTakeImpl extends CommandBasicImpl implements Command {
             if (entityService.is(object, VISIBLE)) {
                 if (player.addItem(object)) {
                     player.getArea().removeItem(object);
+                    returnValue.add(responseFactory.createBuilder().source("CommandTake")
+                            .text(String.format("%s now has %s", player.getName(), object.getDescription())).build());
                 } else {
                     // TODO Inventory full?  Or some other issue?
                     returnValue
@@ -55,8 +57,7 @@ public class CommandTakeImpl extends CommandBasicImpl implements Command {
             }
         } else {
             returnValue.add(responseFactory.createBuilder().source("CommandTake")
-                    .text(String.format("Can't see %s", target.toLowerCase()))
-                    .build());
+                    .text(String.format("Can't see %s", target.toLowerCase())).build());
         }
 
         return returnValue;

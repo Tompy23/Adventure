@@ -3,8 +3,8 @@ package com.tompy.command;
 import com.tompy.adventure.Adventure;
 import com.tompy.attribute.Attribute;
 import com.tompy.directive.CommandType;
-import com.tompy.entity.EntityUtil;
 import com.tompy.entity.EntityService;
+import com.tompy.entity.EntityUtil;
 import com.tompy.entity.feature.Feature;
 import com.tompy.entity.item.Item;
 import com.tompy.player.Player;
@@ -47,6 +47,9 @@ public class CommandTakeFromImpl extends CommandTakeImpl {
 
                     if (player.addItem(source)) {
                         object.removeItem(source);
+                        returnValue.add(responseFactory.createBuilder().source("CommandTake")
+                                .text(String.format("%s now has %s", player.getName(), source.getDescription()))
+                                .build());
                     } else {
                         // TODO Inventory full?  Or some other issue?
                         returnValue
